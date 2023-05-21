@@ -15,7 +15,7 @@ public class CardController {
     @CrossOrigin
     @GetMapping(value="")
     public List<Card> find() {
-        return c.findCard();
+        return c.find();
     }
 
 

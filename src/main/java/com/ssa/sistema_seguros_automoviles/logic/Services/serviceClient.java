@@ -12,7 +12,7 @@ public class serviceClient {
     @Autowired
     ClientRepo clientRepo;
     @Transactional
-    public List<Client> findClient() {
+    public List<Client> find() {
         return clientRepo.findAll();
     }
 

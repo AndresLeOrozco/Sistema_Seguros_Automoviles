@@ -11,7 +11,7 @@ public class serviceCard {
     @Autowired
     CardRepo cardRepo;
     @Transactional
-    public List<Card> findCard() {
+    public List<Card> find() {
         return cardRepo.findAll();
     }
 

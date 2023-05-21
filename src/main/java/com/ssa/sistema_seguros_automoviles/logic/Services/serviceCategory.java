@@ -1,8 +1,6 @@
 package com.ssa.sistema_seguros_automoviles.logic.Services;
 
-import com.ssa.sistema_seguros_automoviles.data.Repo.CardRepo;
 import com.ssa.sistema_seguros_automoviles.data.Repo.CategoryRepo;
-import com.ssa.sistema_seguros_automoviles.logic.Card;
 import com.ssa.sistema_seguros_automoviles.logic.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,7 @@ public class serviceCategory {
     CategoryRepo categoryRepo;
 
     @Transactional
-    public List<Category> findCategory() {
+    public List<Category> find() {
         return categoryRepo.findAll();
     }
 }

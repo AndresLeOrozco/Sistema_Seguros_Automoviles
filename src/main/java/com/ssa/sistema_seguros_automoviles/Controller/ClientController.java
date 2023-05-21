@@ -16,7 +16,7 @@ public class ClientController {
     @CrossOrigin
     @GetMapping(value="")
     public List<Client> find() {
-        return s.findClient();
+        return s.find();
     }
 
 
