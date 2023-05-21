@@ -34,8 +34,7 @@ class App{
         <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
           <div class="container-fluid">
             <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
-                <img src="images/logo.png" class="logo rounded-circle" alt="logo">
-                Countries
+                <img src="images/logo.png" class="logo rounded-circle" width="250" height="150" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
               <span class="navbar-toggler-icon"></span>
@@ -58,20 +57,75 @@ class App{
 
     renderFooter=()=>{
         return `
-        <footer id="footer" class="bg-dark text-white mt-4 w-100 fixed-bottom">
-            <div class="container-fluid py-2">
-
-                <div class="row">
-                    <div class="col-md-2"><h5>Total Soft Inc.</h5></div>
-                    <div class="col-md-7"><h4>
-                        <i class="fab fa-twitter"></i>
-                        <i class="fab fa-facebook"></i>
-                        <i class="fab fa-instagram"></i></h4>
-                    </div>
-                    <div class="col-md-3 text-right small align-self-end">©2023 Tsf, Inc.</div>
-                </div>
-            </div>
-        </footer> 
+        <footer class="text-center text-white fixed-bottom" style="background-color: #f1f1f1;">
+          <!-- Grid container -->
+          <div class="container pt-4">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+              <!-- Facebook -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://www.facebook.com/eduardo.orellanarivas"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+        
+              <!-- Twitter -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://twitter.com/fcbarcelona"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-twitter"></i
+              ></a>
+        
+              <!-- Google -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://www.google.com/?hl=es"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-google"></i
+              ></a>
+        
+              <!-- Instagram -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://www.instagram.com/gugarojeda/"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-instagram"></i
+              ></a>
+        
+              <!-- Linkedin -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://cr.linkedin.com/in/carlosloriasaenz"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-linkedin"></i
+              ></a>
+              <!-- Github -->
+              <a
+                class="btn btn-link btn-floating btn-lg text-dark m-1"
+                href="https://github.com/AndresLeOrozco/Sistema_Seguros_Automoviles"
+                role="button"
+                data-mdb-ripple-color="dark"
+                ><i class="fab fa-github"></i
+              ></a>
+            </section>
+            <!-- Section: Social media -->
+          </div>
+          <!-- Grid container -->
+        
+          <!-- Copyright -->
+          <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2023 Copyright:
+            <a class="text-dark" href="https://www.youtube.com/watch?v=w3QFThq8gQo">BEGUESS SA</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
     `;
     }
 
@@ -113,8 +167,6 @@ class App{
     renderBodyFiller=()=>{
         var html= `
         <div id='bodyFiller' style='margin-left: 10%; margin-top:100px; width: 80%; text-align: center; font-size: 1.5em'>
-            <p>Informacion de los paises del mundo.</p>
-            <img src="images/filler.jpg" class="filler rounded-circle" alt="filler">
         </div>
     `;
         this.dom.querySelector('#app>#body').replaceChildren();
