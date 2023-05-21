@@ -13,8 +13,9 @@ public class Insurance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column
-    Integer id_vehicle;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_vehicle", referencedColumnName = "id")
+    Vehicle id_vehicle;
     @Column
     String pay_meth;
     @Column
@@ -34,7 +35,7 @@ public class Insurance implements Serializable {
     }
 
 
-    public Insurance(Integer id_vehicle, String pay_meth, String vin) {
+    public Insurance(Vehicle id_vehicle, String pay_meth, String vin) {
         this.id_vehicle = id_vehicle;
         this.pay_meth = pay_meth;
         this.vin = vin;
@@ -57,11 +58,11 @@ public class Insurance implements Serializable {
         this.id = id;
     }
 
-    public Integer getId_vehicle() {
+    public Vehicle getId_vehicle() {
         return id_vehicle;
     }
 
-    public void setId_vehicle(Integer id_vehicle) {
+    public void setId_vehicle(Vehicle id_vehicle) {
         this.id_vehicle = id_vehicle;
     }
 
