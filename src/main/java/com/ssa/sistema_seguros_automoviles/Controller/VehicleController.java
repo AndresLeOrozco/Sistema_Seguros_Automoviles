@@ -22,6 +22,4 @@ public class VehicleController {
         return c.findVehicle();
     }
 
-
-
 }
