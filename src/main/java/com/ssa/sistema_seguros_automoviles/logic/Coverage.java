@@ -79,5 +79,4 @@ public class Coverage implements Serializable {
         return "Coverage{" + "id=" + id + ", Category=" + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
     }
 
-
 }
