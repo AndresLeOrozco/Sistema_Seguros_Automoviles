@@ -1,4 +1,4 @@
-var backend="http://localhost:8080";
+var backend="http://localhost:9090";
 
 var globalstate={user:null};
 
