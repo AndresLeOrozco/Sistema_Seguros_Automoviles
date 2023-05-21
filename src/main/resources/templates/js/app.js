@@ -31,10 +31,10 @@ class App{
 
     renderMenu=()=>{
         return `
-        <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
+            <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
           <div class="container-fluid">
-            <a class="navbar-brand  font-italic font-weight-light  text-info" href="#">
-                <img src="images/logo.png" class="logo rounded-circle" width="250" height="150" alt="logo">
+            <a class="navbar-brand font-italic font-weight-light text-info"  href="#">
+                <img src="images/logo.png" class="logo rounded-circle" alt="logo" style="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
               <span class="navbar-toggler-icon"></span>
@@ -45,6 +45,7 @@ class App{
             </div>
           </div>
         </nav>
+        
         `;
     }
 
