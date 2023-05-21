@@ -1,14 +1,27 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
-public class Coverage {
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+
+@Entity
+@Table(name = "coverage")
+public class Coverage implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    Integer id_category;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="id_category", referencedColumnName = "id")
+    Category cat;
+    @Column
     String description;
+    @Column
     Integer min_cost;
+    @Column
     float per_cost;
 
-    public Coverage(Integer id_category, String description, Integer min_cost, float per_cost) {
-        this.id_category = id_category;
+    public Coverage(Category id_category, String description, Integer min_cost, float per_cost) {
+        this.cat = id_category;
         this.description = description;
         this.min_cost = min_cost;
         this.per_cost = per_cost;
@@ -24,12 +37,12 @@ public class Coverage {
         this.id = id;
     }
 
-    public Integer getId_category() {
-        return id_category;
+    public Category getId_category() {
+        return cat;
     }
 
-    public void setId_category(Integer id_category) {
-        this.id_category = id_category;
+    public void setId_category(Category id_category) {
+        this.cat = id_category;
     }
 
     public String getDescrption() {
@@ -58,7 +71,7 @@ public class Coverage {
 
     @Override
     public String toString() {
-        return "Coverage{" + "id=" + id + ", id_category=" + id_category + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
+        return "Coverage{" + "id=" + id + ", Category=" + cat + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
     }
 
 

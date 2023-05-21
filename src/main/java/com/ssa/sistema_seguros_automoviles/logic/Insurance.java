@@ -1,5 +1,8 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -7,12 +10,20 @@ import java.util.ArrayList;
  *
  * @author andre
  */
-public class Insurance {
+@Entity
+@Table(name = "insurance")
+public class Insurance implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+    @Column
     Integer id_vehicle;
+    @Column
     String pay_meth;
+    @Column
     String vin;
-    List<Coverage> cover;
+
+    //List<Coverage> cover;
 
     public Insurance() {
     }
@@ -22,17 +33,17 @@ public class Insurance {
         this.id_vehicle = id_vehicle;
         this.pay_meth = pay_meth;
         this.vin = vin;
-        this.cover = new ArrayList();
+        //this.cover = new ArrayList();
     }
 
 
-    public List<Coverage> getCover() {
-        return cover;
-    }
+//    public List<Coverage> getCover() {
+//        return cover;
+//    }
 
-    public void setCover(List<Coverage> cover) {
-        this.cover = cover;
-    }
+//    public void setCover(List<Coverage> cover) {
+//        this.cover = cover;
+//    }
 
     public Integer getId() {
         return id;
@@ -68,6 +79,6 @@ public class Insurance {
 
     @Override
     public String toString() {
-        return "Insurance{" + "id=" + id + ", id_vehicle=" + id_vehicle + ", pay_meth=" + pay_meth + ", vin=" + vin + "\n, cover=" + cover + '}';
+        return "Insurance{" + "id=" + id + ", id_vehicle=" + id_vehicle + ", pay_meth=" + pay_meth + ", vin=" + vin + "\n, cover=}";
     }
 }

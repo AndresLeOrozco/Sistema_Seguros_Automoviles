@@ -1,0 +1,7 @@
+package com.ssa.sistema_seguros_automoviles.data.Repo;
+
+import com.ssa.sistema_seguros_automoviles.logic.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepo extends JpaRepository<Category,Integer> {
+}

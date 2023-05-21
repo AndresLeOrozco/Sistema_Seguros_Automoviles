@@ -2,9 +2,11 @@ package com.ssa.sistema_seguros_automoviles.logic;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "card")
-public class Card {
+public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -14,16 +16,17 @@ public class Card {
     String date;
     @Column
     Integer cvc;
-    @Column
-    Integer id_client;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="id_client", referencedColumnName = "id")
+    Client cli;
 
 
-    public Card(Integer ID,long num_card, String fec_vencimiento, Integer cvc,Integer id_cli) {
+    public Card(Integer ID,long num_card, String fec_vencimiento, Integer cvc,Client id_cli) {
         this.id = ID;
         this.card_number = num_card;
         this.date = fec_vencimiento;
         this.cvc = cvc;
-        this.id_client = id_cli;
+        this.cli = id_cli;
     }
 
     public Card() {
@@ -62,12 +65,12 @@ public class Card {
         this.date = date;
     }
 
-    public Integer getId_client() {
-        return id_client;
+    public Client getId_client() {
+        return cli;
     }
 
-    public void setId_client(Integer id_client) {
-        this.id_client = id_client;
+    public void setId_client(Client id_client) {
+        this.cli = id_client;
     }
 
 

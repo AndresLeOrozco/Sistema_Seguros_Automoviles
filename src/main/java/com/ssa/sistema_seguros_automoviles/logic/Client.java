@@ -4,6 +4,7 @@ package com.ssa.sistema_seguros_automoviles.logic;
 import com.ssa.sistema_seguros_automoviles.data.Repo.ClientRepo;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "client")
-public class Client {
+public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -112,9 +113,5 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" + "username=" + user + ", password=" + password + ", name=" + name + ", num_telefono=" + phone + ", mail=" + email + ", type_client=" + type_cli + '}';
-    }
-
-    public static void main(String[] args) {
-
     }
 }

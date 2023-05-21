@@ -1,17 +1,27 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
-public class Vehicle {
-    int id;
-    String brand;
-    String model;
-    int year;
-    String img;
+import jakarta.persistence.*;
 
-    public Vehicle(String brand, String model, int year, String img) {
+import java.io.Serializable;
+
+@Entity
+@Table(name = "vehicle")
+public class Vehicle implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
+    @Column
+    String brand;
+    @Column
+    String model;
+    @Column
+    int year;
+
+
+    public Vehicle(String brand, String model, int year) {
         this.brand = brand;
         this.model = model;
         this.year = year;
-        this.img = img;
     }
 
     public Vehicle() {
@@ -49,17 +59,11 @@ public class Vehicle {
         this.year = year;
     }
 
-    public String getImg() {
-        return img;
-    }
 
-    public void setImg(String img) {
-        this.img = img;
-    }
 
     @Override
     public String toString() {
-        return "Vehicle{" + "id=" + id + ", brand=" + brand + ", model=" + model + ", year=" + year + ", img=" + img + '}';
+        return "Vehicle{" + "id=" + id + ", brand=" + brand + ", model=" + model + ", year=" + year ;
     }
 
 
