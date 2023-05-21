@@ -3,6 +3,7 @@ package com.ssa.sistema_seguros_automoviles.logic;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "coverage")
@@ -10,8 +11,8 @@ public class Coverage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="id_category", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_category", referencedColumnName = "id")
     Category cat;
     @Column
     String description;
@@ -19,9 +20,11 @@ public class Coverage implements Serializable {
     Integer min_cost;
     @Column
     float per_cost;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "cover")
+    Set<Insurance> ins;
 
     public Coverage(Category id_category, String description, Integer min_cost, float per_cost) {
-        this.cat = id_category;
+    //    this.cat = id_category;
         this.description = description;
         this.min_cost = min_cost;
         this.per_cost = per_cost;
@@ -33,20 +36,22 @@ public class Coverage implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Category getId_category() {
-        return cat;
-    }
-
-    public void setId_category(Category id_category) {
-        this.cat = id_category;
+    public void setId(Integer id_cov) {
+        this.id = id_cov;
     }
 
     public String getDescrption() {
         return description;
+    }
+
+
+
+    public Category getCat() {
+        return cat;
+    }
+
+    public void setCat(Category cat) {
+        this.cat = cat;
     }
 
     public void setDescrption(String descrption) {
@@ -71,7 +76,7 @@ public class Coverage implements Serializable {
 
     @Override
     public String toString() {
-        return "Coverage{" + "id=" + id + ", Category=" + cat + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
+        return "Coverage{" + "id=" + id + ", Category=" + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
     }
 
 

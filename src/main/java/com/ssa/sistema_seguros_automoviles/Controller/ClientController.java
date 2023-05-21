@@ -1,9 +1,7 @@
 package com.ssa.sistema_seguros_automoviles.Controller;
 
-import com.ssa.sistema_seguros_automoviles.data.Repo.CardRepo;
-import com.ssa.sistema_seguros_automoviles.data.Repo.ClientRepo;
-import com.ssa.sistema_seguros_automoviles.logic.Card;
-import com.ssa.sistema_seguros_automoviles.logic.Client;
+import com.ssa.sistema_seguros_automoviles.data.Repo.*;
+import com.ssa.sistema_seguros_automoviles.logic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +11,11 @@ import java.util.List;
 @RequestMapping("client")
 public class ClientController {
     @Autowired
-    ClientRepo c;
+    InsuranceRepo c;
 
     @CrossOrigin
     @GetMapping(value="")
-    public List<Client> find() {
+    public List<Insurance> find() {
         return c.findAll();
     }
 

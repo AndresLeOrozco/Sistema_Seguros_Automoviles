@@ -3,6 +3,7 @@ package com.ssa.sistema_seguros_automoviles.logic;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -14,6 +15,7 @@ public class Category implements Serializable {
     String type;
     @Column
     String description;
+
 
     public Category(String type, String description) {
         this.type = type;
@@ -27,8 +29,8 @@ public class Category implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id_cat) {
+        this.id = id_cat;
     }
 
     public String getType() {

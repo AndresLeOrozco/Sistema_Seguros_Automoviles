@@ -5,11 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
-/**
- *
- * @author andre
- */
 @Entity
 @Table(name = "insurance")
 public class Insurance implements Serializable {
@@ -22,9 +19,17 @@ public class Insurance implements Serializable {
     String pay_meth;
     @Column
     String vin;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
 
-    //List<Coverage> cover;
-
+    })
+    @JoinTable(
+            name = "ins_cov",
+            joinColumns = {@JoinColumn(name = "id_ins")},
+            inverseJoinColumns = {@JoinColumn(name = "id_cov")}
+    )
+    Set<Coverage> cover;
     public Insurance() {
     }
 
@@ -36,14 +41,13 @@ public class Insurance implements Serializable {
         //this.cover = new ArrayList();
     }
 
+    public Set<Coverage> getCover() {
+        return cover;
+    }
 
-//    public List<Coverage> getCover() {
-//        return cover;
-//    }
-
-//    public void setCover(List<Coverage> cover) {
-//        this.cover = cover;
-//    }
+    public void setCover(Set<Coverage> cover) {
+        this.cover = cover;
+    }
 
     public Integer getId() {
         return id;
