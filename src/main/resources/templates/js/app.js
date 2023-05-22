@@ -15,6 +15,7 @@ class App{
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
         this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
+        this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
         this.renderBodyFiller();
         this.renderMenuItems();
         this.countries = new Countries();
@@ -179,31 +180,39 @@ class App{
     <div class="modal-content">
       <div class="modal-header text-center">
         <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         </button>
       </div>
       <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" id="orangeForm-name" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
+      
+        <div class="md-form mb-3">
+          <i class="fas fa-user-circle prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> User</label>
+          <input type="text" id="Rusername" class="form-control validate">
         </div>
-        <div class="md-form mb-5">
-          <i class="fas fa-envelope prefix grey-text"></i>
-          <input type="email" id="orangeForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-email">Your email</label>
+        
+        <div class="md-form mb-3">
+          <i class="fas fa-lock prefix grey-text" ></i> <label class="ml-2" data-error="wrong" data-success="right" for="orangeForm-pass" style="margin-left: 5px"> Password</label>
+          <input type="password" id="Rpass" class="form-control validate">
+        </div>
+        
+        <div class="md-form mb-3">
+          <i class="fas fa-user prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> Name</label>
+          <input type="text" id="Rname" class="form-control validate">
+        </div>
+        
+        <div class="md-form mb-3">
+          <i class="fas fa-phone prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-phone" style="margin-left: 7px"> Phone</label>
+          <input type="tel" id="Rphone" class="form-control validate" placeholder="00000000" pattern="[0-9]{8}" required>
         </div>
 
-        <div class="md-form mb-4">
-          <i class="fas fa-lock prefix grey-text"></i>
-          <input type="password" id="orangeForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
+        <div class="md-form mb-3">
+          <i class="fas fa-envelope prefix grey-text"></i><label data-error="wrong"  data-success="right" for="orangeForm-email" style="margin-left: 7px"> Email</label>
+          <input placeholder="usuario@mail.com" type="email" id="Remail" class="form-control validate">
         </div>
 
       </div>
       <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-deep-orange">Sign up</button>
+        <button id="subs" class="btn btn-primary">Register</button>
       </div>
     </div>
   </div>
@@ -304,6 +313,28 @@ class App{
             input2.style.borderColor = "";
 
         }
+
+
+    }
+
+    register= async ()=>{
+        const newRegister = {user: this.dom.querySelector("#Rusername").value,
+            password: this.dom.querySelector("#Rpass").value,
+            name: this.dom.querySelector("#Rname").value,
+            phone: this.dom.querySelector("#Rphone").value,
+            email: this.dom.querySelector("#Remail").value
+        };
+
+        const request = new Request(`${backend}/client`, {method: 'POST',body: JSON.stringify(newRegister), headers: {
+            "Content-type": "application/json; charset=UTF-8"}});
+
+        const response = await fetch(request);
+
+        //Validate if the response is ok
+        if (!response.ok) {errorMessage(response.status);}
+        alert("Registered")
+        this.reg.hide();
+        this.renderMenuItems();
 
 
     }

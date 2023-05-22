@@ -29,4 +29,14 @@ public class ClientController {
             return s.findBy(user,pass);
         return new Client();
     }
+
+    @CrossOrigin
+    @PostMapping
+    public void save(@RequestBody Client c) {
+        try{
+            this.s.save(c);
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
 }

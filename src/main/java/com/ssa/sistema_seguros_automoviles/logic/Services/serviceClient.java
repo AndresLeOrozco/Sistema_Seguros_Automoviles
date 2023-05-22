@@ -21,4 +21,12 @@ public class serviceClient {
         return clientRepo.findClientByUserAndPassword(us,pas);
     }
 
+    @Transactional
+    public void save(Client c) {
+        clientRepo.save(c);
+    }
+
+
+
+
 }
