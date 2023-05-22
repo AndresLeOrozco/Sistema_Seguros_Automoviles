@@ -16,5 +16,9 @@ public class serviceClient {
         return clientRepo.findAll();
     }
 
+    @Transactional
+    public Client findBy(String us,String pas) {
+        return clientRepo.findClientByUserAndPassword(us,pas);
+    }
 
 }

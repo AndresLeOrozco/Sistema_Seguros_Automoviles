@@ -23,6 +23,7 @@ class App{
             ${this.renderFooter()}
             ${this.renderModal()}
         `;
+
         var rootContent= document.createElement('div');
         rootContent.id='app';
         rootContent.innerHTML=html;
@@ -33,7 +34,7 @@ class App{
         return `
             <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
           <div class="container-fluid">
-            <a class="navbar-brand font-italic font-weight-light text-info"  href="#">
+            <a id="imag" class="navbar-brand font-italic font-weight-light text-info"  href="#">
                 <img src="images/logo.png" class="logo rounded-circle" alt="logo" style="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
@@ -47,6 +48,7 @@ class App{
         </nav>
         
         `;
+
     }
 
     renderBody=()=>{
@@ -200,11 +202,13 @@ class App{
               </li>
             `;
         };
+
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
         this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
         this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click',e=>this.countriesShow());
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
+        this.dom.querySelector("#imag")?.addEventListener('click',e=>this.inicioShow());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -219,10 +223,20 @@ class App{
         this.countries.list();
     }
 
+    inicioShow = async ()=>{
+       // globalstate.user=null;
+        this.dom.querySelector('#app>#body').replaceChildren();
+        this.renderBodyFiller();
+        this.renderMenuItems();
+    }
+
     login= async ()=>{
         const candidate = Object.fromEntries( (new FormData(this.dom.querySelector("#form"))).entries());
         candidate.rol='CLI';
-        // invoque backend for login
+        // const request = new Request(`${backend}/client`, {method: 'GET',body: JSON.stringify(candidate), headers: { }});
+        // const response = await fetch(request);
+        // if (!response.ok) {errorMessage(response.status);}
+        // this.list();
         globalstate.user = candidate;
         this.modal.hide();
         this.renderMenuItems();

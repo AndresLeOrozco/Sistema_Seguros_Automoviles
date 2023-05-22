@@ -2,6 +2,7 @@ package com.ssa.sistema_seguros_automoviles.Controller;
 
 import com.ssa.sistema_seguros_automoviles.logic.*;
 import com.ssa.sistema_seguros_automoviles.logic.Services.serviceClient;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,5 +21,9 @@ public class ClientController {
     }
 
 
-
+    @CrossOrigin
+    @GetMapping(value="/name/{user}/{pass}")
+    public Client findbyId(@PathVariable() String user,@PathVariable() String pass) {
+        return s.findBy(user,pass);
+    }
 }
