@@ -140,7 +140,7 @@ class Countries{
 
     list=()=>{
         const request = new Request(`${backend}/client`, {method: 'GET', headers: { }});
-        (async ()=>{
+        (async ()=> {
             const response = await fetch(request);
             if (!response.ok) {errorMessage(response.status);return;}
             var countries = await response.json();

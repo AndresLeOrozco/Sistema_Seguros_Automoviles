@@ -150,11 +150,11 @@ class App{
                    <div class="modal-body">
                        <div class="input-group mb-3">
                            <span class="input-group-text">Id</span>
-                           <input type="text" class="form-control" id="identificacion" name="identificacion">
+                           <input type="text" class="form-control" id="identificacion" name="identificacion" value="" placeholder="id" required>
                        </div>  
                        <div class="input-group mb-3">
                            <span class="input-group-text">clave</span>
-                           <input type="password" class="form-control" id="clave" name="clave">
+                           <input type="password" class="form-control" id="clave" name="clave" value="" placeholder="password" required>
                        </div>      
                    </div>
                    <div class="modal-footer">
@@ -232,21 +232,32 @@ class App{
               </li>
             `;
         }else{
-            if(globalstate.user.rol==='CLI'){
+            if(globalstate.user.type_client===1){
                 html+=`
                     <li class="nav-item">
-                        <a class="nav-link" id="countries" href="#"> <span><i class="fas fa-file-alt"></i></span> Countries </a>
+                        <a class="nav-link" id="clients" href="#"> <span><i class="fa fa-address-book"></i></span> Clients </a>
                     </li>
-                    
+                     <li class="nav-item">
+                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-bars"></i></span> Categories </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" id="coverages" href="#"> <span><i class="fa fa-blind"></i></span> Coverage </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="vehicles" href="#"> <span><i class="fa fa-car"></i></span> Vehicle </a>
+                    </li>   
                 `;
             }
-            if(globalstate.user.rol==='ADM'){
+            if(globalstate.user.type_client===2){
                 html+=`
+                <li class="nav-item">
+                     <a class="nav-link" id="insurances" href="#"> <span><i class="fa fa-wheelchair"></i></span> Insurances </a>
+                </li>
                 `;
             }
             html+=`
               <li class="nav-item">
-                  <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.identificacion}) </a>
+                  <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout (${globalstate.user.username}) </a>
               </li>
             `;
         };
@@ -271,12 +282,30 @@ class App{
     }
 
     login= async ()=>{
-        const candidate = Object.fromEntries( (new FormData(this.dom.querySelector("#form"))).entries());
-        candidate.rol='CLI';
-        // invoque backend for login
-        globalstate.user = candidate;
-        this.modal.hide();
-        this.renderMenuItems();
+        let user = this.dom.querySelector("#identificacion").value;
+        let pass = this.dom.querySelector("#clave").value;
+        const request = new Request(`${backend}/client/name/${user}/${pass}`, {method: 'GET', headers: { }});
+        const response = await fetch(request);
+        if (!response.ok) {errorMessage(response.status);}
+        let usuario = await response.json();
+        if(usuario.type_client === null) {
+            this.dom.querySelector("#identificacion").style.borderColor = "red";
+            this.dom.querySelector("#clave").style.borderColor = "red";
+        }
+        else{
+            const input1 = document.getElementById("identificacion");
+            const input2 = document.getElementById("clave");
+            globalstate.user = usuario;
+            this.modal.hide();
+            this.renderMenuItems();
+            input1.value = input1.defaultValue;
+            input2.value = input1.defaultValue;
+            input1.style.borderColor = "";
+            input2.style.borderColor = "";
+
+        }
+
+
     }
 
     registerShow = async ()=>{
