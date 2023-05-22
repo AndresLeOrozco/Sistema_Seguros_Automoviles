@@ -24,6 +24,9 @@ public class ClientController {
     @CrossOrigin
     @GetMapping(value="/name/{user}/{pass}")
     public Client findbyId(@PathVariable() String user,@PathVariable() String pass) {
-        return s.findBy(user,pass);
+        Client c = s.findBy(user,pass);
+        if(c != null)
+            return s.findBy(user,pass);
+        return new Client();
     }
 }
