@@ -2,18 +2,23 @@ class App{
     dom;
     modal; // login modal
 
+    reg; // register modal
+
     state;  // state variables: if any
 
     countries; // Countries view
+
 
     constructor(){
         this.state={};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
+        this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
         this.renderBodyFiller();
         this.renderMenuItems();
         this.countries = new Countries();
+
     }
 
     render=()=>{
@@ -22,6 +27,7 @@ class App{
             ${this.renderBody()} 
             ${this.renderFooter()}
             ${this.renderModal()}
+            ${this.renderReg()}
         `;
         var rootContent= document.createElement('div');
         rootContent.id='app';
@@ -154,14 +160,54 @@ class App{
                    <div class="modal-footer">
                        <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
                    </div>
-                   <div class="input-group">
-                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
-                       <a id="register" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
-                   </div>                
+<!--                   <div class="input-group">-->
+<!--                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>-->
+<!--                       <a id="" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>-->
+<!--                   </div>                -->
                    </form>                 
                </div>         
            </div>          
        </div>   
+    `;
+    }
+
+    renderReg = () => {
+        return `
+        <div id="register" class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fas fa-user prefix grey-text"></i>
+          <input type="text" id="orangeForm-name" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
+        </div>
+        <div class="md-form mb-5">
+          <i class="fas fa-envelope prefix grey-text"></i>
+          <input type="email" id="orangeForm-email" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="orangeForm-email">Your email</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <i class="fas fa-lock prefix grey-text"></i>
+          <input type="password" id="orangeForm-pass" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
+        </div>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-deep-orange">Sign up</button>
+      </div>
+    </div>
+  </div>
+</div>
     `;
     }
 
@@ -208,6 +254,7 @@ class App{
         this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
         this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click',e=>this.countriesShow());
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
+        this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
@@ -228,6 +275,12 @@ class App{
         candidate.rol='CLI';
         // invoque backend for login
         globalstate.user = candidate;
+        this.modal.hide();
+        this.renderMenuItems();
+    }
+
+    registerShow = async ()=>{
+
         this.modal.hide();
         this.renderMenuItems();
     }
