@@ -23,7 +23,6 @@ class App{
             ${this.renderFooter()}
             ${this.renderModal()}
         `;
-
         var rootContent= document.createElement('div');
         rootContent.id='app';
         rootContent.innerHTML=html;
@@ -32,23 +31,22 @@ class App{
 
     renderMenu=()=>{
         return `
-            <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-dark bg-dark">
+            <nav id="menu" class="navbar navbar-expand-lg p-0 navbar-light" style="background-color: #f1f1f1;" >
           <div class="container-fluid">
-            <a id="imag" class="navbar-brand font-italic font-weight-light text-info"  href="#">
+            <a class="navbar-brand font-italic font-weight-light text-info"  href="#">
                 <img src="images/logo.png" class="logo rounded-circle" alt="logo" style="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuCollapse">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div id="menuCollapse" class="collapse navbar-collapse" >
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0" id='menuItems'>
+              <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id='menuItems'>
               </ul>
             </div>
           </div>
         </nav>
         
         `;
-
     }
 
     renderBody=()=>{
@@ -181,7 +179,10 @@ class App{
         if(globalstate.user===null){
             html+=`
               <li class="nav-item">
-                  <a class="nav-link" id="login" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> Login </a>
+                  <a class="nav-link" id="login" href="#" data-bs-toggle="modal"> <span><i class="fa fa-user"></i></span> Login </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="register" href="#"> <span><i class="fas fa-file-alt"></i></span> Register </a>
               </li>
             `;
         }else{
@@ -190,6 +191,7 @@ class App{
                     <li class="nav-item">
                         <a class="nav-link" id="countries" href="#"> <span><i class="fas fa-file-alt"></i></span> Countries </a>
                     </li>
+                    
                 `;
             }
             if(globalstate.user.rol==='ADM'){
@@ -202,13 +204,11 @@ class App{
               </li>
             `;
         };
-
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
         this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
         this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click',e=>this.countriesShow());
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
-        this.dom.querySelector("#imag")?.addEventListener('click',e=>this.inicioShow());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -223,20 +223,10 @@ class App{
         this.countries.list();
     }
 
-    inicioShow = async ()=>{
-       // globalstate.user=null;
-        this.dom.querySelector('#app>#body').replaceChildren();
-        this.renderBodyFiller();
-        this.renderMenuItems();
-    }
-
     login= async ()=>{
         const candidate = Object.fromEntries( (new FormData(this.dom.querySelector("#form"))).entries());
         candidate.rol='CLI';
-        // const request = new Request(`${backend}/client`, {method: 'GET',body: JSON.stringify(candidate), headers: { }});
-        // const response = await fetch(request);
-        // if (!response.ok) {errorMessage(response.status);}
-        // this.list();
+        // invoque backend for login
         globalstate.user = candidate;
         this.modal.hide();
         this.renderMenuItems();
