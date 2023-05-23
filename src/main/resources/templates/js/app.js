@@ -4,9 +4,9 @@ class App{
 
     reg; // register modal
 
-    state;  // state variables: if any
+    state;  // state variables: if any\
 
-    countries; // Countries view
+    clienteDOM;
 
 
     constructor(){
@@ -18,8 +18,7 @@ class App{
         this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
         this.renderBodyFiller();
         this.renderMenuItems();
-        this.countries = new Countries();
-
+        this.clienteDOM = new Clients();
     }
 
     render=()=>{
@@ -276,19 +275,15 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
+        this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
-                    this.countriesShow();
                     break;
             }
         }
     }
 
-    countriesShow=()=>{
-        this.dom.querySelector('#app>#body').replaceChildren(this.countries.dom);
-        this.countries.list();
-    }
 
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
@@ -339,11 +334,10 @@ class App{
 
     }
 
-    registerShow = async ()=>{
-
-        this.modal.hide();
-        this.renderMenuItems();
-    }
+    showCli=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.clienteDOM.dom);
+        this.clienteDOM.list();
+    };
 
     logout= async ()=>{
         // invoque backend for login
