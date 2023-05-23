@@ -22,8 +22,14 @@ public class serviceClient {
     }
 
     @Transactional
-    public void save(Client c) {
-        clientRepo.save(c);
+    public boolean save(Client c) {
+        Client n = new Client();
+        n = clientRepo.findByUser(c.getUsername());
+        if (n == null){
+            clientRepo.save(c);
+            return true;
+        }
+        return false;
     }
 
 

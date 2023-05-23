@@ -42,7 +42,7 @@ public class Client implements Serializable {
     }
 
     public Client(String user, String password, String name, Integer phone, String email, Integer type_cli) {
-        id = 0;
+
         this.user = user;
         this.password = password;
         this.name = name;

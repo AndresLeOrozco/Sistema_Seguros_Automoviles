@@ -187,17 +187,17 @@ class App{
       
         <div class="md-form mb-3">
           <i class="fas fa-user-circle prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> User</label>
-          <input type="text" id="Rusername" class="form-control validate">
+          <input type="text" id="Rusername" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
           <i class="fas fa-lock prefix grey-text" ></i> <label class="ml-2" data-error="wrong" data-success="right" for="orangeForm-pass" style="margin-left: 5px"> Password</label>
-          <input type="password" id="Rpass" class="form-control validate">
+          <input type="password" id="Rpass" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
           <i class="fas fa-user prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> Name</label>
-          <input type="text" id="Rname" class="form-control validate">
+          <input type="text" id="Rname" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
@@ -207,7 +207,7 @@ class App{
 
         <div class="md-form mb-3">
           <i class="fas fa-envelope prefix grey-text"></i><label data-error="wrong"  data-success="right" for="orangeForm-email" style="margin-left: 7px"> Email</label>
-          <input placeholder="usuario@mail.com" type="email" id="Remail" class="form-control validate">
+          <input placeholder="usuario@mail.com" type="email" id="Remail" class="form-control validate" required>
         </div>
 
       </div>
@@ -317,26 +317,81 @@ class App{
 
     }
 
-    register= async ()=>{
-        const newRegister = {user: this.dom.querySelector("#Rusername").value,
-            password: this.dom.querySelector("#Rpass").value,
-            name: this.dom.querySelector("#Rname").value,
-            phone: this.dom.querySelector("#Rphone").value,
-            email: this.dom.querySelector("#Remail").value
+    register = async () => {
+        const username = this.dom.querySelector("#Rusername").value;
+        const password = this.dom.querySelector("#Rpass").value;
+        const name = this.dom.querySelector("#Rname").value;
+        const phone = this.dom.querySelector("#Rphone").value;
+        const email = this.dom.querySelector("#Remail").value;
+
+        // Validación de campos de entrada
+        if (!username || !password || !name || !phone || !email) {
+            alert("Por favor, complete todos los campos.");
+            return;
+        }
+
+        const newRegister = {
+            username: username,
+            password: password,
+            name: name,
+            num_telefono: phone,
+            mail: email
         };
 
-        const request = new Request(`${backend}/client`, {method: 'POST',body: JSON.stringify(newRegister), headers: {
-            "Content-type": "application/json; charset=UTF-8"}});
+        const request = new Request(`${backend}/client`, {
+            method: 'POST',
+            body: JSON.stringify(newRegister),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
 
-        const response = await fetch(request);
+        try {
+            const response = await fetch(request);
 
-        //Validate if the response is ok
-        if (!response.ok) {errorMessage(response.status);}
-        alert("Registered")
-        this.reg.hide();
-        this.renderMenuItems();
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                handleErrorResponse(response.status, errorMessage);
+                return;
+            }
+            let resp = await response.json();
+            if(JSON.stringify(resp).includes('0')){
+                alert('User already exist');
+                this.clearParameters();
+                return;
+            }
+            alert('User Registered');
+            this.clearParameters();
+            this.reg.hide();
+            this.renderMenuItems();
+        } catch (error) {
+            console.error(error);
+            alert("There is an error with the request.");
+        }
+    }
 
+    handleErrorResponse = (status, message) => {
+        // Manejo de errores específicos en función del código de estado de la respuesta
+        switch (status) {
 
+            case 400:
+                alert(`Request error: ${message}`);
+                break;
+            case 401:
+                alert(`Authentication error: ${message}`);
+                break;
+            // Otros casos de error...
+            default:
+                alert(`Unknown error: ${status}`);
+        }
+    }
+
+    clearParameters = () =>{
+        this.dom.querySelector("#Rusername").value = '';
+        this.dom.querySelector("#Rpass").value = '';
+        this.dom.querySelector("#Rname").value = '';
+        this.dom.querySelector("#Rphone").value = '';
+        this.dom.querySelector("#Remail").value = '';
     }
 
     registerShow = async ()=>{

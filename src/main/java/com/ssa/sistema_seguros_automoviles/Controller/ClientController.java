@@ -32,11 +32,14 @@ public class ClientController {
 
     @CrossOrigin
     @PostMapping
-    public void save(@RequestBody Client c) {
+    public int save(@RequestBody Client c) {
+        c.setType_client(2);
         try{
-            this.s.save(c);
+            if(this.s.save(c))
+                return 1;
         }catch(Exception e){
             System.out.println(e.toString());
         }
+        return 0;
     }
 }
