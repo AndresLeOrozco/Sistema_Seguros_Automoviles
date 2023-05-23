@@ -2,8 +2,6 @@ package com.ssa.sistema_seguros_automoviles.Controller;
 
 import com.ssa.sistema_seguros_automoviles.logic.*;
 import com.ssa.sistema_seguros_automoviles.logic.Services.serviceClient;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +21,8 @@ public class ClientController {
 
 
     @CrossOrigin
-    @GetMapping(value="/name/{user}/{pass}")
-    public Client findbyId(@PathVariable() String user,@PathVariable() String pass) {
+    @GetMapping(value="/login/{user}/{pass}")
+    public Client login(@PathVariable() String user, @PathVariable() String pass) {
         Client c = s.findBy(user,pass);
         if(c != null)
             return s.findBy(user,pass);

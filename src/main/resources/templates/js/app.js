@@ -293,7 +293,7 @@ class App{
         if(user === "" || pass === ""){
 
         }else {
-            const request = new Request(`${backend}/client/name/${user}/${pass}`, {method: 'GET', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 errorMessage(response.status);
@@ -314,7 +314,8 @@ class App{
                 input2.style.borderColor = "";
 
             }
-            await this.showInsurance();
+            if(globalstate.user.type_client === 2)
+                await this.showInsurance();
         }
     }
 

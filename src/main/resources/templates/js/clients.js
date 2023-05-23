@@ -26,7 +26,6 @@ class Clients{
         <div id="list" class="container">     
             <div class="card bg-light">
                 <h4 class="card-title mt-3 text-center"><span><i class="fas fa-user-circle"></i></span> Clients</h4>    
-
                     <div class="table-responsive " style="max-height: 300px; overflow: auto">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -59,15 +58,66 @@ class Clients{
         // Load entity data into modal form
         this.modal.show();
     }
+
+
+
+
     row=(list,c)=>{
         var tr =document.createElement("tr");
         tr.innerHTML=`
                 <td>${c.name}</td>
                 <td>${c.username}</td>
                 <td>${c.num_telefono}</td>
-                <td>${c.type_client}</td>`;
+                <td>${c.type_client}</td>
+                <td>
+                  <div class="w3-container">
+                    <button onclick="(function() {
+                      var button = document.getElementById('button-${c.id}');
+                      button.style.display = 'none';
+                      var modal = document.getElementById('${c.id}');
+                      modal.style.display = 'block';
+                    })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
+                    <div id="${c.id}" class="w3-modal" style="display: none;">
+                      <div class="w3-modal-content">
+                        <div class="w3-container">
+                          <span onclick="(function() {
+                                var button = document.getElementById('button-${c.id}');
+                                button.style.display = 'block';
+                                var modal = document.getElementById('${c.id}');
+                                modal.style.display = 'none';
+                              })()" id="button-${c.id}" class="w3-button w3-display-topright">&times;</span>
+                          <h3>Insurances of client</h3>
+                              <ul class="list-group">
+                                ${c.insurances && Array.isArray(c.insurances) ? c.insurances.map(element => `
+                                  <h5>Insurance ID: ${element.id}</h5>
+                                  <li>Modelo Vehiculo: ${element.id_vehicle.model}</li>
+                                  <li>VIN: ${element.vin}</li>
+                                  <li>Coverages:
+                                    ${element.cover && Array.isArray(element.cover) ? element.cover.map(cov => `
+                                      <h6>Descripcion: ${cov.descrption}</h6>
+                                      <p>Category: ${cov.cat.description}</p>
+                                    `).join('') : ''}
+                                  </li>
+                                `).join('') : ''}
+                              </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+  `;
         list.append(tr);
     }
+
+    toggleModal=(id) =>{
+        var modal = document.getElementById(id);
+        modal.style.display = 'block';
+    }
+    closeModal=(id)=> {
+        var modal = document.getElementById(id);
+        modal.style.display = 'none';
+    }
+
     list=()=>{
         const request = new Request(`${backend}/client`, {method: 'GET', headers: { }});
         (async ()=> {
