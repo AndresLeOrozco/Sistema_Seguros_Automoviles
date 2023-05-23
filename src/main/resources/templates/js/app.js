@@ -7,6 +7,7 @@ class App{
     state;  // state variables: if any\
 
     clienteDOM;
+    insuranceDOM;
 
 
     constructor(){
@@ -19,6 +20,7 @@ class App{
         this.renderBodyFiller();
         this.renderMenuItems();
         this.clienteDOM = new Clients();
+        this.insuranceDOM = new Insurances();
     }
 
     render=()=>{
@@ -312,6 +314,7 @@ class App{
                 input2.style.borderColor = "";
 
             }
+            await this.showInsurance();
         }
     }
 
@@ -405,6 +408,11 @@ class App{
         this.renderBodyFiller();
         this.renderMenuItems();
         let request = new Request(`${backend}/login`, {method: 'DELETE', headers: { }});
+    }
+    showInsurance = async () =>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
+        this.insuranceDOM.list();
+
     }
 
 }

@@ -23,6 +23,7 @@ public class Insurance implements Serializable {
     String pay_meth;
     @Column
     String vin;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
@@ -38,6 +39,11 @@ public class Insurance implements Serializable {
     @JoinColumn(name="id_client", referencedColumnName = "id")
     @JsonBackReference
     private Client client;
+
+    @Column
+    float cost;
+    @Column
+    String date;
     public Insurance() {
     }
 
@@ -47,6 +53,22 @@ public class Insurance implements Serializable {
         this.pay_meth = pay_meth;
         this.vin = vin;
         //this.cover = new ArrayList();
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Client getClient() {

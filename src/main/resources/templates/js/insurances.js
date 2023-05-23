@@ -16,7 +16,7 @@ class Insurances{
             ${this.renderModal()} 
         `;
         let rootContent = document.createElement('div');
-        rootContent.id = 'clients';
+        rootContent.id = 'insurance';
         rootContent.innerHTML = html;
         return rootContent;
     }
@@ -31,11 +31,11 @@ class Insurances{
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>Number</th>
                                     <th>VIN</th>
                                     <th>Date</th>
                                     <th>Price</th>
                                     <th>Detail</th>
-                                    <th>Number</th>
                                 </tr>
                             </thead>
                             <tbody id="listbody">
@@ -60,39 +60,26 @@ class Insurances{
         this.modal.show();
     }
 
-    row=(list,c)=>{
+    row=(list,c, n)=>{
         var tr =document.createElement("tr");
         tr.innerHTML=`
+                <td>${n}</td>
                 <td>${c.vin}</td>
                 <td>${c.date}</td>
                 <td>${c.cost}</td>
-                <button id="seeInf" class="w3-button w3-black">See</button>
-                <td>${c.number}</td>`;
+                <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="openInfo()">Show</button></td>`;
+
         list.append(tr);
     }
 
     list=()=>{
-        const request = new Request(`${backend}/insurance`, {method: 'GET', headers: { }});
-        (async ()=> {
-            const response = await fetch(request);
-
-            if (!response.ok) {
-                errorMessage(response.status);
-                return;}
-
-            var insurances = await response.json();
-            this.state.entities = insurances;
-            var listing= this.dom.querySelector("#listbody");
-            listing.replaceChildren();
-            this.state.entities.forEach( e=>{
-                if(e.type_client === 1)
-                    e.type_client = "Administrator"
-                if(e.type_client === 2)
-                    e.type_client = "Client"
-
-                this.row(listing,e)
-            });
-        })();
+        let n = 0;
+        let insurances = [];
+        insurances = globalstate.user.insurances;
+        var listing= this.dom.querySelector("#listbody");
+        listing.replaceChildren();
+        insurances.forEach( e=>
+            this.row(listing,e, n += 1)
+        );
     }
-
 }
