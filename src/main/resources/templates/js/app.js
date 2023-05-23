@@ -324,7 +324,7 @@ class App{
 
         // Validación de campos de entrada
         if (!username || !password || !name || !phone || !email) {
-            alert("Por favor, complete todos los campos.");
+            alert("Fill in all the fields.");
             return;
         }
 
