@@ -51,29 +51,7 @@ class Clients{
     renderModal = () => {
         return `
         <div id="modal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" >
-                        <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
-                        <span style='margin-left:4em;font-weight: bold;'>Country</span> 
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="form" >
-                    <div class="modal-body">
-                        <input id="nom" type="text" class="form-control" placeholder="Nombre Pais">
-                        <input id="cap" type="text" class="form-control" placeholder="Capital">
-                        <input id="pop" type="text" class="form-control" placeholder="Population">
-                        <input id="are" type="text" class="form-control" placeholder="Area">
-                        <input id="lat" type="text" class="form-control" placeholder="Latitud">
-                        <input id="lon" type="text" class="form-control" placeholder="Longitud">
-                        <input id="fla" type="text" class="form-control" placeholder="Bandera">
-                    </div>
-                    <div class="modal-footer">
-                        <button id="apply" type="button" class="btn btn-primary" >Aplicar</button>
-                    </div>
-                    </form>                 
-                </div>         
-            </div>          
+            
         </div>      
         `;
     }
@@ -104,6 +82,7 @@ class Clients{
                     e.type_client = "Administrator"
                 if(e.type_client === 2)
                     e.type_client = "Client"
+
                 this.row(listing,e)
             });
         })();
