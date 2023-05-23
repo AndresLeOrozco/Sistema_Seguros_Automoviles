@@ -356,6 +356,7 @@ class App{
             if(JSON.stringify(resp).includes('0')){
                 alert('User already exist');
                 this.clearParameters();
+                this.reg.hide();
                 return;
             }
             alert('User Registered');
