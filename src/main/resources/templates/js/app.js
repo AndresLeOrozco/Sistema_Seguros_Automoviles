@@ -4,9 +4,9 @@ class App{
 
     reg; // register modal
 
-    state;  // state variables: if any
+    state;  // state variables: if any\
 
-    countries; // Countries view
+    clienteDOM;
 
 
     constructor(){
@@ -18,8 +18,7 @@ class App{
         this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
         this.renderBodyFiller();
         this.renderMenuItems();
-        this.countries = new Countries();
-
+        this.clienteDOM = new Clients();
     }
 
     render=()=>{
@@ -148,7 +147,7 @@ class App{
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                    </div>
                    <form id="form" >
-                   <div class="modal-body">
+                   <div class="modal-body" id="modalbo">
                        <div class="input-group mb-3">
                            <span class="input-group-text">Id</span>
                            <input type="text" class="form-control" id="identificacion" name="identificacion" value="" placeholder="id" required>
@@ -276,45 +275,44 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
+        this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
-                    this.countriesShow();
                     break;
             }
         }
     }
 
-    countriesShow=()=>{
-        this.dom.querySelector('#app>#body').replaceChildren(this.countries.dom);
-        this.countries.list();
-    }
 
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
         let pass = this.dom.querySelector("#clave").value;
-        const request = new Request(`${backend}/client/name/${user}/${pass}`, {method: 'GET', headers: { }});
-        const response = await fetch(request);
-        if (!response.ok) {errorMessage(response.status);}
-        let usuario = await response.json();
-        if(usuario.type_client === null) {
-            this.dom.querySelector("#identificacion").style.borderColor = "red";
-            this.dom.querySelector("#clave").style.borderColor = "red";
+        if(user === "" || pass === ""){
+
+        }else {
+            const request = new Request(`${backend}/client/name/${user}/${pass}`, {method: 'GET', headers: {}});
+            const response = await fetch(request);
+            if (!response.ok) {
+                errorMessage(response.status);
+            }
+            let usuario = await response.json();
+            if (usuario.type_client === null) {
+                this.dom.querySelector("#identificacion").style.borderColor = "red";
+                this.dom.querySelector("#clave").style.borderColor = "red";
+            } else {
+                const input1 = document.getElementById("identificacion");
+                const input2 = document.getElementById("clave");
+                globalstate.user = usuario;
+                this.modal.hide();
+                this.renderMenuItems();
+                input1.value = input1.defaultValue;
+                input2.value = input1.defaultValue;
+                input1.style.borderColor = "";
+                input2.style.borderColor = "";
+
+            }
         }
-        else{
-            const input1 = document.getElementById("identificacion");
-            const input2 = document.getElementById("clave");
-            globalstate.user = usuario;
-            this.modal.hide();
-            this.renderMenuItems();
-            input1.value = input1.defaultValue;
-            input2.value = input1.defaultValue;
-            input1.style.borderColor = "";
-            input2.style.borderColor = "";
-
-        }
-
-
     }
 
     register = async () => {
@@ -394,11 +392,10 @@ class App{
         this.dom.querySelector("#Remail").value = '';
     }
 
-    registerShow = async ()=>{
-
-        this.modal.hide();
-        this.renderMenuItems();
-    }
+    showCli=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.clienteDOM.dom);
+        this.clienteDOM.list();
+    };
 
     logout= async ()=>{
         // invoque backend for login
