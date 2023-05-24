@@ -7,7 +7,8 @@ class Insurances{
     constructor() {
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
         this.dom = this.render();
-        this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
+
     }
 
     render = () => {
@@ -20,6 +21,7 @@ class Insurances{
         rootContent.innerHTML = html;
         return rootContent;
     }
+
 
     renderList = () => {
         return `
@@ -46,13 +48,30 @@ class Insurances{
             </div>
         </div>
         `;
+
     }
 
     renderModal = () => {
         return `
-        <div id="modal" class="modal fade" tabindex="-1">
-            
-        </div>      
+<!--        <div id="modal" class="modal fade" tabindex="-1">-->
+        <div class="modal" id="myModal">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>           
+<!--        </div>      -->
         `;
     }
     showModal= async ()=>{
@@ -67,9 +86,12 @@ class Insurances{
                 <td>${c.vin}</td>
                 <td>${c.date}</td>
                 <td>${c.cost}</td>
-                <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="openInfo()">Show</button></td>`;
+                <td><button id="${c.id}" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="{openInfo() {
+      this.openInfo();
+    })()">Show</button></td>`;
 
         list.append(tr);
+        ;
     }
 
     list=()=>{
@@ -82,5 +104,8 @@ class Insurances{
             this.row(listing,e, n += 1)
         );
     }
+
+
+
 }
 //
