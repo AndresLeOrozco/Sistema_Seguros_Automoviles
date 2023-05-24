@@ -77,29 +77,27 @@ class Clients{
                       var modal = document.getElementById('${c.id}');
                       modal.style.display = 'block';
                     })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
-                    <div id="${c.id}" class="w3-modal" style="display: none;">
+                    <div id="${c.id}" class="w3-modal" style="display: none; border: 1px solid black; padding: 10px">
                       <div class="w3-modal-content">
                         <div class="w3-container">
-                          <span onclick="(function() {
+                          <button onclick="(function() {
                                 var button = document.getElementById('button-${c.id}');
                                 button.style.display = 'block';
                                 var modal = document.getElementById('${c.id}');
                                 modal.style.display = 'none';
-                              })()" id="button-${c.id}" class="w3-button w3-display-topright">&times;</span>
+                              })()" id="button-${c.id}" class="w3-button w3-display-topright" style="float: right; text-align: right;">&times;</button>
                           <h3>Insurances of client</h3>
-                              <ul class="list-group">
                                 ${c.insurances && Array.isArray(c.insurances) ? c.insurances.map(element => `
                                   <h5>Insurance ID: ${element.id}</h5>
-                                  <li>Modelo Vehiculo: ${element.id_vehicle.model}</li>
-                                  <li>VIN: ${element.vin}</li>
-                                  <li>Coverages:
+                                  <p>Modelo Vehiculo: ${element.id_vehicle.model}</p>
+                                  <p>VIN: ${element.vin}</p>
+                                  <ul>Coverages:
                                     ${element.cover && Array.isArray(element.cover) ? element.cover.map(cov => `
-                                      <h6>Descripcion: ${cov.descrption}</h6>
-                                      <p>Category: ${cov.cat.description}</p>
+                                     <li> <p>Descripcion: ${cov.descrption}</p>
+                                      <p>Category: ${cov.cat.description}</p></li>
                                     `).join('') : ''}
-                                  </li>
+                                  </ul>
                                 `).join('') : ''}
-                              </ul>
                         </div>
                       </div>
                     </div>
@@ -107,15 +105,6 @@ class Clients{
                 </td>
   `;
         list.append(tr);
-    }
-
-    toggleModal=(id) =>{
-        var modal = document.getElementById(id);
-        modal.style.display = 'block';
-    }
-    closeModal=(id)=> {
-        var modal = document.getElementById(id);
-        modal.style.display = 'none';
     }
 
     list=()=>{

@@ -31,6 +31,7 @@ class App{
             ${this.renderModal()}
             ${this.renderReg()}
         `;
+
         var rootContent= document.createElement('div');
         rootContent.id='app';
         rootContent.innerHTML=html;
@@ -144,8 +145,8 @@ class App{
            <div class="modal-dialog">
                <div class="modal-content">
                    <div class="modal-header" >
-                       <img class="img-circle" id="img_logo" src="images/user.png" style="max-width: 50px; max-height: 50px" alt="logo">
-                       <span style='margin-left:4em;font-weight: bold;'>Login</span> 
+                      
+                       <h4 class="modal-title w-100 font-weight-bold"><span><i class="fa fa-address-card" aria-hidden="true"></i></span> Login</h4> 
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                    </div>
                    <form id="form" >
@@ -155,17 +156,17 @@ class App{
                            <input type="text" class="form-control" id="identificacion" name="identificacion" value="" placeholder="id" required>
                        </div>  
                        <div class="input-group mb-3">
-                           <span class="input-group-text">clave</span>
+                           <span class="input-group-text">Password</span>
                            <input type="password" class="form-control" id="clave" name="clave" value="" placeholder="password" required>
                        </div>      
                    </div>
                    <div class="modal-footer">
                        <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
                    </div>
-<!--                   <div class="input-group">-->
-<!--                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>-->
-<!--                       <a id="" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>-->
-<!--                   </div>                -->
+                   <div class="input-group">
+                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
+                       <a id="GoRegister" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
+                   </div>                
                    </form>                 
                </div>         
            </div>          
@@ -278,6 +279,11 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
+        this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
+            this.modal.hide();
+            this.reg.show();
+            });
+
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -290,7 +296,9 @@ class App{
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
         let pass = this.dom.querySelector("#clave").value;
-        if(user === "" || pass === ""){
+        if(!user || !pass){
+            this.handleErrorResponse(400,"You must insert id and password")
+            this.clearParameters();
 
         }else {
             const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
@@ -302,17 +310,13 @@ class App{
             if (usuario.type_client === null) {
                 this.dom.querySelector("#identificacion").style.borderColor = "red";
                 this.dom.querySelector("#clave").style.borderColor = "red";
+                this.handleErrorResponse(401,"ID or password incorrect");
+                this.clearParameters();
             } else {
-                const input1 = document.getElementById("identificacion");
-                const input2 = document.getElementById("clave");
                 globalstate.user = usuario;
                 this.modal.hide();
                 this.renderMenuItems();
-                input1.value = input1.defaultValue;
-                input2.value = input1.defaultValue;
-                input1.style.borderColor = "";
-                input2.style.borderColor = "";
-
+                this.clearParameters();
             }
             if(globalstate.user.type_client === 2)
                 await this.showInsurance();
@@ -376,14 +380,12 @@ class App{
     handleErrorResponse = (status, message) => {
         // Manejo de errores específicos en función del código de estado de la respuesta
         switch (status) {
-
             case 400:
                 alert(`Request error: ${message}`);
                 break;
             case 401:
                 alert(`Authentication error: ${message}`);
                 break;
-            // Otros casos de error...
             default:
                 alert(`Unknown error: ${status}`);
         }
@@ -395,6 +397,8 @@ class App{
         this.dom.querySelector("#Rname").value = '';
         this.dom.querySelector("#Rphone").value = '';
         this.dom.querySelector("#Remail").value = '';
+        this.dom.querySelector("#identificacion").value = '';
+        this.dom.querySelector("#clave").value = '';
     }
 
     showCli=async()=>{
