@@ -8,7 +8,6 @@ class Insurances{
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
-
     }
 
     render = () => {
