@@ -4,6 +4,8 @@ class Insurances{
 
     state;
 
+    insu;
+
     constructor() {
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
         this.dom = this.render();
@@ -120,7 +122,6 @@ class Insurances{
          </div>
          <div class="modal-body">
             <form role="form" action="" method="post" class="registration-form">
-               <fieldset style="display: block;">
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Step 1 / 3</h3>
@@ -143,25 +144,25 @@ class Insurances{
                      <br>
                      <i class="fa fa-car"></i>
                      <h7>Brand - Model - Year</h7>
-                     <select class="form-select" aria-label="Default select example" required>
-                      <option selected>Select Vehicle</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                     <select id="sVehicle" class="form-select" aria-label="Default select example" required>
+                      <option selected></option>
+<!--                      <option value="1">One</option>-->
+<!--                      <option value="2">Two</option>-->
+<!--                      <option value="3">Three</option>-->
                     </select>
                     <br>
                     <i class="fa fa-credit-card"></i>
                     <h7>Pay Method</h7>
                     <br>
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                      <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="Trimestral" autocomplete="off" checked>
+                      <label class="btn btn-outline-primary" for="btnradio1">Quaterly</label>
                     
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                      <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="Semestral" autocomplete="off">
+                      <label class="btn btn-outline-primary" for="btnradio2">Half-Yearly</label>
                     
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                      <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="Anual" autocomplete="off">
+                      <label class="btn btn-outline-primary" for="btnradio3">Yearly</label>
                     </div>
             </form>
             <br><br><br>
@@ -180,37 +181,29 @@ class Insurances{
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
+            <h4 class="modal-title" id="myModalLabel">Coverages</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
            <form>
             <fieldset>
                   <div class="form-top">
-                     <div class="form-top-left">
-                        <h3>Step 2 / 3</h3>
-                        <p>Set up your account:</p>
+                     <div id="infVIN" class="form-top-left">
+<!--                        <h3>Step 2 / 3</h3>-->
+<!--                        <p>Set up your coverages:</p>-->
                      </div>
                      <div class="form-top-right">
                         <i class="fa fa-key"></i>
                      </div>
                   </div>
                   <div class="form-bottom">
-                     <div class="form-group">
-                        <label class="sr-only" for="form-email">Email</label>
-                        <input name="form-email" placeholder="Email..." class="form-email form-control" id="form-email" type="text">
-                     </div>
-                     <div class="form-group">
-                        <label class="sr-only" for="form-password">Password</label>
-                        <input name="form-password" placeholder="Password..." class="form-password form-control" id="form-password" type="password">
-                     </div>
-                     <div class="form-group">
-                        <label class="sr-only" for="form-repeat-password">Repeat password</label>
-                        <input name="form-repeat-password" placeholder="Repeat password..." class="form-repeat-password form-control" id="form-repeat-password" type="password">
-                  
+                     <div id="iCoverages" class="form-check form-switch">
+<!--                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">-->
+<!--                      <label class="form-check-label" for="flexSwitchCheckDefault">Switch checkbox input por defecto</label>-->
+                    </div>
+                  </div>
                </fieldset>
            </form>
-         </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default btn-prev">Prev</button>
             <button id="nextV2" type="button" class="btn btn-default btn-next">Next</button>
@@ -219,12 +212,13 @@ class Insurances{
       </div>
    </div>
 </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Modal title 3</h4>
+            <h4 class="modal-title" id="myModalLabel">Purchase</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
@@ -233,29 +227,46 @@ class Insurances{
                   <div class="form-top">
                      <div class="form-top-left">
                         <h3>Step 3 / 3</h3>
-                        <p>Social media profiles:</p>
+                        <p>Purchase information:</p>
                      </div>
                      <div class="form-top-right">
-                        <i class="fa fa-twitter"></i>
+                        <i class="fa fa-computer"></i>
                      </div>
-                  </div>
-                  <div class="form-bottom">
-                     <div class="form-group">
-                        <label class="sr-only" for="form-facebook">Facebook</label>
-                        <input name="form-facebook" placeholder="Facebook..." class="form-facebook form-control" id="form-facebook" type="text">
-                     </div>
-                     <div class="form-group">
-                        <label class="sr-only" for="form-twitter">Twitter</label>
-                        <input name="form-twitter" placeholder="Twitter..." class="form-twitter form-control" id="form-twitter" type="text">
-                     </div>
-                     <div class="form-group">
-                        <label class="sr-only" for="form-google-plus">Google plus</label>
-                        <input name="form-google-plus" placeholder="Google plus..." class="form-google-plus form-control" id="form-google-plus" type="text">
-                     </div>
-                     <button type="button" class="btn btn-previous">Previous</button>
-                     <button type="submit" class="btn">Sign me up!</button>
                   </div>
                </fieldset>
+               <section style="background-color: #eee; height: 100%; width: 100%;">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div style="height: 100%; width: 100%; class="col-md-8 col-lg-6 col-xl-4">
+        <div class="card text-black">
+          <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp"
+            class="card-img-top" alt="Apple Computer" />
+          <div class="card-body">
+            <div class="text-center">
+              <h5 class="card-title">Believing is seeing</h5>
+              <p class="text-muted mb-4">Apple pro display XDR</p>
+            </div>
+            <div>
+              <div class="d-flex justify-content-between">
+                <span>Pro Display XDR</span><span>$5,999</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Pro stand</span><span>$999</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Vesa Mount Adapter</span><span>$199</span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between total font-weight-bold mt-4">
+              <span>Total</span><span>$7,197.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
            </form>
          </div>
          <div class="modal-footer">
@@ -271,15 +282,13 @@ class Insurances{
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Modal title 4</h4>
+            <h4 class="modal-title" id="myModalLabel">Purchased</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
             Thank For Register
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button type="button" class="btn btn-default btn-next">Next</button>
             <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
          </div>
       </div>
@@ -316,6 +325,62 @@ class Insurances{
             this.row(listing,e, n += 1)
         );
 
+    }
+
+    selectOP=(list,c)=>{
+        var option =document.createElement("option");
+
+        option.innerHTML=`
+                <option value="${c.brand} - ${c.model} - ${c.year}">${c.brand}-${c.model}-${c.year}</option>
+                `;
+        list.append(option);
+
+    }
+
+    checkC=(list, c) =>{
+        var div = document.createElement("div");
+        var br = document.createElement("br");
+        div.innerHTML=`
+            <p style="font-size: medium; margin-bottom: 0em;  margin-top: 0em; font-weight: bold;">${c.cat.type}</p>
+            <input class="form-check-input" type="checkbox" role="switch" id="o-${c.id}" value="${c.descrption}">
+            <label class="form-check-label" for="flexSwitchCheckDefault">${c.descrption}</label>
+           
+       ` ;
+        list.append(div);
+        list.append(br);
+    }
+
+    listVehicle=()=>{
+
+        const request = new Request(`${backend}/vehicle`, {method: 'GET', headers: { }});
+        (async ()=>{
+            const response = await fetch(request);
+            if (!response.ok) {errorMessage(response.status);return;}
+            var vehicles = await response.json();
+            var listing=this.dom.querySelector("#sVehicle");
+            vehicles.forEach( e=>this.selectOP(listing,e));
+        })();
+    }
+    listCoverages=()=>{
+
+        const request = new Request(`${backend}/coverage`, {method: 'GET', headers: { }});
+        (async ()=>{
+            const response = await fetch(request);
+            if (!response.ok) {errorMessage(response.status);return;}
+            var coverages = await response.json();
+            var listing=this.dom.querySelector("#iCoverages");
+            coverages.forEach( e=>this.checkC(listing,e));
+        })();
+    }
+
+    showVIN=() =>{
+        var listing = this.dom.querySelector("#infVIN");
+        var vin = document.getElementById("iVIN").value;
+
+        listing.innerHTML=`
+            <h3> Step 2 / 3 </h3>
+            <p>Set the coverages of the VIN ${vin}:</p>
+        `;
     }
     openDetail = async (c) =>{
         var p = document.createElement('p');
@@ -363,9 +428,12 @@ class Insurances{
 
     registerInsurance = () => {
         this.modalAdd.show();
+        this.listVehicle();
     }
     registerInsurance2 =async () => {
         this.modalAdd2.show();
+        this.showVIN();
+        this.listCoverages();
         this.modalAdd.hide();
 
 
