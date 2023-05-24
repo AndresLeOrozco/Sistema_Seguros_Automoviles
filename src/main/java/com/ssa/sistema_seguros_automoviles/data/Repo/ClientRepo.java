@@ -18,4 +18,6 @@ public interface ClientRepo  extends JpaRepository<Client,Integer> {
 
 
     Client findByUser(String user);
+
+    Client findClientById(int id);
 }

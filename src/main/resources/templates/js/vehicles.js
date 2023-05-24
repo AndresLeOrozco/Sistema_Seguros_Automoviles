@@ -34,15 +34,16 @@ class Vehicles{
                     </form>
 
                     <div class="table-responsive " style="max-height: 300px; overflow: auto">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-outline-primary" id="create">Add New</button>
+                          </div>
                         <table class="table table-striped table-hover">
                             <thead><tr><th scope="col">Imagen</th><th scope="col">Brand</th><th scope="col">Model</th><th scope="col">Year</th></tr></thead>
                             <tbody id="listbody">
                             </tbody>
                         </table>
                           <div class="input-group mb-3">
-                          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-outline-primary" id="create">Add New</button>
-                        </div>  
+                            
                         </div>
                     </div>                 
                 </div>
