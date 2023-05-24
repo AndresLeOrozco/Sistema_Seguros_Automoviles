@@ -481,7 +481,7 @@ class App{
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
         this.dom.querySelector("#subs").textContent = "Register";
-        this.dom.querySelector("#subs").removeEventListener();
+        this.dom.querySelector("#subs").removeEventListener('click',e=>this.UpdateUser());
         this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
     }
 
@@ -510,7 +510,6 @@ class App{
     showInsurance = async () =>{
         this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
         this.insuranceDOM.list();
-
     }
 
 }

@@ -32,8 +32,6 @@ class Insurances{
         return rootContent;
 
     }
-
-
     renderList = () => {
         return `
         <div id="list" class="container">     
