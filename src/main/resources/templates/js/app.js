@@ -399,11 +399,7 @@ class App{
         this.dom.querySelector("#Remail").value = '';
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
-        //Validate if the response is ok
-        if (!response.ok) {errorMessage(response.status);}
-        alert("Registered")
-        this.reg.hide();
-        this.renderMenuItems();
+
     }
 
     showCli=async()=>{

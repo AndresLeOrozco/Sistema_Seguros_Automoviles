@@ -8,6 +8,7 @@ class Insurances{
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
+
     }
 
     render = () => {
@@ -19,6 +20,7 @@ class Insurances{
         rootContent.id = 'insurance';
         rootContent.innerHTML = html;
         return rootContent;
+
     }
 
 
@@ -26,7 +28,7 @@ class Insurances{
         return `
         <div id="list" class="container">     
             <div class="card bg-light">
-                <h4 class="card-title mt-3 text-center"><span><i class="fas fa-user-circle"></i></span> Insurances</h4>    
+                <h4 class="card-title mt-3 text-center"><span><i class="fas fa-shield-alt"></i></span> Insurances</h4><br>    
 
                     <div class="table-responsive " style="max-height: 300px; overflow: auto">
                         <table class="table table-striped table-hover">
@@ -47,29 +49,50 @@ class Insurances{
             </div>
         </div>
         `;
-
     }
 
     renderModal = () => {
         return `
-<!--        <div id="modal" class="modal fade" tabindex="-1">-->
-        <div class="modal" id="myModal">
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- The Modal -->
+<div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
+
+      <!-- Modal Header -->
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title">Insurance Information</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-      <div class="modal-body">...</div>
+      
+      <div class="modal-body" id="vehiclePrice">
+      
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+          <table class="table table-striped">
+    <thead>
+    <h5>Coverages</h5>
+      <tr>
+        <th>Minimum Cost</th>
+        <th>Percentage Cost</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody id="coverInfo">
+        
+    </tbody>
+  </table>
+  </div>
+
+      <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
+
     </div>
   </div>
 </div>
-</div>           
 <!--        </div>      -->
         `;
     }
@@ -84,13 +107,11 @@ class Insurances{
                 <td>${n}</td>
                 <td>${c.vin}</td>
                 <td>${c.date}</td>
-                <td>${c.cost}</td>
-                <td><button id="${c.id}" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="{openInfo() {
-      this.openInfo();
-    })()">Show</button></td>`;
+                <td>${this.finalPrice(c)}</td>
+                <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal"><a id="insurance-${c.id}">Show</a></button></td>`;
 
         list.append(tr);
-        ;
+        this.dom.querySelector(`#insurance-${c.id}`)?.addEventListener('click',e=>this.openDetail(c));
     }
 
     list=()=>{
@@ -102,9 +123,50 @@ class Insurances{
         insurances.forEach( e=>
             this.row(listing,e, n += 1)
         );
+
+    }
+    openDetail = async (c) =>{
+        var p = document.createElement('p');
+        var tr = document.createElement('tr');
+        var listing= this.dom.querySelector("#vehiclePrice");
+        var listing2= this.dom.querySelector("#coverInfo");
+        let covers = [];
+        covers = c.cover;
+
+        p.innerHTML = `
+            <p>Pay Method: ${c.pay_meth}</p>
+            <p>Vehicle Cost: ${c.cost}</p>
+        `;
+
+
+        covers.forEach(e =>
+            tr.innerHTML =`
+                
+                <td>${e.min_cost}</td>
+                <td>${e.per_cost}</td>
+                <td>${e.descrption}</td>
+            `
+        );
+
+        listing.replaceChildren();
+        listing2.replaceChildren();
+        listing.append(p);
+        listing2.append(tr);
+        this.modal.show();
     }
 
+    finalPrice = (c) => {
+        let price = 0;
+        const cost = Number(c.cost);
 
+        c.cover.forEach(e => {
+            const minCost = Number(e.min_cost);
+            const perCost = Number(e.per_cost);
+            price += Math.max(minCost, cost * perCost);
+
+        });
+
+        return price;
+    }
 
 }
-//
