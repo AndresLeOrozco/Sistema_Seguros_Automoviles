@@ -8,7 +8,7 @@ class App{
 
     clienteDOM;
     insuranceDOM;
-
+    vehicleDOM;
     categoryDOM;
 
 
@@ -24,6 +24,7 @@ class App{
         this.clienteDOM = new Clients();
         this.categoryDOM = new Categories();
         this.insuranceDOM = new Insurances();
+        this.vehicleDOM = new Vehicles();
     }
 
     render=()=>{
@@ -251,10 +252,7 @@ class App{
                         <a class="nav-link" id="clients" href="#"> <span><i class="fa fa-address-book"></i></span> Clients </a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-th-list" aria-hidden="true"></i></span> Categories </a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link" id="coverages" href="#"> <span><i class="fa fa-blind"></i></span> Coverage </a>
+                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-th-list" aria-hidden="true"></i></span> Cat-Cov </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="vehicles" href="#"> <span><i class="fa fa-car"></i></span> Vehicle </a>
@@ -287,6 +285,7 @@ class App{
             });
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
+        this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -412,6 +411,10 @@ class App{
     showCat=async()=>{
         this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
         this.categoryDOM.list();
+    };
+    showVeh=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.vehicleDOM.dom);
+        this.vehicleDOM.list();
     };
 
     logout= async ()=>{
