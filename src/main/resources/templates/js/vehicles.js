@@ -59,7 +59,7 @@ class Vehicles{
                     <div class="modal-header" >
                         <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
                         <span style='margin-left:4em;font-weight: bold;'>Country</span> 
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                       <button onclick="this.clearParameters()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form" >
                     <div class="modal-body">

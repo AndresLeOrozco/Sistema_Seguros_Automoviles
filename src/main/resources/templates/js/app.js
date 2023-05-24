@@ -8,7 +8,7 @@ class App{
 
     clienteDOM;
     insuranceDOM;
-
+    vehicleDOM;
     categoryDOM;
 
 
@@ -24,6 +24,7 @@ class App{
         this.clienteDOM = new Clients();
         this.categoryDOM = new Categories();
         this.insuranceDOM = new Insurances();
+        this.vehicleDOM = new Vehicles();
     }
 
     render=()=>{
@@ -284,6 +285,7 @@ class App{
             });
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
+        this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -409,6 +411,10 @@ class App{
     showCat=async()=>{
         this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
         this.categoryDOM.list();
+    };
+    showVeh=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.vehicleDOM.dom);
+        this.vehicleDOM.list();
     };
 
     logout= async ()=>{
