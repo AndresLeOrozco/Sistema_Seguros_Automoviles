@@ -26,7 +26,7 @@ class Clients{
         <div id="list" class="container">     
             <div class="card bg-light">
                 <h4 class="card-title mt-3 text-center"><span><i class="fas fa-user-circle"></i></span> Clients</h4>    
-                    <div class="table-responsive " style="max-height: 300px; overflow: auto">
+                    <div class="table-responsive " style="max-height: 420px; overflow-y: auto">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>

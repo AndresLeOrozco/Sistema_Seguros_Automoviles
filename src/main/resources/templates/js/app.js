@@ -1,14 +1,14 @@
 class App{
     dom;
-    modal; // login modal
+    modal;
 
-    reg; // register modal
+    reg;
 
-    state;  // state variables: if any\
+    state;
 
     clienteDOM;
     insuranceDOM;
-
+    vehicleDom;
     categoryDOM;
 
 
@@ -24,6 +24,7 @@ class App{
         this.clienteDOM = new Clients();
         this.categoryDOM = new Categories();
         this.insuranceDOM = new Insurances();
+        this.vehicleDom = new Vehicles();
     }
 
     render=()=>{
@@ -278,6 +279,7 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
+        this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
         this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
             this.modal.hide();
             this.reg.show();
@@ -299,7 +301,6 @@ class App{
         if(!user || !pass){
             this.handleErrorResponse(400,"You must insert id and password")
             this.clearParameters();
-
         }else {
             const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
@@ -399,11 +400,6 @@ class App{
         this.dom.querySelector("#Remail").value = '';
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
-        //Validate if the response is ok
-        if (!response.ok) {errorMessage(response.status);}
-        alert("Registered")
-        this.reg.hide();
-        this.renderMenuItems();
     }
 
     showCli=async()=>{
@@ -414,6 +410,10 @@ class App{
     showCat=async()=>{
         this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
         this.categoryDOM.list();
+    };
+    showVeh=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.vehicleDom.dom);
+        this.vehicleDom.list();
     };
 
     logout= async ()=>{
@@ -427,7 +427,6 @@ class App{
     showInsurance = async () =>{
         this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
         this.insuranceDOM.list();
-
     }
 
 }
