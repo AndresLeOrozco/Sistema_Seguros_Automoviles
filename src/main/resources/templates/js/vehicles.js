@@ -2,14 +2,13 @@ class Vehicles{
     dom;
     modal;
 
-    state;  // state variables: entities, entity, mode (Add|Edit)
+    state;
 
     constructor(){
         this.state = {'entities': new Array(), 'entity': this.emptyEntity(), 'mode':'A'};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.dom.querySelector("#create").addEventListener('click',this.makenew);
-        this.dom.querySelector("#search").addEventListener('click',this.search);
         this.dom.querySelector('#apply').addEventListener('click',this.add);
     }
 
@@ -28,25 +27,24 @@ class Vehicles{
         return `
         <div id="list" class="container">     
             <div class="card bg-light">
-                <h4 class="card-title mt-3 text-center">Countries</h4>    
+                <h4 class="card-title mt-3 text-center"><span><i class="fa fa-car"></i></span> Vehicles</h4>    
                 <div class="card-body mx-auto w-75" >
                     <form id="form">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Name</span>
-                            <input id="name" type="text" class="form-control">
-                          <div class="btn-toolbar">
-                            <div class="btn-group me-2"><button type="button" class="btn btn-primary" id="search">Search</button> </div>
-                            <div class="btn-group me-2"><button type="button" class="btn btn-primary" id="create">Create</button> </div>                        
-                          </div>  
-                        </div>
+                      
                     </form>
 
                     <div class="table-responsive " style="max-height: 300px; overflow: auto">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-outline-primary" id="create">Add New</button>
+                          </div>
                         <table class="table table-striped table-hover">
-                            <thead><tr><th scope="col">Name</th><th scope="col">Flag</th></tr></thead>
+                            <thead><tr><th scope="col">Imagen</th><th scope="col">Brand</th><th scope="col">Model</th><th scope="col">Year</th></tr></thead>
                             <tbody id="listbody">
                             </tbody>
                         </table>
+                          <div class="input-group mb-3">
+                            
+                        </div>
                     </div>                 
                 </div>
             </div>
@@ -62,17 +60,14 @@ class Vehicles{
                     <div class="modal-header" >
                         <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
                         <span style='margin-left:4em;font-weight: bold;'>Country</span> 
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                       <button onclick="this.clearParameters()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form" >
                     <div class="modal-body">
-                        <input id="nom" type="text" class="form-control" placeholder="Nombre Pais">
-                        <input id="cap" type="text" class="form-control" placeholder="Capital">
-                        <input id="pop" type="text" class="form-control" placeholder="Population">
-                        <input id="are" type="text" class="form-control" placeholder="Area">
-                        <input id="lat" type="text" class="form-control" placeholder="Latitud">
-                        <input id="lon" type="text" class="form-control" placeholder="Longitud">
-                        <input id="fla" type="text" class="form-control" placeholder="Bandera">
+                        <input id="bra" type="text" class="form-control" placeholder="Brand">
+                        <input id="mod" type="text" class="form-control" placeholder="Model">
+                        <input id="yea" type="text" class="form-control" placeholder="Year">
+                        <input type="file" name="fileInput" id="fileInput">
                     </div>
                     <div class="modal-footer">
                         <button id="apply" type="button" class="btn btn-primary" >Aplicar</button>
@@ -89,9 +84,7 @@ class Vehicles{
         this.modal.show();
     }
 
-    load=()=>{
-        // Save modal form data into entity
-    }
+
 
     reset=()=>{
         this.state.entity=this.emptyEntity();
@@ -101,31 +94,87 @@ class Vehicles{
         // return an empty entity
     }
 
-    addCountry=()=>{
-        let nom = this.dom.querySelector("#nom").value;
-        let cap = this.dom.querySelector("#cap").value;
-        let pop = Number(this.dom.querySelector("#pop").value);
-        let are = Number(this.dom.querySelector("#are").value);
-        let fla = this.dom.querySelector("#fla").value;
-        let latlon = [];
-        latlon[0] = Number(this.dom.querySelector("#lat").value);
-        latlon[1] = Number(this.dom.querySelector("#lon").value);
-        var countrpais = {name:nom,captail:cap,population:pop,area:are,latitudlongitud:latlon};
-        fetch(`${backend}/countries`, {
+    addVehicle=async () => {
+        let bra = this.dom.querySelector("#bra").value;
+        let mod = this.dom.querySelector("#mod").value;
+        let yea = Number(this.dom.querySelector("#yea").value);
+        var fileInput = this.dom.querySelector("#fileInput");
+        if(isNaN(yea) || yea < 1980){
+            alert("Debe agregar un valor numerico y mayor a 1980.");
+            return;
+        }
+
+        if (!bra || !mod || !yea || !(fileInput.files && fileInput.files.length > 0)) {
+            alert("Fill in all the fields.");
+            return;
+        }
+        var vehi = {brand: bra, model: mod, year: yea};
+        const request = new Request(`${backend}/vehicle`, {
             method: 'POST',
-            body: JSON.stringify(countrpais),
+            body: JSON.stringify(vehi),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
-        }).then((response) => alert(response.json()));
+        });
+
+        try {
+            const response = await fetch(request);
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                return 0;
+            }
+            let resp = await response.json();
+            if(JSON.stringify(resp).includes('0')){
+                alert('Car Already Exists');
+                return 0;
+            }
+            alert('Car Registered');
+            return 1;
+        } catch (error) {
+            console.error(error);
+            alert("There is an error with the request.");
+            return 0;
+        }
+
+
+
     }
 
-    add=()=>{
-        // Validate data, load into entity, invoque backend for adding
-        this.addCountry();
-        this.list();
-        this.reset();
-        this.modal.hide();
+    getVehicle= async ()=>{
+        let bra = this.dom.querySelector("#bra").value;
+        let mod = this.dom.querySelector("#mod").value;
+        const request = new Request(`${backend}/vehicle/car/${mod}/${bra}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        var vehicle = await response.json();
+        return vehicle;
+    }
+
+    addImg= async (id)=> {
+        var data = new FormData();
+        data.append("image", this.dom.querySelector("#fileInput").files[0])
+        const request = new Request(`${backend}/vehicle/img/${id}`, {
+            method: 'POST',
+            body: data,
+        });
+        const response = await fetch(request);
+
+    }
+
+    add= async()=>{
+
+        let number = await this.addVehicle()
+        if(number === 1) {
+            let vehi = await this.getVehicle();
+            await this.addImg(vehi.id);
+            this.update();
+            this.clearParameters();
+        }
+
     }
 
     update=()=>{
@@ -141,7 +190,7 @@ class Vehicles{
 
 
     list=()=>{
-        const request = new Request(`${backend}/countries`, {method: 'GET', headers: { }});
+        const request = new Request(`${backend}/vehicle`, {method: 'GET', headers: { }});
         (async ()=>{
             const response = await fetch(request);
             if (!response.ok) {errorMessage(response.status);return;}
@@ -153,32 +202,42 @@ class Vehicles{
         })();
     }
 
+
+
     row=(list,c)=>{
         var tr =document.createElement("tr");
         tr.innerHTML=`
-                <td>${c.name}</td>
-                <td><img class="flag" src="${c.flag}"></td>`;
+                <td><img class="flag" src="${backend}/vehicle/${c.id}/img"></td>
+                <td>${c.brand}</td>
+                <td>${c.model}</td>
+                <td>${c.year}</td>
+        `;
         list.append(tr);
     }
 
     makenew=()=>{
         this.reset();
-        this.state.mode='A'; //adding
+        this.state.mode='A'; //adding preguntar
         this.showModal();
     }
 
-    search=()=>{
-        let nom = this.dom.querySelector("#name").value;
-        const request = new Request(`${backend}/countries?name=${nom}`, {method: 'GET', headers: { }});
-        (async ()=>{
-            const response = await fetch(request);
-            if (!response.ok) {errorMessage(response.status);return;}
-            var countries = await response.json();
-            this.state.entities = countries;
-            var listing=this.dom.querySelector("#countries #list #listbody");
-            listing.innerHTML="";
-            this.state.entities.forEach( e=>this.row(listing,e));
-        })();
-    }
 
+    clearParameters=() =>{
+        this.dom.querySelector("#bra").value = "";
+        this.dom.querySelector("#mod").value= "";
+        this.dom.querySelector("#yea").value="";
+    }
+    handleErrorResponse = (status, message) => {
+        // Manejo de errores específicos en función del código de estado de la respuesta
+        switch (status) {
+            case 400:
+                alert(`Request error: ${message}`);
+                break;
+            case 401:
+                alert(`Authentication error: ${message}`);
+                break;
+            default:
+                alert(`Unknown error: ${status}`);
+        }
+    }
 }

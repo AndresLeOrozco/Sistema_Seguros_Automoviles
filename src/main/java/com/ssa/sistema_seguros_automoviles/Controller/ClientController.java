@@ -41,4 +41,12 @@ public class ClientController {
         }
         return 0;
     }
+    @CrossOrigin
+    @PutMapping("/{clientId}/update")
+    public int updateClient(@PathVariable Integer clientId, @RequestBody Client client) {
+        client.setId(clientId);
+        if(s.update(client))
+            return 1;
+        return 0;
+    }
 }

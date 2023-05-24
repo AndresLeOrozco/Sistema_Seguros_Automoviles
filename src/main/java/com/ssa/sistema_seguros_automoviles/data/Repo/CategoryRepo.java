@@ -9,4 +9,6 @@ import java.util.List;
 public interface CategoryRepo extends JpaRepository<Category,Integer> {
     @Override
     List<Category> findAll();
+
+    Category findByDescription(String description);
 }
