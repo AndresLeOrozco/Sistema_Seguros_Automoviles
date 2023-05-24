@@ -1,14 +1,14 @@
 class App{
     dom;
-    modal;
+    modal; // login modal
 
-    reg;
+    reg; // register modal
 
-    state;
+    state;  // state variables: if any\
 
     clienteDOM;
     insuranceDOM;
-    vehicleDom;
+
     categoryDOM;
 
 
@@ -24,7 +24,6 @@ class App{
         this.clienteDOM = new Clients();
         this.categoryDOM = new Categories();
         this.insuranceDOM = new Insurances();
-        this.vehicleDom = new Vehicles();
     }
 
     render=()=>{
@@ -279,7 +278,6 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
-        this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
         this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
             this.modal.hide();
             this.reg.show();
@@ -301,6 +299,7 @@ class App{
         if(!user || !pass){
             this.handleErrorResponse(400,"You must insert id and password")
             this.clearParameters();
+
         }else {
             const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
@@ -411,10 +410,6 @@ class App{
         this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
         this.categoryDOM.list();
     };
-    showVeh=async()=>{
-        this.dom.querySelector('#app>#body').replaceChildren(this.vehicleDom.dom);
-        this.vehicleDom.list();
-    };
 
     logout= async ()=>{
         // invoque backend for login
@@ -427,6 +422,7 @@ class App{
     showInsurance = async () =>{
         this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
         this.insuranceDOM.list();
+
     }
 
 }
