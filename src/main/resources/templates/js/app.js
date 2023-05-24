@@ -251,10 +251,7 @@ class App{
                         <a class="nav-link" id="clients" href="#"> <span><i class="fa fa-address-book"></i></span> Clients </a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-th-list" aria-hidden="true"></i></span> Categories </a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link" id="coverages" href="#"> <span><i class="fa fa-blind"></i></span> Coverage </a>
+                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-th-list" aria-hidden="true"></i></span> Cat-Cov </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="vehicles" href="#"> <span><i class="fa fa-car"></i></span> Vehicle </a>
