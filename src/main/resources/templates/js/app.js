@@ -8,6 +8,8 @@ class App{
 
     clienteDOM;
 
+    categoryDOM;
+
 
     constructor(){
         this.state={};
@@ -19,6 +21,7 @@ class App{
         this.renderBodyFiller();
         this.renderMenuItems();
         this.clienteDOM = new Clients();
+        this.categoryDOM = new Categories();
     }
 
     render=()=>{
@@ -246,7 +249,7 @@ class App{
                         <a class="nav-link" id="clients" href="#"> <span><i class="fa fa-address-book"></i></span> Clients </a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-bars"></i></span> Categories </a>
+                        <a class="nav-link" id="categories" href="#"> <span><i class="fa fa-th-list" aria-hidden="true"></i></span> Categories </a>
                     </li>
                      <li class="nav-item">
                         <a class="nav-link" id="coverages" href="#"> <span><i class="fa fa-blind"></i></span> Coverage </a>
@@ -276,6 +279,7 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
+        this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
                 case 'CLI':
@@ -333,13 +337,16 @@ class App{
         alert("Registered")
         this.reg.hide();
         this.renderMenuItems();
-
-
     }
 
     showCli=async()=>{
         this.dom.querySelector('#app>#body').replaceChildren(this.clienteDOM.dom);
         this.clienteDOM.list();
+    };
+
+    showCat=async()=>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
+        this.categoryDOM.list();
     };
 
     logout= async ()=>{
