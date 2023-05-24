@@ -76,7 +76,7 @@ public class Coverage implements Serializable {
 
     @Override
     public String toString() {
-        return "Coverage{" + "id=" + id + ", Category=" + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
+        return "Coverage{" + "id=" + id + ", Categories=" + ", description=" + description + ", min_cost=" + min_cost + ", per_cost=" + per_cost + '}';
     }
 
 }
