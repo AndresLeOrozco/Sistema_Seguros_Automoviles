@@ -1,5 +1,8 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,6 +23,7 @@ public class Insurance implements Serializable {
     String pay_meth;
     @Column
     String vin;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
@@ -31,6 +35,15 @@ public class Insurance implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "id_cov")}
     )
     Set<Coverage> cover;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="id_client", referencedColumnName = "id")
+    @JsonBackReference
+    private Client client;
+
+    @Column
+    float cost;
+    @Column
+    String date;
     public Insurance() {
     }
 
@@ -40,6 +53,30 @@ public class Insurance implements Serializable {
         this.pay_meth = pay_meth;
         this.vin = vin;
         //this.cover = new ArrayList();
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Set<Coverage> getCover() {

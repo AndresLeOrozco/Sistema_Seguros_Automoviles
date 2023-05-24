@@ -7,6 +7,7 @@ class App{
     state;  // state variables: if any\
 
     clienteDOM;
+    insuranceDOM;
 
     categoryDOM;
 
@@ -22,6 +23,7 @@ class App{
         this.renderMenuItems();
         this.clienteDOM = new Clients();
         this.categoryDOM = new Categories();
+        this.insuranceDOM = new Insurances();
     }
 
     render=()=>{
@@ -145,8 +147,8 @@ class App{
            <div class="modal-dialog">
                <div class="modal-content">
                    <div class="modal-header" >
-                       <img class="img-circle" id="img_logo" src="images/user.png" style="max-width: 50px; max-height: 50px" alt="logo">
-                       <span style='margin-left:4em;font-weight: bold;'>Login</span> 
+                      
+                       <h4 class="modal-title w-100 font-weight-bold"><span><i class="fa fa-address-card" aria-hidden="true"></i></span> Login</h4> 
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                    </div>
                    <form id="form" >
@@ -156,17 +158,17 @@ class App{
                            <input type="text" class="form-control" id="identificacion" name="identificacion" value="" placeholder="id" required>
                        </div>  
                        <div class="input-group mb-3">
-                           <span class="input-group-text">clave</span>
+                           <span class="input-group-text">Password</span>
                            <input type="password" class="form-control" id="clave" name="clave" value="" placeholder="password" required>
                        </div>      
                    </div>
                    <div class="modal-footer">
                        <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
                    </div>
-<!--                   <div class="input-group">-->
-<!--                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>-->
-<!--                       <a id="" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>-->
-<!--                   </div>                -->
+                   <div class="input-group">
+                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
+                       <a id="GoRegister" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
+                   </div>                
                    </form>                 
                </div>         
            </div>          
@@ -189,17 +191,17 @@ class App{
       
         <div class="md-form mb-3">
           <i class="fas fa-user-circle prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> User</label>
-          <input type="text" id="Rusername" class="form-control validate">
+          <input type="text" id="Rusername" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
           <i class="fas fa-lock prefix grey-text" ></i> <label class="ml-2" data-error="wrong" data-success="right" for="orangeForm-pass" style="margin-left: 5px"> Password</label>
-          <input type="password" id="Rpass" class="form-control validate">
+          <input type="password" id="Rpass" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
           <i class="fas fa-user prefix grey-text"></i><label data-error="wrong" data-success="right" for="orangeForm-name" style="margin-left: 7px"> Name</label>
-          <input type="text" id="Rname" class="form-control validate">
+          <input type="text" id="Rname" class="form-control validate" required>
         </div>
         
         <div class="md-form mb-3">
@@ -209,7 +211,7 @@ class App{
 
         <div class="md-form mb-3">
           <i class="fas fa-envelope prefix grey-text"></i><label data-error="wrong"  data-success="right" for="orangeForm-email" style="margin-left: 7px"> Email</label>
-          <input placeholder="usuario@mail.com" type="email" id="Remail" class="form-control validate">
+          <input placeholder="usuario@mail.com" type="email" id="Remail" class="form-control validate" required>
         </div>
 
       </div>
@@ -279,6 +281,11 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>this.reg.show());
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
+        this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
+            this.modal.hide();
+            this.reg.show();
+            });
+
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         if(globalstate.user!==null){
             switch(globalstate.user.rol){
@@ -292,10 +299,12 @@ class App{
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
         let pass = this.dom.querySelector("#clave").value;
-        if(user === "" || pass === ""){
+        if(!user || !pass){
+            this.handleErrorResponse(400,"You must insert id and password")
+            this.clearParameters();
 
         }else {
-            const request = new Request(`${backend}/client/name/${user}/${pass}`, {method: 'GET', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 errorMessage(response.status);
@@ -304,34 +313,95 @@ class App{
             if (usuario.type_client === null) {
                 this.dom.querySelector("#identificacion").style.borderColor = "red";
                 this.dom.querySelector("#clave").style.borderColor = "red";
+                this.handleErrorResponse(401,"ID or password incorrect");
+                this.clearParameters();
             } else {
-                const input1 = document.getElementById("identificacion");
-                const input2 = document.getElementById("clave");
                 globalstate.user = usuario;
                 this.modal.hide();
                 this.renderMenuItems();
-                input1.value = input1.defaultValue;
-                input2.value = input1.defaultValue;
-                input1.style.borderColor = "";
-                input2.style.borderColor = "";
-
+                this.clearParameters();
             }
+            if(globalstate.user.type_client === 2)
+                await this.showInsurance();
         }
     }
 
-    register= async ()=>{
-        const newRegister = {user: this.dom.querySelector("#Rusername").value,
-            password: this.dom.querySelector("#Rpass").value,
-            name: this.dom.querySelector("#Rname").value,
-            phone: this.dom.querySelector("#Rphone").value,
-            email: this.dom.querySelector("#Remail").value
+    register = async () => {
+        const username = this.dom.querySelector("#Rusername").value;
+        const password = this.dom.querySelector("#Rpass").value;
+        const name = this.dom.querySelector("#Rname").value;
+        const phone = this.dom.querySelector("#Rphone").value;
+        const email = this.dom.querySelector("#Remail").value;
+
+        // Validación de campos de entrada
+        if (!username || !password || !name || !phone || !email) {
+            alert("Fill in all the fields.");
+            return;
+        }
+
+        const newRegister = {
+            username: username,
+            password: password,
+            name: name,
+            num_telefono: phone,
+            mail: email
         };
 
-        const request = new Request(`${backend}/client`, {method: 'POST',body: JSON.stringify(newRegister), headers: {
-            "Content-type": "application/json; charset=UTF-8"}});
+        const request = new Request(`${backend}/client`, {
+            method: 'POST',
+            body: JSON.stringify(newRegister),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
 
-        const response = await fetch(request);
+        try {
+            const response = await fetch(request);
 
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                handleErrorResponse(response.status, errorMessage);
+                return;
+            }
+            let resp = await response.json();
+            if(JSON.stringify(resp).includes('0')){
+                alert('User already exist');
+                this.clearParameters();
+                this.reg.hide();
+                return;
+            }
+            alert('User Registered');
+            this.clearParameters();
+            this.reg.hide();
+            this.renderMenuItems();
+        } catch (error) {
+            console.error(error);
+            alert("There is an error with the request.");
+        }
+    }
+
+    handleErrorResponse = (status, message) => {
+        // Manejo de errores específicos en función del código de estado de la respuesta
+        switch (status) {
+            case 400:
+                alert(`Request error: ${message}`);
+                break;
+            case 401:
+                alert(`Authentication error: ${message}`);
+                break;
+            default:
+                alert(`Unknown error: ${status}`);
+        }
+    }
+
+    clearParameters = () =>{
+        this.dom.querySelector("#Rusername").value = '';
+        this.dom.querySelector("#Rpass").value = '';
+        this.dom.querySelector("#Rname").value = '';
+        this.dom.querySelector("#Rphone").value = '';
+        this.dom.querySelector("#Remail").value = '';
+        this.dom.querySelector("#identificacion").value = '';
+        this.dom.querySelector("#clave").value = '';
         //Validate if the response is ok
         if (!response.ok) {errorMessage(response.status);}
         alert("Registered")
@@ -356,6 +426,11 @@ class App{
         this.renderBodyFiller();
         this.renderMenuItems();
         let request = new Request(`${backend}/login`, {method: 'DELETE', headers: { }});
+    }
+    showInsurance = async () =>{
+        this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
+        this.insuranceDOM.list();
+
     }
 
 }
