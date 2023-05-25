@@ -44,7 +44,6 @@ public class ClientController {
     @CrossOrigin
     @PutMapping("/{clientId}/update")
     public Client updateClient(@PathVariable Integer clientId, @RequestBody Client client) {
-        client.setId(clientId);
         if(s.update(client) != null)
             return client;
         return new Client();

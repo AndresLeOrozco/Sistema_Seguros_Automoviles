@@ -18,7 +18,9 @@ class App{
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
         this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
-        this.dom.querySelector('#subs').addEventListener('click',e=>this.debounce(this.register(),500));
+        this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
+        this.dom.querySelector("#upd").addEventListener("click",e=>this.UpdateUser());
+        this.dom.querySelector("#botUpd").style.visibility = 'hidden';
         this.renderBodyFiller();
         this.renderMenuItems();
         this.clienteDOM = new Clients();
@@ -216,8 +218,11 @@ class App{
                     </div>
             
                   </div>
-                  <div class="modal-footer d-flex justify-content-center">
+                  <div id="botSub" class="modal-footer d-flex justify-content-center">
                     <button id="subs" class="btn btn-primary">Register</button>
+                  </div>
+                  <div id="botUpd" class="modal-footer d-flex justify-content-center">
+                    <button id="upd" class="btn btn-primary">Update</button>
                   </div>
                 </div>
               </div>
@@ -238,18 +243,14 @@ class App{
     renderUpdate=()=>{
         this.dom.querySelector("#titleReg").textContent = "Edit User";
         this.dom.querySelector("#Rusername").value = globalstate.user.username;
-        this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
+        //this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
         this.dom.querySelector("#Rpass").value = globalstate.user.password;
         this.dom.querySelector("#Rname").value = globalstate.user.name;
         this.dom.querySelector("#Rphone").value = globalstate.user.num_telefono;
         this.dom.querySelector("#Remail").value = globalstate.user.mail;
         this.dom.querySelector("#Remail").setAttribute('readonly', 'true');
-        let sub = this.dom.querySelector("#subs");
-        if(sub !== null)
-            sub.id="upd";
-        this.dom.querySelector("#upd").textContent = "Update";
-        this.dom.querySelector("#upd").removeEventListener("click",e=>this.debounce(this.UpdateUser(),500));
-        this.dom.querySelector("#upd").addEventListener("click",e=>this.debounce(this.UpdateUser(),500));
+        this.dom.querySelector("#botSub").style.visibility = 'hidden';
+        this.dom.querySelector("#botUpd").style.visibility = 'visible';
         this.reg.show();
     }
 
@@ -457,7 +458,11 @@ class App{
                 return;
             }
             let resp = await response.json();
-            alert('Usuario Modificado');
+            if(resp.id === null) {
+                alert('Cant modify user, repeat Username');
+                return;
+            }
+            alert('User Modify');
             globalstate.user = resp;
             this.reg.hide();
             this.renderMenuItems();
@@ -489,12 +494,9 @@ class App{
         this.dom.querySelector("#Remail").readOnly= false;
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
-        let upd = this.dom.querySelector("#upd");
-        if(upd != null){
-            upd.id = "subs"
-        }
-        let sub = this.dom.querySelector("#subs");
-        sub.textContent = "Register";
+        this.dom.querySelector("#botSub").style.visibility = 'visible';
+        this.dom.querySelector("#botUpd").style.visibility = 'hidden';
+
     }
 
     showCli=async()=>{
