@@ -238,6 +238,7 @@ class App{
     renderUpdate=()=>{
         this.dom.querySelector("#titleReg").textContent = "Edit User";
         this.dom.querySelector("#Rusername").value = globalstate.user.username;
+        this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
         this.dom.querySelector("#Rpass").value = globalstate.user.password;
         this.dom.querySelector("#Rname").value = globalstate.user.name;
         this.dom.querySelector("#Rphone").value = globalstate.user.num_telefono;
@@ -435,12 +436,13 @@ class App{
             return;
         }
         const newRegister = {
+            id:Number(globalstate.user.id),
             username: username,
             password: password,
             name: name,
             num_telefono: phone,
             mail: email,
-            type_client:globalstate.user.type_client
+            type_client:Number(globalstate.user.type_client)
         };
         const request = new Request(`${backend}/client/${globalstate.user.id}/update`, {
             method: 'PUT',
@@ -479,6 +481,7 @@ class App{
     clearParameters = () =>{
         this.dom.querySelector("#titleReg").textContent = "Sign Up";
         this.dom.querySelector("#Rusername").value = '';
+        this.dom.querySelector("#Rusername").readOnly=false;
         this.dom.querySelector("#Rpass").value = '';
         this.dom.querySelector("#Rname").value = '';
         this.dom.querySelector("#Rphone").value = '';

@@ -36,7 +36,7 @@ public class serviceClient {
 
         Client cli = clientRepo.findClientById(c.getId());
         if(cli!=null){
-            clientRepo.save(c);
+            clientRepo.save(cli);
             cli = clientRepo.findClientById(c.getId());
             return cli;
         }
