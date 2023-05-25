@@ -18,7 +18,7 @@ class App{
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
         this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
-        this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
+        this.dom.querySelector('#subs').addEventListener('click',e=>this.debounce(this.register(),500));
         this.renderBodyFiller();
         this.renderMenuItems();
         this.clienteDOM = new Clients();
@@ -238,14 +238,18 @@ class App{
     renderUpdate=()=>{
         this.dom.querySelector("#titleReg").textContent = "Edit User";
         this.dom.querySelector("#Rusername").value = globalstate.user.username;
+        this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
         this.dom.querySelector("#Rpass").value = globalstate.user.password;
         this.dom.querySelector("#Rname").value = globalstate.user.name;
         this.dom.querySelector("#Rphone").value = globalstate.user.num_telefono;
         this.dom.querySelector("#Remail").value = globalstate.user.mail;
         this.dom.querySelector("#Remail").setAttribute('readonly', 'true');
-        this.dom.querySelector("#subs").textContent = "Update";
-        this.dom.querySelector("#subs").removeEventListener("click",e=>this.register());
-        this.dom.querySelector("#subs").addEventListener("click",e=>this.UpdateUser());
+        let sub = this.dom.querySelector("#subs");
+        if(sub !== null)
+            sub.id="upd";
+        this.dom.querySelector("#upd").textContent = "Update";
+        this.dom.querySelector("#upd").removeEventListener("click",e=>this.debounce(this.UpdateUser(),500));
+        this.dom.querySelector("#upd").addEventListener("click",e=>this.debounce(this.UpdateUser(),500));
         this.reg.show();
     }
 
@@ -317,6 +321,15 @@ class App{
         }
     }
 
+    debounce= (func, delay) =>{
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func(...args);
+            }, delay);
+        };
+    }
 
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
@@ -324,7 +337,6 @@ class App{
         if(!user || !pass){
             this.handleErrorResponse(400,"You must insert id and password")
             this.clearParameters();
-
         }else {
             const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
@@ -348,7 +360,7 @@ class App{
         }
     }
 
-    register = async () => {
+    register = () => {
         const username = this.dom.querySelector("#Rusername").value;
         const password = this.dom.querySelector("#Rpass").value;
         const name = this.dom.querySelector("#Rname").value;
@@ -358,6 +370,10 @@ class App{
         // Validación de campos de entrada
         if (!username || !password || !name || !phone || !email) {
             alert("Fill in all the fields.");
+            return;
+        }
+        if(Number(phone) === NaN || phone > 99999999 ||  phone < 10000000){
+            alert("Phone format wrong.");
             return;
         }
 
@@ -376,13 +392,13 @@ class App{
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
-
+        (async ()=>{
         try {
             const response = await fetch(request);
 
             if (!response.ok) {
                 const errorMessage = await response.text();
-                handleErrorResponse(response.status, errorMessage);
+                this.handleErrorResponse(response.status, errorMessage);
                 return;
             }
             let resp = await response.json();
@@ -400,6 +416,7 @@ class App{
             console.error(error);
             alert("There is an error with the request.");
         }
+        })();
     }
 
     UpdateUser = async () => {
@@ -414,17 +431,20 @@ class App{
             alert("Fill in all the fields.");
             return;
         }
-
+        if(Number(phone) === NaN || phone > 99999999 ||  phone < 10000000){
+            alert("Phone format wrong.");
+            return;
+        }
         const newRegister = {
+            id:Number(globalstate.user.id),
             username: username,
             password: password,
             name: name,
             num_telefono: phone,
             mail: email,
-            type_client:globalstate.user.type_client
+            type_client:Number(globalstate.user.type_client)
         };
-
-        const request = new Request(`${backend}/${globalstate.user.id}/update`, {
+        const request = new Request(`${backend}/client/${globalstate.user.id}/update`, {
             method: 'PUT',
             body: JSON.stringify(newRegister),
             headers: {
@@ -432,29 +452,16 @@ class App{
             }
         });
 
-        try {
             const response = await fetch(request);
-
             if (!response.ok) {
-                const errorMessage = await response.text();
-                this.handleErrorResponse(response.status, errorMessage);
                 return;
             }
             let resp = await response.json();
-            if(JSON.stringify(resp).includes('0')){
-                alert('No se pudo actualizar');
-                this.clearParameters();
-                this.reg.hide();
-                return;
-            }
             alert('Usuario Modificado');
-            this.clearParameters();
+            globalstate.user = resp;
             this.reg.hide();
             this.renderMenuItems();
-        } catch (error) {
-            console.error(error);
-            alert("There is an error with the request.");
-        }
+
     }
 
     handleErrorResponse = (status, message) => {
@@ -474,15 +481,20 @@ class App{
     clearParameters = () =>{
         this.dom.querySelector("#titleReg").textContent = "Sign Up";
         this.dom.querySelector("#Rusername").value = '';
+        this.dom.querySelector("#Rusername").readOnly=false;
         this.dom.querySelector("#Rpass").value = '';
         this.dom.querySelector("#Rname").value = '';
         this.dom.querySelector("#Rphone").value = '';
         this.dom.querySelector("#Remail").value = '';
+        this.dom.querySelector("#Remail").readOnly= false;
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
-        this.dom.querySelector("#subs").textContent = "Register";
-        this.dom.querySelector("#subs").removeEventListener('click',e=>this.UpdateUser());
-        this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
+        let upd = this.dom.querySelector("#upd");
+        if(upd != null){
+            upd.id = "subs"
+        }
+        let sub = this.dom.querySelector("#subs");
+        sub.textContent = "Register";
     }
 
     showCli=async()=>{
@@ -505,7 +517,6 @@ class App{
         this.dom.querySelector('#app>#body').replaceChildren();
         this.renderBodyFiller();
         this.renderMenuItems();
-        let request = new Request(`${backend}/login`, {method: 'DELETE', headers: { }});
     }
     showInsurance = async () =>{
         this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);

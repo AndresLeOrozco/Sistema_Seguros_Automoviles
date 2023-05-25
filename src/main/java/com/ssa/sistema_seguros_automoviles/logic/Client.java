@@ -29,7 +29,7 @@ public class Client implements Serializable {
     @Column
     String name;
     @Column
-    Integer phone;
+    long phone;
     @Column
     String email;
     @Column
@@ -61,6 +61,30 @@ public class Client implements Serializable {
     public Client() {
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Set<Insurance> getInsurances() {
         return insurances;
     }
@@ -71,6 +95,14 @@ public class Client implements Serializable {
 
     public String getUsername() {
         return user;
+    }
+
+    public Integer getType_cli() {
+        return type_cli;
+    }
+
+    public void setType_cli(Integer type_cli) {
+        this.type_cli = type_cli;
     }
 
     public void setUsername(String username) {
@@ -93,11 +125,11 @@ public class Client implements Serializable {
         this.name = name;
     }
 
-    public Integer getNum_telefono() {
+    public long getNum_telefono() {
         return phone;
     }
 
-    public void setNum_telefono(Integer num_telefono) {
+    public void setNum_telefono(long num_telefono) {
         this.phone = num_telefono;
     }
 
