@@ -33,7 +33,7 @@ class Vehicles{
                       
                     </form>
 
-                    <div class="table-responsive " style="max-height: 300px; overflow: auto">
+                    <div class="table-responsive " style="max-height: 400px; overflow: auto">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="button" class="btn btn-outline-primary" id="create">Add New</button>
                           </div>
@@ -80,7 +80,6 @@ class Vehicles{
     }
 
     showModal= async ()=>{
-        // Load entity data into modal form
         this.modal.show();
     }
 
@@ -91,7 +90,6 @@ class Vehicles{
     }
 
     emptyEntity=()=>{
-        // return an empty entity
     }
 
     addVehicle=async () => {
@@ -185,7 +183,6 @@ class Vehicles{
     }
 
     validate=()=>{
-        // validate data
     }
 
 

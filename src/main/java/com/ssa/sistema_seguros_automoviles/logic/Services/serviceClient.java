@@ -32,14 +32,15 @@ public class serviceClient {
         return false;
     }
     @Transactional
-    public boolean update(Client c){
+    public Client update(Client c){
 
         Client cli = clientRepo.findClientById(c.getId());
         if(cli!=null){
             clientRepo.save(c);
-            return true;
+            cli = clientRepo.findClientById(c.getId());
+            return cli;
         }
-        return false;
+        return null;
     }
 
 

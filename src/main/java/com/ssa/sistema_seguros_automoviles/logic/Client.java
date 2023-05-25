@@ -29,7 +29,7 @@ public class Client implements Serializable {
     @Column
     String name;
     @Column
-    Integer phone;
+    long phone;
     @Column
     String email;
     @Column
@@ -93,11 +93,11 @@ public class Client implements Serializable {
         this.name = name;
     }
 
-    public Integer getNum_telefono() {
+    public long getNum_telefono() {
         return phone;
     }
 
-    public void setNum_telefono(Integer num_telefono) {
+    public void setNum_telefono(long num_telefono) {
         this.phone = num_telefono;
     }
 
