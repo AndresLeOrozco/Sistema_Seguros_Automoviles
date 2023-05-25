@@ -237,27 +237,29 @@ class Insurances{
     <div class="row justify-content-center">
       <div style="height: 100%; width: 100%; class="col-md-8 col-lg-6 col-xl-4">
         <div class="card text-black">
-          <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
-          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp"
-            class="card-img-top" alt="Apple Computer" />
+            <div id="addImage">
+<!--                <i class="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-->
+<!--                <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp"-->
+<!--                    class="card-img-top" alt="Apple Computer" />-->
+            </div>
           <div class="card-body">
             <div class="text-center">
               <h5 class="card-title">Believing is seeing</h5>
               <p class="text-muted mb-4">Apple pro display XDR</p>
             </div>
-            <div>
-              <div class="d-flex justify-content-between">
-                <span>Pro Display XDR</span><span>$5,999</span>
-              </div>
-              <div class="d-flex justify-content-between">
-                <span>Pro stand</span><span>$999</span>
-              </div>
-              <div class="d-flex justify-content-between">
-                <span>Vesa Mount Adapter</span><span>$199</span>
-              </div>
+            <div id="showCover">
+<!--              <div class="d-flex justify-content-between">-->
+<!--                <span>Pro Display XDR</span><span>$5,999</span>-->
+<!--              </div>-->
+<!--              <div class="d-flex justify-content-between">-->
+<!--                <span>Pro stand</span><span>$999</span>-->
+<!--              </div>-->
+<!--              <div class="d-flex justify-content-between">-->
+<!--                <span>Vesa Mount Adapter</span><span>$199</span>-->
+<!--              </div>-->
             </div>
-            <div class="d-flex justify-content-between total font-weight-bold mt-4">
-              <span>Total</span><span>$7,197.00</span>
+            <div id="precioFinal" class="d-flex justify-content-between total font-weight-bold mt-4">
+<!--              <span>Total</span><span>$7,197.00</span>-->
             </div>
           </div>
         </div>
@@ -340,7 +342,7 @@ class Insurances{
         var br = document.createElement("br");
         div.innerHTML=`
             <p style="font-size: medium; margin-bottom: 0em;  margin-top: 0em; font-weight: bold;">${c.cat.type}</p>
-            <input class="form-check-input" type="checkbox" role="switch" id="o-${c.id}" value="${c.descrption}">
+            <input class="form-check-input" type="checkbox" role="switch" id="o-${c.id}" value="${c.id}">
             <label class="form-check-label" for="flexSwitchCheckDefault">${c.descrption}</label>
            
        ` ;
@@ -439,12 +441,87 @@ class Insurances{
 
     registerInsurance3 =async () => {
         this.modalAdd3.show();
+        this.showInformation();
         this.modalAdd2.hide();
     }
     registerInsurance4 =async () => {
         this.modalAdd4.show();
         this.modalAdd3.hide();
     }
+
+    getVehicle= async (brand, model, year)=>{
+        const request = new Request(`${backend}/vehicle/car/${brand}/${model}/${year}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        var vehicle = await response.json();
+        return vehicle;
+    }
+
+    getCoverByAll = async (id) =>{
+        const request = new Request(`${backend}/coverage/${id}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        var coverage = await response.json();
+        return coverage;
+    }
+
+    showInformation = async () =>{
+        var finalprice = 0;
+        var info = document.getElementById('sVehicle').value;
+        var infoCar = info.split('-');
+        var car = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+
+
+        var listing = this.dom.querySelector("#showCover")
+        var listing2 = this.dom.querySelector("#precioFinal")
+        var listing3 = this.dom.querySelector("#addImage")
+        // En esta variable se guardaran cada unos de los id de los coverages seleccionados
+        var selectedCoverages = [];
+
+        // La sigte variable es para ir guardando cada uno de los coverage
+        var recoveryCoverage = [];
+        // Obtener el precio que se registro en el seguro
+        var price  = Number(document.getElementById('iPrice').value);
+
+        // Aqui recupera todos los datos que se encuentran en los checkbox
+        var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
+        checkboxes.forEach( e => selectedCoverages.push(e.value));
+
+        // Se recupera en la base de datos cada una de las coverturas elegidas
+        for (let i = 0; i < selectedCoverages.length; i++) {
+            var coverage = await this.getCoverByAll(selectedCoverages[i]);
+            recoveryCoverage.push(coverage);
+        }
+
+        listing3.innerHTML = `
+            <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
+            <img src="${backend}/vehicle/${car.id}/img" class="card-img-top" alt="Apple Computer" />
+        `;
+
+        recoveryCoverage.forEach( e => {
+            var min_cost = Number(e.min_cost);
+            var per_cost = Number(e.per_cost);
+            finalprice += Math.max(min_cost, per_cost * price);
+            listing.innerHTML += `
+            <div class="d-flex justify-content-between">
+               <span>${e.descrption}</span><span>$${Math.max(min_cost, per_cost * price)}</span>
+            </div>
+        `;});
+        listing2.innerHTML = `
+            <span>Total</span><span>$${finalprice}</span>
+        `;
+
+
+    }
+
+// <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
+// <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp" class="card-img-top" alt="Apple Computer" />
 
 
 

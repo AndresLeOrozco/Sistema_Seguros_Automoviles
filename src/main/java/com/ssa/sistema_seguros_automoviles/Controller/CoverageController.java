@@ -4,12 +4,11 @@ package com.ssa.sistema_seguros_automoviles.Controller;
 import com.ssa.sistema_seguros_automoviles.logic.Coverage;
 import com.ssa.sistema_seguros_automoviles.logic.Services.serviceCoverage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 @RestController()
 @RequestMapping("coverage")
@@ -22,6 +21,10 @@ public class CoverageController {
     public List<Coverage> find() {
         return c.findCoverage();
     }
+
+    @CrossOrigin
+    @GetMapping(value = "{id}")
+    public  Coverage findById(@PathVariable String id){return  c.findById(parseInt(id));}
 
 
 
