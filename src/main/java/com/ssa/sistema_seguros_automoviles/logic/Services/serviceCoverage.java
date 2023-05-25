@@ -17,5 +17,6 @@ public class serviceCoverage {
         return coverageRepo.findAll();
     }
 
-
+    @Transactional
+    public  Coverage findById(int id){return coverageRepo.findById(id);}
 }
