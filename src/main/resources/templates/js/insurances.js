@@ -270,31 +270,11 @@ class Insurances{
            </form>
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button id="nextV3" type="button" class="btn btn-default btn-next">Next</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
-         </div>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+      </div>
       </div>
    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Purchased</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            Thank For Register
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
-         </div>
-      </div>
-   </div>
-</div>
-        
+</div>        
         `;
     }
     showModal= async ()=>{
@@ -471,58 +451,109 @@ class Insurances{
         return coverage;
     }
 
-    showInformation = async () =>{
-        var finalprice = 0;
-        var info = document.getElementById('sVehicle').value;
-        var infoCar = info.split('-');
-        var car = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
-
-
-        var listing = this.dom.querySelector("#showCover")
-        var listing2 = this.dom.querySelector("#precioFinal")
-        var listing3 = this.dom.querySelector("#addImage")
-        // En esta variable se guardaran cada unos de los id de los coverages seleccionados
-        var selectedCoverages = [];
-
-        // La sigte variable es para ir guardando cada uno de los coverage
-        var recoveryCoverage = [];
-        // Obtener el precio que se registro en el seguro
-        var price  = Number(document.getElementById('iPrice').value);
-
-        // Aqui recupera todos los datos que se encuentran en los checkbox
-        var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
-        checkboxes.forEach( e => selectedCoverages.push(e.value));
-
-        // Se recupera en la base de datos cada una de las coverturas elegidas
-        for (let i = 0; i < selectedCoverages.length; i++) {
-            var coverage = await this.getCoverByAll(selectedCoverages[i]);
-            recoveryCoverage.push(coverage);
-        }
-
-        listing3.innerHTML = `
-            <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
-            <img src="${backend}/vehicle/${car.id}/img" class="card-img-top" alt="Apple Computer" />
-        `;
-
-        recoveryCoverage.forEach( e => {
-            var min_cost = Number(e.min_cost);
-            var per_cost = Number(e.per_cost);
-            finalprice += Math.max(min_cost, per_cost * price);
-            listing.innerHTML += `
-            <div class="d-flex justify-content-between">
-               <span>${e.descrption}</span><span>$${Math.max(min_cost, per_cost * price)}</span>
-            </div>
-        `;});
-        listing2.innerHTML = `
-            <span>Total</span><span>$${finalprice}</span>
-        `;
-
-
-    }
-
-// <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
-// <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp" class="card-img-top" alt="Apple Computer" />
-
-
+    // showInformation = async () =>{
+    //     var currentDate = new Date();
+    //     var year = currentDate.getFullYear();
+    //     var month = currentDate.getMonth() + 1;
+    //     var day = currentDate.getDate();
+    //     date = `${year}-${month}-${day}`;
+    //     var vin = document.getElementById("iVIN").value;
+    //     var selectedOption = document.querySelector('input[name="btnradio"]:checked');
+    //     var pay_meth = selectedOption.value;
+    //     var finalprice = 0;
+    //     var info = document.getElementById('sVehicle').value;
+    //     var infoCar = info.split('-');
+    //     var car = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+    //
+    //
+    //     var listing = this.dom.querySelector("#showCover")
+    //     var listing2 = this.dom.querySelector("#precioFinal")
+    //     var listing3 = this.dom.querySelector("#addImage")
+    //     // En esta variable se guardaran cada unos de los id de los coverages seleccionados
+    //     var selectedCoverages = [];
+    //
+    //     // La sigte variable es para ir guardando cada uno de los coverage
+    //     var recoveryCoverage = [];
+    //     // Obtener el precio que se registro en el seguro
+    //     var price  = Number(document.getElementById('iPrice').value);
+    //
+    //     // Aqui recupera todos los datos que se encuentran en los checkbox
+    //     var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
+    //     checkboxes.forEach( e => selectedCoverages.push(e.value));
+    //
+    //     // Se recupera en la base de datos cada una de las coverturas elegidas
+    //     for (let i = 0; i < selectedCoverages.length; i++) {
+    //         var coverage = await this.getCoverByAll(selectedCoverages[i]);
+    //         recoveryCoverage.push(coverage);
+    //     }
+    //
+    //     listing3.innerHTML = `
+    //         <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
+    //         <img src="${backend}/vehicle/${car.id}/img" class="card-img-top" alt="Apple Computer" />
+    //     `;
+    //
+    //     recoveryCoverage.forEach( e => {
+    //         var min_cost = Number(e.min_cost);
+    //         var per_cost = Number(e.per_cost);
+    //         finalprice += Math.max(min_cost, per_cost * price);
+    //         listing.innerHTML += `
+    //         <div class="d-flex justify-content-between">
+    //            <span>${e.descrption}</span><span>$${Math.max(min_cost, per_cost * price)}</span>
+    //         </div>
+    //     `;});
+    //     listing2.innerHTML = `
+    //         <span>Total</span><span>$${finalprice}</span>
+    //     `;
+    //
+    //     var insurance = {id_vehicle: car.id, pay_meth: pay_meth, vin: vin, id_client: globalstate.user.id, cost: price, date: date, cover: recoveryCoverage};
+    //     this.addInsurance(insurance);
+    // }
+    //
+    // addInsurance =async (insurance) => {
+    //     const request = new Request(`${backend}/insurance`, {
+    //         method: 'POST',
+    //         body: JSON.stringify(insurance),
+    //         headers: {
+    //             "Content-type": "application/json; charset=UTF-8"
+    //         }
+    //     });
+    //
+    //     try {
+    //         const response = await fetch(request);
+    //
+    //         if (!response.ok) {
+    //             const errorMessage = await response.text();
+    //             this.handleErrorResponse(response.status, errorMessage);
+    //             return;
+    //         }
+    //         let resp = await response.json();
+    //
+    //         if(JSON.stringify(resp).includes('0')){
+    //             alert('Insurance Already Exists');
+    //             return;
+    //         }
+    //         alert('Insurance Registered');
+    //         return;
+    //
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("There is an error with the request.");
+    //     }
+    //
+    // }
+    //
+    // handleErrorResponse = (status, message) => {
+    //     // Manejo de errores específicos en función del código de estado de la respuesta
+    //     switch (status) {
+    //         case 400:
+    //             alert(`Request error: ${message}`);
+    //             break;
+    //         case 401:
+    //             alert(`Authentication error: ${message}`);
+    //             break;
+    //         default:
+    //             alert(`Unknown error: ${status}`);
+    //     }
+    // }
 
 }

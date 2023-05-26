@@ -9,4 +9,7 @@ import java.util.List;
 public interface InsuranceRepo extends JpaRepository<Insurance,Integer> {
     @Override
     List<Insurance> findAll();
+
+
+    Insurance findById(int id);
 }
