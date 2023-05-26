@@ -19,6 +19,16 @@ public class serviceInsurance {
     }
 
     @Transactional
+    public  int findInsuranceByVin(String vin){
+        Insurance n = new Insurance();
+        n = this.insuranceRepo.findByVin(vin);
+        if (n == null){
+            return 1;
+        }
+        return 0;
+    }
+
+    @Transactional
     public int save(Insurance insurance){
         Insurance n = new Insurance();
         n = this.insuranceRepo.findById(insurance.getId());

@@ -38,7 +38,7 @@ public class Insurance implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_client", referencedColumnName = "id")
     @JsonBackReference
-    private Client client;
+    Client client;
 
     @Column
     float cost;
