@@ -15,6 +15,7 @@ class Categories {
         this.dom.querySelector('#apply').addEventListener('click',this.add);
         this.dom.querySelector('#addNewCov').addEventListener('click', this.listCatType);
         this.coverageDOM = new Coverage();
+
     }
 
     render = () => {
