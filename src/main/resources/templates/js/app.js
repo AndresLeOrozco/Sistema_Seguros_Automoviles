@@ -361,7 +361,7 @@ class App{
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
-
+        let Hola = " ";
     }
 
 
