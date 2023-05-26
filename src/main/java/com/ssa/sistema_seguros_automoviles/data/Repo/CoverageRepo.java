@@ -1,6 +1,5 @@
 package com.ssa.sistema_seguros_automoviles.data.Repo;
 
-import com.ssa.sistema_seguros_automoviles.logic.Client;
 import com.ssa.sistema_seguros_automoviles.logic.Coverage;
 import org.springframework.data.jpa.repository.JpaRepository;
 

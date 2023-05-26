@@ -14,6 +14,7 @@ class Insurances{
         this.modalAdd2 = new bootstrap.Modal(this.dom.querySelector('#myModal2'));
         this.modalAdd3 = new bootstrap.Modal(this.dom.querySelector('#myModal3'));
         this.modalAdd4 = new bootstrap.Modal(this.dom.querySelector('#myModal4'));
+        this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#addNew').addEventListener('click', this.registerInsurance);
         this.dom.querySelector('#nextV1').addEventListener('click', this.registerInsurance2);
         this.dom.querySelector('#nextV2').addEventListener('click', this.registerInsurance3);
@@ -27,6 +28,7 @@ class Insurances{
             ${this.renderList()}
             ${this.renderModal()} 
             ${this.renderModalAdd()}
+            ${this.renderWarning()}
         `;
         let rootContent = document.createElement('div');
         rootContent.id = 'insurance';
@@ -277,6 +279,52 @@ class Insurances{
 </div>        
         `;
     }
+
+    renderWarning(){
+        return `
+                <div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-bottom-end">
+                      
+
+                        <div class="modal-body" id="modalBodyWarn">
+                         
+                        </div>
+                       
+                      
+                    </div>
+                  </div>
+            `;
+    }
+
+    addWarning = (message,type) => {
+        //type 1: Error Type 2: Warning Type 3 Succes
+        let warning = this.dom.querySelector("#modalBodyWarn");
+        let html = "";
+        if(type === 1)
+            html += `
+                <div class="alert alert-danger" role="alert">
+                 ${message}
+                </div>
+            `;
+        if(type === 2)
+            html += `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>WARNING!</strong> ${message}
+                 
+                </div>
+            `;
+        if(type === 3)
+            html += `
+                <div class="alert alert-success" role="alert">
+                  <h4 class="alert-heading">Succesful!</h4>
+                  <p>${message}</p>
+                  <hr>
+                </div>
+            `;
+        warning.replaceChildren();
+        warning.innerHTML=html;
+    }
+
     showModal= async ()=>{
         // Load entity data into modal form
         this.modal.show();

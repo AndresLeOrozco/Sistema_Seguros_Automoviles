@@ -19,4 +19,13 @@ public class serviceCoverage {
 
     @Transactional
     public  Coverage findById(int id){return coverageRepo.findById(id);}
+
+    @Transactional
+    public boolean save(Coverage c){
+        if (coverageRepo.findById(c.getId()) == null){
+            coverageRepo.save(c);
+            return true;
+        }
+        return false;
+    }
 }
