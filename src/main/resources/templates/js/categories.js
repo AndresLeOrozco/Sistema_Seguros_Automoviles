@@ -9,12 +9,13 @@ class Categories {
         this.state = {'entities': new Array(), 'entity': "", 'mode':'A'};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.modalCov = new bootstrap.Modal(this.dom.querySelector('#modalCov'));
         this.dom.querySelector("#addNewCat").addEventListener('click', this.makenew);
         this.dom.querySelector("#addNewCov").addEventListener('click', this.makenewCov);
         this.dom.querySelector('#apply').addEventListener('click',this.add);
+        this.dom.querySelector('#applyCov').addEventListener('click',this.addCov);
         this.dom.querySelector('#addNewCov').addEventListener('click', this.listCatType);
-        this.coverageDOM = new Coverage();
 
     }
 
@@ -22,6 +23,7 @@ class Categories {
         const html = `
             ${this.renderList()}
             ${this.renderModalCategory()}
+            ${this.renderWarning()}
             ${this.renderModalCoverage()}
         `;
         let rootContent = document.createElement('div');
@@ -117,6 +119,51 @@ class Categories {
         `;
     }
 
+    renderWarning(){
+        return `
+                <div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-bottom-end">
+                      
+
+                        <div class="modal-body" id="modalBodyWarn">
+                         
+                        </div>
+                       
+                      
+                    </div>
+                  </div>
+            `;
+    }
+
+    addWarning = (message,type) => {
+        //type 1: Error Type 2: Warning Type 3 Succes
+        let warning = this.dom.querySelector("#modalBodyWarn");
+        let html = "";
+        if(type === 1)
+            html += `
+                <div class="alert alert-danger" role="alert">
+                 ${message}
+                </div>
+            `;
+        if(type === 2)
+            html += `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>WARNING!</strong> ${message}
+                 
+                </div>
+            `;
+        if(type === 3)
+            html += `
+                <div class="alert alert-success" role="alert">
+                  <h4 class="alert-heading">Succesful!</h4>
+                  <p>${message}</p>
+                  <hr>
+                </div>
+            `;
+        warning.replaceChildren();
+        warning.innerHTML=html;
+    }
+
     showModal= async ()=>{
         // Load entity data into modal form
         this.modal.show();
@@ -147,7 +194,7 @@ class Categories {
     comboBoxOption=(list,c)=>{
         var option = document.createElement("option");
         option.textContent = c.type;
-        option.value = c.type; // Asigna el valor correspondiente si es necesario
+        option.value = c.id; // Asigna el valor correspondiente si es necesario
         list.appendChild(option);
     }
 
@@ -219,23 +266,77 @@ class Categories {
         }
     }
 
-    handleErrorResponse = (status, message) => {
-        // Manejo de errores específicos en función del código de estado de la respuesta
-        switch (status) {
-            case 400:
-                alert(`Request error: ${message}`);
-                break;
-            case 401:
-                alert(`Authentication error: ${message}`);
-                break;
-            default:
-                alert(`Unknown error: ${status}`);
+    addCov = async () => {
+        const cat = this.dom.querySelector("#catDrpDwn").value;
+        const description = this.dom.querySelector("#descr").value;
+        const min_cost = this.dom.querySelector("#minCost").value;
+        const per_cost = this.dom.querySelector("#perCost").value;
+
+        if (!cat || !description || !min_cost || !per_cost) {
+            this.addWarning("Fill the blanks", 2);
+            this.modalCov.hide();
+            this.warn.show();
+            return;
+        }
+
+        if ( Number(min_cost) === NaN || Number(per_cost) === NaN || per_cost < 1 ) {
+            this.addWarning("Wrong format number", 2);
+            this.modalCov.hide();
+            this.warn.show();
+            return;
+        }
+
+        const newCoverage = {
+            cat: cat,
+            description: description,
+            min_cost: min_cost,
+            per_cost: per_cost
+        };
+
+        const request = new Request(`${backend}/coverage`, {
+            method: 'POST',
+            body: JSON.stringify(newCoverage),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+
+        try {
+            const response = await fetch(request);
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                this.addWarning(errorMessage, 1);
+                this.modalCov.hide();
+                this.warn.show();
+                return;
+            }
+            let resp = await response.json();
+            if(JSON.stringify(resp).includes('0')){
+                this.addWarning("Coverage already exist", 1);
+                this.modalCov.hide();
+                this.warn.show();
+                this.clearParameters();
+                return;
+            }
+            this.addWarning("Coverage saved", 3);
+            this.modalCov.hide();
+            this.warn.show();
+            this.clearParameters();
+            this.update();
+        } catch (error) {
+            this.addWarning(error, 2);
+            this.modalCov.hide();
+            this.warn.show();;
         }
     }
 
     clearParameters = () =>{
         this.dom.querySelector("#typ").value = '';
         this.dom.querySelector("#desc").value = '';
+        this.dom.querySelector("#descr").value = '';
+        this.dom.querySelector("#minCost").value = '';
+        this.dom.querySelector("#perCost").value = '';
     }
 
     emptyEntity=()=>{
