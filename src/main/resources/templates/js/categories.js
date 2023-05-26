@@ -1,21 +1,27 @@
 class Categories {
     dom;
     modal;
+    modalCov
     state;
+    coverageDOM;
 
     constructor(){
         this.state = {'entities': new Array(), 'entity': "", 'mode':'A'};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.modalCov = new bootstrap.Modal(this.dom.querySelector('#modalCov'));
         this.dom.querySelector("#addNewCat").addEventListener('click', this.makenew);
-        //this.dom.querySelector("#addNewCov").addEventListener('click', this.makenew);
+        this.dom.querySelector("#addNewCov").addEventListener('click', this.makenewCov);
         this.dom.querySelector('#apply').addEventListener('click',this.add);
+        this.dom.querySelector('#addNewCov').addEventListener('click', this.listCatType);
+        this.coverageDOM = new Coverage();
     }
 
     render = () => {
         const html = `
             ${this.renderList()}
             ${this.renderModalCategory()}
+            ${this.renderModalCoverage()}
         `;
         let rootContent = document.createElement('div');
         rootContent.id = 'categories';
@@ -76,6 +82,40 @@ class Categories {
         `;
     }
 
+    renderModalCoverage = () => {
+        return `
+        <div id="modalCov" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" >
+                        <img class="img-circle" id="img_logo" src="images/logo.png" style="max-width: 50px; max-height: 50px" alt="logo">
+                        <span style='margin-left:4em;font-weight: bold;'>Coverage</span> 
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formCov" >
+                    <div class="col">
+                        <label class="form-label" for="form2Example11">Select a Category</label>
+                        <select name="categoriesDrpDwn" id="catDrpDwn" required>
+                            <option value="" label="" disabled>Choose option</option>
+                            
+                        </select>
+                        <br><br>
+                    </div>
+                    <div class="modal-body">
+                        <input id="descr" type="text" class="form-control" placeholder="Description">
+                        <input id="minCost" type="text" class="form-control" placeholder="Minimum cost">
+                        <input id="perCost" type="text" class="form-control" placeholder="Percentage cost">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="applyCov" type="button" class="btn btn-primary" >Save</button>
+                    </div>
+                    </form>                 
+                </div>         
+            </div>
+        </div>      
+        `;
+    }
+
     showModal= async ()=>{
         // Load entity data into modal form
         this.modal.show();
@@ -101,6 +141,30 @@ class Categories {
             //listing.innerHTML="";
             this.state.entities.forEach( e=>this.row(listing,e));
         })();
+    }
+
+    comboBoxOption=(list,c)=>{
+        var option = document.createElement("option");
+        option.textContent = c.type;
+        option.value = c.type; // Asigna el valor correspondiente si es necesario
+        list.appendChild(option);
+    }
+
+    listCatType = async () => {
+        const request = new Request(`${backend}/category`, { method: 'GET', headers: {} });
+        try {
+            const response = await fetch(request);
+            if (!response.ok) {
+                errorMessage(response.status);
+                return;
+            }
+            const categoryType = await response.json();
+            const listing = this.dom.querySelector("#catDrpDwn");
+            listing.innerHTML="";
+            categoryType.forEach(e => this.comboBoxOption(listing, e));
+        } catch (error) {
+            console.error("Error al obtener los datos de categoría:", error);
+        }
     }
 
     reset=()=>{
@@ -134,7 +198,7 @@ class Categories {
 
             if (!response.ok) {
                 const errorMessage = await response.text();
-                handleErrorResponse(response.status, errorMessage);
+                //handleErrorResponse(response.status, errorMessage);
                 return;
             }
             let resp = await response.json();
@@ -147,14 +211,11 @@ class Categories {
             alert('Category Saved');
             this.clearParameters();
             this.modal.hide();
-            this.renderList();
+            this.update();
         } catch (error) {
             console.error(error);
             alert("There is an error with the request.");
         }
-        // this.list();
-        // this.reset();
-        // this.modal.hide();
     }
 
     handleErrorResponse = (status, message) => {
@@ -184,6 +245,25 @@ class Categories {
         this.reset();
         this.state.mode='A'; //adding
         this.showModal();
+    }
+
+    showModalCov= async ()=>{
+        // Load entity data into modal form
+        this.modalCov.show();
+    }
+
+    makenewCov=()=>{
+        this.reset();
+        this.state.mode='A'; //adding
+        this.showModalCov();
+    }
+
+    update=()=>{
+        // Validate data, load into entity, invoque backend for updating
+        this.list();
+        this.reset();
+        this.modal.hide();
+        this.modalCov.hide();
     }
 
 }
