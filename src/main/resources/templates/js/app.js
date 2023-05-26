@@ -17,8 +17,11 @@ class App{
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
         this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
+        this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
-        this.dom.querySelector('#subs').addEventListener('click',e=>this.debounce(this.register(),500));
+        this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
+        this.dom.querySelector("#upd").addEventListener("click",e=>this.UpdateUser());
+        this.dom.querySelector("#botUpd").style.visibility = 'hidden';
         this.renderBodyFiller();
         this.renderMenuItems();
         this.clienteDOM = new Clients();
@@ -34,6 +37,7 @@ class App{
             ${this.renderFooter()}
             ${this.renderModal()}
             ${this.renderReg()}
+            ${this.renderWarning()}
         `;
         var rootContent= document.createElement('div');
         rootContent.id='app';
@@ -152,7 +156,7 @@ class App{
                        <h4 class="modal-title w-100 font-weight-bold"><span><i class="fa fa-address-card" aria-hidden="true"></i></span> Login</h4> 
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                    </div>
-                   <form id="form" >
+                   <form id="formlog" >
                    <div class="modal-body" id="modalbo">
                        <div class="input-group mb-3">
                            <span class="input-group-text">Id</span>
@@ -167,8 +171,8 @@ class App{
                        <button id="apply" type="button" class="btn btn-primary" id="apply">Login</button>
                    </div>
                    <div class="input-group">
-                       <span style="font-style: italic; margin-left: 2em;">No tiene cuenta? ... </span>
-                       <a id="GoRegister" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Registrese aquí</a>
+                       <span style="font-style: italic; margin-left: 2em;">Don't have an account? ... </span>
+                       <a id="GoRegister" class="btn btn-info btn-block" style="margin-bottom: 15px; background-color: white; color:red; border:1px solid red" href="#">Sign Up</a>
                    </div>                
                    </form>                 
                </div>         
@@ -216,8 +220,11 @@ class App{
                     </div>
             
                   </div>
-                  <div class="modal-footer d-flex justify-content-center">
+                  <div id="botSub" class="modal-footer d-flex justify-content-center">
                     <button id="subs" class="btn btn-primary">Register</button>
+                  </div>
+                  <div id="botUpd" class="modal-footer d-flex justify-content-center">
+                    <button id="upd" class="btn btn-primary">Update</button>
                   </div>
                 </div>
               </div>
@@ -225,6 +232,52 @@ class App{
             `;
 
     }
+
+    renderWarning(){
+        return `
+                <div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-bottom-end">
+                      
+
+                        <div class="modal-body" id="modalBodyWarn">
+                         
+                        </div>
+                       
+                      
+                    </div>
+                  </div>
+            `;
+    }
+
+    addWarning = (message,type) => {
+        //type 1: Error Type 2: Warning Type 3 Succes
+        let warning = this.dom.querySelector("#modalBodyWarn");
+        let html = "";
+        if(type === 1)
+            html += `
+                <div class="alert alert-danger" role="alert">
+                 ${message}
+                </div>
+            `;
+        if(type === 2)
+            html += `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>WARNING!</strong> ${message}
+                 
+                </div>
+            `;
+        if(type === 3)
+            html += `
+                <div class="alert alert-success" role="alert">
+                  <h4 class="alert-heading">Succesful!</h4>
+                  <p>${message}</p>
+                  <hr>
+                </div>
+            `;
+        warning.replaceChildren();
+        warning.innerHTML=html;
+    }
+
 
     renderBodyFiller=()=>{
         var html= `
@@ -238,18 +291,14 @@ class App{
     renderUpdate=()=>{
         this.dom.querySelector("#titleReg").textContent = "Edit User";
         this.dom.querySelector("#Rusername").value = globalstate.user.username;
-        this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
+        //this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
         this.dom.querySelector("#Rpass").value = globalstate.user.password;
         this.dom.querySelector("#Rname").value = globalstate.user.name;
         this.dom.querySelector("#Rphone").value = globalstate.user.num_telefono;
         this.dom.querySelector("#Remail").value = globalstate.user.mail;
         this.dom.querySelector("#Remail").setAttribute('readonly', 'true');
-        let sub = this.dom.querySelector("#subs");
-        if(sub !== null)
-            sub.id="upd";
-        this.dom.querySelector("#upd").textContent = "Update";
-        this.dom.querySelector("#upd").removeEventListener("click",e=>this.debounce(this.UpdateUser(),500));
-        this.dom.querySelector("#upd").addEventListener("click",e=>this.debounce(this.UpdateUser(),500));
+        this.dom.querySelector("#botSub").style.visibility = 'hidden';
+        this.dom.querySelector("#botUpd").style.visibility = 'visible';
         this.reg.show();
     }
 
@@ -300,7 +349,6 @@ class App{
         };
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
         this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
-        this.dom.querySelector("#app>#menu #menuItems #countries")?.addEventListener('click',e=>this.countriesShow());
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>{this.reg.show();this.clearParameters()});
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
@@ -313,41 +361,30 @@ class App{
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
-        if(globalstate.user!==null){
-            switch(globalstate.user.rol){
-                case 'CLI':
-                    break;
-            }
-        }
+
     }
 
-    debounce= (func, delay) =>{
-        let timeoutId;
-        return (...args) => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                func(...args);
-            }, delay);
-        };
-    }
 
     login= async ()=>{
         let user = this.dom.querySelector("#identificacion").value;
         let pass = this.dom.querySelector("#clave").value;
         if(!user || !pass){
-            this.handleErrorResponse(400,"You must insert id and password")
+            this.addWarning("Fill de blanks",2);
+            this.modal.hide();
+            this.warn.show();
             this.clearParameters();
         }else {
             const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
-                errorMessage(response.status);
+                this.addWarning(response.statusText,1);
+                this.warn.show();
             }
             let usuario = await response.json();
             if (usuario.type_client === null) {
-                this.dom.querySelector("#identificacion").style.borderColor = "red";
-                this.dom.querySelector("#clave").style.borderColor = "red";
-                this.handleErrorResponse(401,"ID or password incorrect");
+                this.addWarning("ID or password incorrect",1);
+                this.modal.hide();
+                this.warn.show();
                 this.clearParameters();
             } else {
                 globalstate.user = usuario;
@@ -369,11 +406,15 @@ class App{
 
         // Validación de campos de entrada
         if (!username || !password || !name || !phone || !email) {
-            alert("Fill in all the fields.");
+            this.addWarning("Fill de blanks",2);
+            this.reg.hide();
+            this.warn.show();
             return;
         }
         if(Number(phone) === NaN || phone > 99999999 ||  phone < 10000000){
-            alert("Phone format wrong.");
+            this.addWarning("Phone format wrong",2);
+            this.reg.hide();
+            this.warn.show();
             return;
         }
 
@@ -398,23 +439,30 @@ class App{
 
             if (!response.ok) {
                 const errorMessage = await response.text();
-                this.handleErrorResponse(response.status, errorMessage);
+                this.addWarning(errorMessage,1);
+                this.reg.hide();
+                this.warn.show();
                 return;
             }
             let resp = await response.json();
             if(JSON.stringify(resp).includes('0')){
-                alert('User already exist');
+                this.addWarning("User already exist",1);
+                this.warn.show();
                 this.clearParameters();
                 this.reg.hide();
                 return;
             }
-            alert('User Registered');
+            this.addWarning("User Registered",3);
+            this.warn.show();
             this.clearParameters();
             this.reg.hide();
             this.renderMenuItems();
         } catch (error) {
             console.error(error);
-            alert("There is an error with the request.");
+            this.addWarning(error,1);
+            this.warn.show();
+            this.reg.hide();
+            this.clearParameters();
         }
         })();
     }
@@ -428,11 +476,15 @@ class App{
 
         // Validación de campos de entrada
         if (!username || !password || !name || !phone || !email) {
-            alert("Fill in all the fields.");
+            this.addWarning("Fill de blanks",2);
+            this.reg.hide();
+            this.warn.show();
             return;
         }
         if(Number(phone) === NaN || phone > 99999999 ||  phone < 10000000){
-            alert("Phone format wrong.");
+            this.addWarning("Phone format wrong",2);
+            this.reg.hide();
+            this.warn.show();
             return;
         }
         const newRegister = {
@@ -454,10 +506,23 @@ class App{
 
             const response = await fetch(request);
             if (!response.ok) {
+                const errorMessage = await response.text();
+                this.addWarning(errorMessage,1);
+                this.reg.hide();
+                this.warn.show();
                 return;
             }
             let resp = await response.json();
-            alert('Usuario Modificado');
+            if(resp.id === null) {
+                this.addWarning("Cant modify user, repeat Username",1);
+                this.warn.show();
+                this.clearParameters();
+                this.reg.hide();
+                return;
+            }
+            this.addWarning("User Modify",3);
+            this.warn.show();
+            this.clearParameters();
             globalstate.user = resp;
             this.reg.hide();
             this.renderMenuItems();
@@ -489,30 +554,35 @@ class App{
         this.dom.querySelector("#Remail").readOnly= false;
         this.dom.querySelector("#identificacion").value = '';
         this.dom.querySelector("#clave").value = '';
-        let upd = this.dom.querySelector("#upd");
-        if(upd != null){
-            upd.id = "subs"
-        }
-        let sub = this.dom.querySelector("#subs");
-        sub.textContent = "Register";
+        this.dom.querySelector("#botSub").style.visibility = 'visible';
+        this.dom.querySelector("#botUpd").style.visibility = 'hidden';
+
     }
 
+
     showCli=async()=>{
+        this.dom.querySelector("#app>#menu #menuItems").style.fontWeight = '';
+        this.dom.querySelector("#app>#menu #menuItems #clients").style.fontWeight = 'bold';
         this.dom.querySelector('#app>#body').replaceChildren(this.clienteDOM.dom);
         this.clienteDOM.list();
     };
 
     showCat=async()=>{
+        this.dom.querySelector("#app>#menu #menuItems").style.fontWeight = '';
+        this.dom.querySelector("#app>#menu #menuItems  #categories").style.fontWeight = 'bold';
         this.dom.querySelector('#app>#body').replaceChildren(this.categoryDOM.dom);
         this.categoryDOM.list();
     };
     showVeh=async()=>{
+        this.dom.querySelector("#app>#menu #menuItems").style.fontWeight = '';
+        this.dom.querySelector("#app>#menu #menuItems #vehicles").style.fontWeight = 'bold';
         this.dom.querySelector('#app>#body').replaceChildren(this.vehicleDOM.dom);
         this.vehicleDOM.list();
     };
 
     logout= async ()=>{
         // invoque backend for login
+        this.dom.querySelector("#app>#menu #menuItems").style.fontWeight = 'normal';
         globalstate.user=null;
         this.dom.querySelector('#app>#body').replaceChildren();
         this.renderBodyFiller();

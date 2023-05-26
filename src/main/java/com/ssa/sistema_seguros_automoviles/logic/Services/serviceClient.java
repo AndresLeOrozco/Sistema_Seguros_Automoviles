@@ -33,16 +33,13 @@ public class serviceClient {
     }
     @Transactional
     public Client update(Client c){
-
-        Client cli = clientRepo.findClientById(c.getId());
-        if(cli!=null){
-            clientRepo.save(cli);
+            Client cli = clientRepo.findByUser(c.getUser());
+            if(cli != null)
+                return null;
+            clientRepo.save(c);
             cli = clientRepo.findClientById(c.getId());
             return cli;
-        }
-        return null;
     }
-
 
 
 

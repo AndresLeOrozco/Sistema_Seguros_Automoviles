@@ -20,6 +20,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 @RestController()
 @RequestMapping("vehicle")
 public class VehicleController {
@@ -38,6 +40,13 @@ public class VehicleController {
     @GetMapping(value="car/{model}/{brand}")
     public Vehicle findByModel(@PathVariable String model,@PathVariable String brand) {
         return c.findbyBrMo(brand,model);
+    }
+
+    @CrossOrigin
+    @GetMapping(value="car/{brand}/{model}/{year}")
+    public Vehicle findByBrandModelYear(@PathVariable String brand,@PathVariable String model, @PathVariable String year) {
+
+        return c.findByBMY(brand,model,parseInt(year));
     }
 
     @CrossOrigin
@@ -63,7 +72,6 @@ public class VehicleController {
         }
         return 0;
     }
-
 
 
 

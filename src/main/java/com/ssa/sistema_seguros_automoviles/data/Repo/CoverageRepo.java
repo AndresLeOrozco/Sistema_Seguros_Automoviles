@@ -11,5 +11,7 @@ public interface CoverageRepo extends JpaRepository<Coverage,Integer> {
     @Override
     List<Coverage> findAll();
 
+    Coverage findById(int id);
+
 
 }

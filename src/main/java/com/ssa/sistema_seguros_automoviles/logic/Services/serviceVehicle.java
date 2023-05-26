@@ -77,5 +77,8 @@ public class serviceVehicle {
         return vehicleRepo.findVehicleByBrandAndModel(br,mo);
     }
 
+    @Transactional
+    public Vehicle findByBMY(String brand, String model, int year){return vehicleRepo.findVehicleByBrandAndModelAndYear(brand, model, year);}
+
 
 }

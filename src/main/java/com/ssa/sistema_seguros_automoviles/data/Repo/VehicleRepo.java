@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VehicleRepo extends JpaRepository<Vehicle,Integer> {
     Vehicle findVehicleByBrandAndModel(String brand,String Model);
+    Vehicle findVehicleByBrandAndModelAndYear(String brand, String model, int year);
 }

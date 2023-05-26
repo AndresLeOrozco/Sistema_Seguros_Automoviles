@@ -8,6 +8,7 @@ class Vehicles{
         this.state = {'entities': new Array(), 'entity': this.emptyEntity(), 'mode':'A'};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector("#create").addEventListener('click',this.makenew);
         this.dom.querySelector('#apply').addEventListener('click',this.add);
     }
@@ -16,6 +17,7 @@ class Vehicles{
         const html= `
             ${this.renderList()}
             ${this.renderModal()} 
+            ${this.renderWarning()}
         `;
         var rootContent= document.createElement('div');
         rootContent.id='countries';
@@ -79,6 +81,51 @@ class Vehicles{
         `;
     }
 
+    renderWarning(){
+        return `
+                <div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-bottom-end">
+                      
+
+                        <div class="modal-body" id="modalBodyWarn">
+                         
+                        </div>
+                       
+                      
+                    </div>
+                  </div>
+            `;
+        }
+
+    addWarning = (message,type) => {
+        //type 1: Error Type 2: Warning Type 3 Succes
+        let warning = this.dom.querySelector("#modalBodyWarn");
+        let html = "";
+        if(type === 1)
+            html += `
+                <div class="alert alert-danger" role="alert">
+                 ${message}
+                </div>
+            `;
+        if(type === 2)
+            html += `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>WARNING!</strong> ${message}
+                 
+                </div>
+            `;
+        if(type === 3)
+            html += `
+                <div class="alert alert-success" role="alert">
+                  <h4 class="alert-heading">Succesful!</h4>
+                  <p>${message}</p>
+                  <hr>
+                </div>
+            `;
+        warning.replaceChildren();
+        warning.innerHTML=html;
+    }
+
     showModal= async ()=>{
         this.modal.show();
     }
@@ -97,13 +144,16 @@ class Vehicles{
         let mod = this.dom.querySelector("#mod").value;
         let yea = Number(this.dom.querySelector("#yea").value);
         var fileInput = this.dom.querySelector("#fileInput");
-        if(isNaN(yea) || yea < 1980){
-            alert("Debe agregar un valor numerico y mayor a 1980.");
+        if (!bra || !mod || !yea || !(fileInput.files && fileInput.files.length > 0)) {
+            this.addWarning("Fill the fields",2);
+            this.modal.hide();
+            this.warn.show();
             return;
         }
-
-        if (!bra || !mod || !yea || !(fileInput.files && fileInput.files.length > 0)) {
-            alert("Fill in all the fields.");
+        if(isNaN(yea) || yea < 1980){
+            this.addWarning("The car year must be a number and over 1980",2);
+            this.modal.hide();
+            this.warn.show();
             return;
         }
         var vehi = {brand: bra, model: mod, year: yea};
@@ -120,14 +170,21 @@ class Vehicles{
 
             if (!response.ok) {
                 const errorMessage = await response.text();
+                this.addWarning( errorMessage,2);
+                this.modal.hide();
+                this.warn.show();
                 return 0;
             }
             let resp = await response.json();
             if(JSON.stringify(resp).includes('0')){
-                alert('Car Already Exists');
+                this.addWarning( 'Car Already Exists',1);
+                this.modal.hide();
+                this.warn.show();
                 return 0;
             }
-            alert('Car Registered');
+            this.addWarning( 'Car Registered',3);
+            this.modal.hide();
+            this.warn.show();
             return 1;
         } catch (error) {
             console.error(error);
@@ -160,7 +217,6 @@ class Vehicles{
             body: data,
         });
         const response = await fetch(request);
-
     }
 
     add= async()=>{
