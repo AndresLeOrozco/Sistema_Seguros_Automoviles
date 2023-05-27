@@ -14,7 +14,7 @@ public class Coverage implements Serializable {
     Integer id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category", referencedColumnName = "id")
-    Category cat;
+    Category category;
     @Column
     String description;
     @Column
@@ -39,6 +39,22 @@ public class Coverage implements Serializable {
         this.ins = ins;
     }
 
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
+
+//    public Set<Insurance> getIns() {
+//        return ins;
+//    }
+//
+//    public void setIns(Set<Insurance> ins) {
+//        this.ins = ins;
+//    }
+
     public Coverage(){}
 
     public Integer getId() {
@@ -58,12 +74,12 @@ public class Coverage implements Serializable {
         this.description = description;
     }
 
-    public Category getCat() {
-        return cat;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCat(Category cat) {
-        this.cat = cat;
+    public void setCategory(Category cat) {
+        this.category = cat;
     }
 
     public Integer getMin_cost() {

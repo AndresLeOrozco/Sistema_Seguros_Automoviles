@@ -4,21 +4,25 @@ class Insurances{
 
     state;
 
-    insu;
+    insurance;
 
     constructor() {
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
+
+        this.insurance = {'id_vehicle': "", 'pay_meth': "", 'vin': "",
+            'cover': new Array(), 'client': "", 'cost': "", 'date': ""};
+
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
         this.modalAdd = new bootstrap.Modal(this.dom.querySelector('#myModal1'));
         this.modalAdd2 = new bootstrap.Modal(this.dom.querySelector('#myModal2'));
         this.modalAdd3 = new bootstrap.Modal(this.dom.querySelector('#myModal3'));
-        this.modalAdd4 = new bootstrap.Modal(this.dom.querySelector('#myModal4'));
+        // this.modalAdd4 = new bootstrap.Modal(this.dom.querySelector('#myModal4'));
         this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#addNew').addEventListener('click', this.registerInsurance);
         this.dom.querySelector('#nextV1').addEventListener('click', this.registerInsurance2);
         this.dom.querySelector('#nextV2').addEventListener('click', this.registerInsurance3);
-        this.dom.querySelector('#nextV3').addEventListener('click', this.registerInsurance4);
+        // this.dom.querySelector('#nextV3').addEventListener('click', this.registerInsurance4);
 
 
     }
@@ -272,31 +276,11 @@ class Insurances{
            </form>
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button id="nextV3" type="button" class="btn btn-default btn-next">Next</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
-         </div>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+      </div>
       </div>
    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">Purchased</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            Thank For Register
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
-         </div>
-      </div>
-   </div>
-</div>
-        
+</div>        
         `;
     }
 
@@ -389,7 +373,7 @@ class Insurances{
         var div = document.createElement("div");
         var br = document.createElement("br");
         div.innerHTML=`
-            <p style="font-size: medium; margin-bottom: 0em;  margin-top: 0em; font-weight: bold;">${c.cat.type}</p>
+            <p style="font-size: medium; margin-bottom: 0em;  margin-top: 0em; font-weight: bold;">${c.category.type}</p>
             <input class="form-check-input" type="checkbox" role="switch" id="o-${c.id}" value="${c.id}">
             <label class="form-check-label" for="flexSwitchCheckDefault">${c.descrption}</label>
            
@@ -423,11 +407,11 @@ class Insurances{
 
     showVIN=() =>{
         var listing = this.dom.querySelector("#infVIN");
-        var vin = document.getElementById("iVIN").value;
+
 
         listing.innerHTML=`
             <h3> Step 2 / 3 </h3>
-            <p>Set the coverages of the VIN ${vin}:</p>
+            <p>Set the coverages of the VIN ${this.insurance.vin}:</p>
         `;
     }
     openDetail = async (c) =>{
@@ -475,10 +459,43 @@ class Insurances{
     }
 
     registerInsurance = () => {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = currentDate.getMonth() + 1;
+        var day = currentDate.getDate();
+        this.insurance.client = globalstate.user;
+        this.insurance.date = `${year}-${month}-${day}`;
+
         this.modalAdd.show();
         this.listVehicle();
     }
     registerInsurance2 =async () => {
+        //Get the previous information
+        var vin = document.getElementById("iVIN").value;
+        var info = document.getElementById('sVehicle').value;
+        var infoCar = info.split('-');
+        var price  = document.getElementById('iPrice').value;
+
+
+        // Validate all inputs are fill
+        if (!vin || !infoCar || !price ) {
+            swal("Fill the blank");
+            return;
+        }
+
+        if (await this.getInsuranceByVin(vin) == 0){
+            alert("VIN COULD NOT BE USED!");
+            return;
+        }
+
+        //After validate add all data to insurance
+        this.insurance.cost = price;
+        this.insurance.id_vehicle = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+        this.insurance.pay_meth = document.querySelector('input[name="btnradio"]:checked').value;
+        this.insurance.vin = vin;
+
+
+
         this.modalAdd2.show();
         this.showVIN();
         this.listCoverages();
@@ -488,11 +505,35 @@ class Insurances{
     }
 
     registerInsurance3 =async () => {
+        // save each id of coverage registered
+        var selectedCoverages = [];
+
+        // Save each coverage
+        var recoveryCoverage = [];
+
+        // Recovery all coverages checked
+        var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
+        checkboxes.forEach( e => selectedCoverages.push(e.value));
+
+        // Get from the DB the info od the coverages selected
+        for (let i = 0; i < selectedCoverages.length; i++) {
+            var coverage = await this.getCoverById(selectedCoverages[i]);
+            recoveryCoverage.push(coverage);
+        }
+
+        this.insurance.cover = recoveryCoverage;
+
         this.modalAdd3.show();
         this.showInformation();
         this.modalAdd2.hide();
     }
     registerInsurance4 =async () => {
+        swal({
+            title: "Good job!",
+            text: "You clicked the button!",
+            icon: "success",
+        });
+
         this.modalAdd4.show();
         this.modalAdd3.hide();
     }
@@ -508,7 +549,7 @@ class Insurances{
         return vehicle;
     }
 
-    getCoverByAll = async (id) =>{
+    getCoverById = async (id) =>{
         const request = new Request(`${backend}/coverage/${id}`, {method: 'GET', headers: {}});
         const response = await fetch(request);
         if (!response.ok) {
@@ -518,41 +559,32 @@ class Insurances{
         var coverage = await response.json();
         return coverage;
     }
+    getInsuranceByVin = async (vin) =>{
+        const request = new Request(`${backend}/insurance/${vin}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        var insurance = await response.json();
+        console.info(insurance);
+        return insurance;
+    }
 
     showInformation = async () =>{
         var finalprice = 0;
-        var info = document.getElementById('sVehicle').value;
-        var infoCar = info.split('-');
-        var car = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
-
+        var price = Number(this.insurance.cost);
 
         var listing = this.dom.querySelector("#showCover")
         var listing2 = this.dom.querySelector("#precioFinal")
         var listing3 = this.dom.querySelector("#addImage")
-        // En esta variable se guardaran cada unos de los id de los coverages seleccionados
-        var selectedCoverages = [];
-
-        // La sigte variable es para ir guardando cada uno de los coverage
-        var recoveryCoverage = [];
-        // Obtener el precio que se registro en el seguro
-        var price  = Number(document.getElementById('iPrice').value);
-
-        // Aqui recupera todos los datos que se encuentran en los checkbox
-        var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
-        checkboxes.forEach( e => selectedCoverages.push(e.value));
-
-        // Se recupera en la base de datos cada una de las coverturas elegidas
-        for (let i = 0; i < selectedCoverages.length; i++) {
-            var coverage = await this.getCoverByAll(selectedCoverages[i]);
-            recoveryCoverage.push(coverage);
-        }
 
         listing3.innerHTML = `
             <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
-            <img src="${backend}/vehicle/${car.id}/img" class="card-img-top" alt="Apple Computer" />
+            <img src="${backend}/vehicle/${this.insurance.id_vehicle.id}/img" class="card-img-top" alt="Apple Computer" />
         `;
 
-        recoveryCoverage.forEach( e => {
+        this.insurance.cover.forEach( e => {
             var min_cost = Number(e.min_cost);
             var per_cost = Number(e.per_cost);
             finalprice += Math.max(min_cost, per_cost * price);
@@ -565,12 +597,58 @@ class Insurances{
             <span>Total</span><span>$${finalprice}</span>
         `;
 
+        // var insurance = {"id_vehicle": this.insurance.id_vehicle, "pay_meth": this.insurance.pay_meth, "vin": this.insurance.vin, "client": globalstate.user, "cost": price, "date": date, "cover": recoveryCoverage};
+        this.addInsurance(this.insurance);
 
     }
 
-// <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
-// <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp" class="card-img-top" alt="Apple Computer" />
+    addInsurance =async (insurance) => {
+        const request = new Request(`${backend}/insurance`, {
+            method: 'POST',
+            body: JSON.stringify(insurance),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
 
+        try {
+            const response = await fetch(request);
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                this.handleErrorResponse(response.status, errorMessage);
+                return;
+            }
+            let resp = await response.json();
+
+            if(JSON.stringify(resp).includes('0')){
+                alert('Insurance Already Exists');
+                return;
+            }
+            alert('Insurance Registered');
+            return;
+
+        } catch (error) {
+            console.error(error);
+            alert("There is an error with the request.");
+        }
+
+    }
+
+    handleErrorResponse = (status, message) => {
+        // Manejo de errores específicos en función del código de estado de la respuesta
+        switch (status) {
+            case 400:
+                alert(`Request error: ${message}`);
+                console.log(message);
+                break;
+            case 401:
+                alert(`Authentication error: ${message}`);
+                break;
+            default:
+                alert(`Unknown error: ${status}`);
+        }
+    }
 
 
 }

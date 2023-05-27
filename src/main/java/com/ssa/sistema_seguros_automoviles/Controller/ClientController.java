@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 @RestController()
 @RequestMapping("client")
 public class ClientController {
@@ -48,4 +50,6 @@ public class ClientController {
             return client;
         return new Client();
     }
+
+
 }

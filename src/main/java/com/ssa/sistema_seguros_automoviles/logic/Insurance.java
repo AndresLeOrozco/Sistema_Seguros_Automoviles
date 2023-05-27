@@ -15,7 +15,7 @@ import java.util.Set;
 public class Insurance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    int id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vehicle", referencedColumnName = "id")
     Vehicle id_vehicle;
@@ -38,7 +38,7 @@ public class Insurance implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_client", referencedColumnName = "id")
     @JsonBackReference
-    private Client client;
+    Client client;
 
     @Column
     float cost;
@@ -87,7 +87,7 @@ public class Insurance implements Serializable {
         this.cover = cover;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
