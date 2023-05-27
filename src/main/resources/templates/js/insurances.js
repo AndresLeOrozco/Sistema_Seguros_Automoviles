@@ -2,23 +2,6 @@ class Insurances{
     dom;
     modal;
 
-    // int id;
-    //
-    // Vehicle id_vehicle;
-    //
-    // String pay_meth;
-    //
-    // String vin;
-    //
-    //
-    // Set<Coverage> cover;
-    //
-    // Client client;
-    //
-    // float cost;
-    //
-    // String date;
-
     state;
 
     insurance;
@@ -492,14 +475,25 @@ class Insurances{
         var info = document.getElementById('sVehicle').value;
         var infoCar = info.split('-');
         var price  = document.getElementById('iPrice').value;
-        this.insurance.cost = price;
-        this.insurance.id_vehicle = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
-        this.insurance.pay_meth = document.querySelector('input[name="btnradio"]:checked').value;
+
+
+        // Validate all inputs are fill
+        if (!vin || !infoCar || !price ) {
+            swal("Fill the blank");
+            return;
+        }
+
         if (await this.getInsuranceByVin(vin) == 0){
             alert("VIN COULD NOT BE USED!");
             return;
         }
+
+        //After validate add all data to insurance
+        this.insurance.cost = price;
+        this.insurance.id_vehicle = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+        this.insurance.pay_meth = document.querySelector('input[name="btnradio"]:checked').value;
         this.insurance.vin = vin;
+
 
 
         this.modalAdd2.show();
@@ -534,6 +528,12 @@ class Insurances{
         this.modalAdd2.hide();
     }
     registerInsurance4 =async () => {
+        swal({
+            title: "Good job!",
+            text: "You clicked the button!",
+            icon: "success",
+        });
+
         this.modalAdd4.show();
         this.modalAdd3.hide();
     }
