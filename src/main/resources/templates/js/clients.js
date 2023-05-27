@@ -66,9 +66,9 @@ class Clients{
         var tr =document.createElement("tr");
         tr.innerHTML=`
                 <td>${c.name}</td>
-                <td>${c.username}</td>
-                <td>${c.num_telefono}</td>
-                <td>${c.type_client}</td>
+                <td>${c.user}</td>
+                <td>${c.phone}</td>
+                <td>${c.type_cli}</td>
                 <td>
                   <div class="w3-container">
                     <button onclick="(function() {
@@ -94,7 +94,7 @@ class Clients{
                                   <ul>Coverages:
                                     ${element.cover && Array.isArray(element.cover) ? element.cover.map(cov => `
                                      <li> <p>Descripcion: ${cov.descrption}</p>
-                                      <p>Category: ${cov.cat.description}</p></li>
+                                      <p>Category: ${cov.category.description}</p></li>
                                     `).join('') : ''}
                                   </ul>
                                 `).join('') : ''}
@@ -117,10 +117,10 @@ class Clients{
             var listing=this.dom.querySelector("#listbody");
             listing.replaceChildren();
             this.state.entities.forEach( e=>{
-                if(e.type_client === 1)
-                    e.type_client = "Administrator"
-                if(e.type_client === 2)
-                    e.type_client = "Client"
+                if(e.type_cli === 1)
+                    e.type_cli = "Administrator"
+                if(e.type_cli === 2)
+                    e.type_cli = "Client"
 
                 this.row(listing,e)
             });

@@ -14,7 +14,7 @@ public class Coverage implements Serializable {
     Integer id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category", referencedColumnName = "id")
-    Category category;
+    Category cat;
     @Column
     String description;
     @Column
@@ -75,11 +75,11 @@ public class Coverage implements Serializable {
     }
 
     public Category getCategory() {
-        return category;
+        return cat;
     }
 
     public void setCategory(Category cat) {
-        this.category = cat;
+        this.cat = cat;
     }
 
     public Integer getMin_cost() {

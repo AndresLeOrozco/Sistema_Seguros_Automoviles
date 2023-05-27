@@ -171,27 +171,33 @@ class Categories {
 
     row= async (list,c)=>{
         var tr =document.createElement("tr");
-        var cov = [];
-        cov.push(await this.getCovs(c));
-
-        console.info(cov);
+        let covs = {'entities': new Array(), 'entity': "", 'mode':'A'};
+        covs.entities = await this.getCovs(c);
+        if(covs.entities.length === 0)
             tr.innerHTML=`
                 <td>${c.type}</td>
                 <td>${c.description}</td>
-                <td>${cov[0].ge}</td>    
+                <td> </td>    
                 `;
-            list.append(tr);
+        else{
+            tr.innerHTML=`
+                <td>${c.type}</td>
+                <td>${c.description}</td>
+                <td> ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
+                      <h5>Coverage: ${element.description}</h5>
+                        `).join('') : ''}</td>    
+                `;
+        }
+        list.append(tr);
     }
 
-    getCovs=(Category)=>{
-        const request = new Request(`${backend}/coverage/cat/${Category.id}`, {method: 'GET', headers: { }});
-        (async ()=> {
-            const response = await fetch(request);
-            //if (!response.ok) {errorMessage(response.status);return;}
-            var coverages = await response.json();
-            console.info(coverages);
-            return JSON.stringify(coverages);
-        })();
+
+    getCovs = async (Category) => {
+        const request = new Request(`${backend}/coverage/cat/${Category.id}`, { method: 'GET', headers: {} });
+        const response = await fetch(request);
+        //if (!response.ok) {errorMessage(response.status);return;}
+        let coverages = await response.json();
+        return coverages;
     }
 
     list=()=>{

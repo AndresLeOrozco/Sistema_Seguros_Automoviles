@@ -93,20 +93,12 @@ public class Client implements Serializable {
         this.insurances = insurances;
     }
 
-    public String getUsername() {
-        return user;
-    }
-
     public Integer getType_cli() {
         return type_cli;
     }
 
     public void setType_cli(Integer type_cli) {
         this.type_cli = type_cli;
-    }
-
-    public void setUsername(String username) {
-        this.user = username;
     }
 
     public String getPassword() {
@@ -123,30 +115,6 @@ public class Client implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getNum_telefono() {
-        return phone;
-    }
-
-    public void setNum_telefono(long num_telefono) {
-        this.phone = num_telefono;
-    }
-
-    public String getMail() {
-        return email;
-    }
-
-    public void setMail(String mail) {
-        this.email = mail;
-    }
-
-    public Integer getType_client() {
-        return type_cli;
-    }
-
-    public void setType_client(Integer type_client) {
-        this.type_cli = type_client;
     }
 
     public Integer getId() {
