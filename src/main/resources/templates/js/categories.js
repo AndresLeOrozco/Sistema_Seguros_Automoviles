@@ -169,12 +169,29 @@ class Categories {
         this.modal.show();
     }
 
-    row=(list,c)=>{
+    row= async (list,c)=>{
         var tr =document.createElement("tr");
-        tr.innerHTML=`
+        var cov = [];
+        cov.push(await this.getCovs(c));
+
+        console.info(cov);
+            tr.innerHTML=`
                 <td>${c.type}</td>
-                <td>${c.description}</td>`;
-        list.append(tr);
+                <td>${c.description}</td>
+                <td>${cov[0].ge}</td>    
+                `;
+            list.append(tr);
+    }
+
+    getCovs=(Category)=>{
+        const request = new Request(`${backend}/coverage/cat/${Category.id}`, {method: 'GET', headers: { }});
+        (async ()=> {
+            const response = await fetch(request);
+            //if (!response.ok) {errorMessage(response.status);return;}
+            var coverages = await response.json();
+            console.info(coverages);
+            return JSON.stringify(coverages);
+        })();
     }
 
     list=()=>{
@@ -266,8 +283,23 @@ class Categories {
         }
     }
 
+    getCat = async (id) =>{
+        const request = new Request(`${backend}/category/${id}`, { method: 'GET', headers: {} });
+        try {
+            const response = await fetch(request);
+            if (!response.ok) {
+                errorMessage(response.status);
+                return;
+            }
+            const categoryType = await response.json();
+            return categoryType;
+        } catch (error) {
+            console.error("Error al obtener los datos de categoría:", error);
+        }
+    }
+
     addCov = async () => {
-        const cat = this.dom.querySelector("#catDrpDwn").value;
+        const cat = Number(this.dom.querySelector("#catDrpDwn").value);
         const description = this.dom.querySelector("#descr").value;
         const min_cost = this.dom.querySelector("#minCost").value;
         const per_cost = this.dom.querySelector("#perCost").value;
@@ -279,15 +311,18 @@ class Categories {
             return;
         }
 
-        if ( Number(min_cost) === NaN || Number(per_cost) === NaN || per_cost < 1 ) {
+        if ( Number(min_cost) === NaN ) {
             this.addWarning("Wrong format number", 2);
             this.modalCov.hide();
             this.warn.show();
             return;
         }
 
+        let category = await this.getCat(cat);
+
         const newCoverage = {
-            cat: cat,
+            id: null,
+            cat: category,
             description: description,
             min_cost: min_cost,
             per_cost: per_cost

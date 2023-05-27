@@ -1,5 +1,6 @@
 package com.ssa.sistema_seguros_automoviles.data.Repo;
 
+import com.ssa.sistema_seguros_automoviles.logic.Category;
 import com.ssa.sistema_seguros_automoviles.logic.Coverage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +12,9 @@ public interface CoverageRepo extends JpaRepository<Coverage,Integer> {
     List<Coverage> findAll();
 
     Coverage findById(int id);
+
+    List<Coverage> findCoveragesByCat_Id(int id);
+
 
 
 }
