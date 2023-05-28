@@ -173,22 +173,43 @@ class Categories {
         var tr =document.createElement("tr");
         let covs = {'entities': new Array(), 'entity': "", 'mode':'A'};
         covs.entities = await this.getCovs(c);
-        if(covs.entities.length === 0)
-            tr.innerHTML=`
+        if(covs.entities.length === 0) {
+            tr.innerHTML = `
                 <td>${c.type}</td>
                 <td>${c.description}</td>
-                <td> </td>    
+                <td>There is no coverages</td>    
                 `;
-        else{
-            tr.innerHTML=`
-                <td>${c.type}</td>
-                <td>${c.description}</td>
-                <td> ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
-                      <h5>Coverage: ${element.description}</h5>
-                        `).join('') : ''}</td>    
-                `;
+            list.append(tr);
         }
-        list.append(tr);
+        else{
+            tr.innerHTML = `
+    <td>${c.type}</td>
+    <td>${c.description}</td>
+    <td> 
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#popup">Mostrar Popup</button>
+        <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="popupLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="popupLabel">Coverages</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
+                            <p>${element.description}</p>
+                        `).join('') : ''}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+`;
+            list.append(tr);
+        }
+
     }
 
 
