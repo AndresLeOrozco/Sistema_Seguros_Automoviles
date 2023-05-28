@@ -185,28 +185,33 @@ class Categories {
             tr.innerHTML = `
     <td>${c.type}</td>
     <td>${c.description}</td>
-    <td> 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#popup">Mostrar Popup</button>
-        <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="popupLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="popupLabel">Coverages</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <td>
+                  <div class="w3-container">
+                    <button onclick="(function() {
+                      var button = document.getElementById('button-${c.id}');
+                      button.style.display = 'none';
+                      var modal = document.getElementById('${c.id}');
+                      modal.style.display = 'block';
+                    })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
+                    <div id="${c.id}" class="w3-modal" style="display: none; border: 1px solid black; padding: 10px">
+                      <div class="w3-modal-content">
+                        <div class="w3-container">
+                          <button onclick="(function() {
+                                var button = document.getElementById('button-${c.id}');
+                                button.style.display = 'block';
+                                var modal = document.getElementById('${c.id}');
+                                modal.style.display = 'none';
+                              })()" id="button-${c.id}" class="w3-button w3-display-topright" style="float: right; text-align: right;">&times;</button>
+                          <h3>Coverages</h3>
+                                ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
+                                    <p>${element.description}</p>
+                                `).join('') : ''}
+                        </div>
+                      </div>
                     </div>
-                    <div class="modal-body">
-                        ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
-                            <p>${element.description}</p>
-                        `).join('') : ''}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </td>
-`;
+                  </div>
+                </td>
+  `;
             list.append(tr);
         }
 
@@ -349,7 +354,7 @@ class Categories {
 
         const newCoverage = {
             id: null,
-            cat: category,
+            category: category,
             description: description,
             min_cost: min_cost,
             per_cost: per_cost
