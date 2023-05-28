@@ -31,13 +31,13 @@ public class Coverage implements Serializable {
         this.per_cost = per_cost;
     }
 
-    public Set<Insurance> getIns() {
-        return ins;
-    }
+//    public Set<Insurance> getIns() {
+//        return ins;
+//    }
 
-    public void setIns(Set<Insurance> ins) {
-        this.ins = ins;
-    }
+  //  public void setIns(Set<Insurance> ins) {
+//        this.ins = ins;
+//    }
 
 //    public String getDescription() {
 //        return description;

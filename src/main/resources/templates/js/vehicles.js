@@ -238,10 +238,6 @@ class Vehicles{
         this.modal.hide();
     }
 
-    validate=()=>{
-    }
-
-
     list=()=>{
         const request = new Request(`${backend}/vehicle`, {method: 'GET', headers: { }});
         (async ()=>{
@@ -280,17 +276,5 @@ class Vehicles{
         this.dom.querySelector("#mod").value= "";
         this.dom.querySelector("#yea").value="";
     }
-    handleErrorResponse = (status, message) => {
-        // Manejo de errores específicos en función del código de estado de la respuesta
-        switch (status) {
-            case 400:
-                alert(`Request error: ${message}`);
-                break;
-            case 401:
-                alert(`Authentication error: ${message}`);
-                break;
-            default:
-                alert(`Unknown error: ${status}`);
-        }
-    }
+
 }

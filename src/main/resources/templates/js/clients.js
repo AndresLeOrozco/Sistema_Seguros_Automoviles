@@ -64,7 +64,18 @@ class Clients{
 
     row=(list,c)=>{
         var tr =document.createElement("tr");
-        tr.innerHTML=`
+        if(c.type_cli === "Administrator"){
+            tr.innerHTML=`
+                <td>${c.name}</td>
+                <td>${c.user}</td>
+                <td>${c.phone}</td>
+                <td>${c.type_cli}</td>
+                <td><strong>Administrator</strong></td>
+                        `;
+            list.append(tr);
+        }
+        else{
+            tr.innerHTML=`
                 <td>${c.name}</td>
                 <td>${c.user}</td>
                 <td>${c.phone}</td>
@@ -93,7 +104,7 @@ class Clients{
                                   <p>VIN: ${element.vin}</p>
                                   <ul>Coverages:
                                     ${element.cover && Array.isArray(element.cover) ? element.cover.map(cov => `
-                                     <li> <p>Descripcion: ${cov.descrption}</p>
+                                     <li> <p>Descripcion: ${cov.description}</p>
                                       <p>Category: ${cov.category.description}</p></li>
                                     `).join('') : ''}
                                   </ul>
@@ -104,7 +115,9 @@ class Clients{
                   </div>
                 </td>
   `;
-        list.append(tr);
+            list.append(tr);
+        }
+
     }
 
     list=()=>{
@@ -121,7 +134,6 @@ class Clients{
                     e.type_cli = "Administrator"
                 if(e.type_cli === 2)
                     e.type_cli = "Client"
-
                 this.row(listing,e)
             });
         })();

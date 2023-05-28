@@ -355,13 +355,13 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
         this.dom.querySelector("#app>#menu #menuItems #information")?.addEventListener('click',e=>this.renderUpdate());
         this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
+            this.clearParameters();
             this.modal.hide();
             this.reg.show();
             });
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
-        let Hola = " ";
     }
 
 
