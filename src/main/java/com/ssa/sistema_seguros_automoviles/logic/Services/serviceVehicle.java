@@ -64,7 +64,8 @@ public class serviceVehicle {
     @Transactional
     public boolean save(Vehicle c) {
         Vehicle n = new Vehicle();
-        n = vehicleRepo.findVehicleByBrandAndModel(n.getBrand(),n.getModel());
+        n = vehicleRepo.findVehicleByBrandAndModelAndYear(n.getBrand(),n.getModel(),n.getYear());
+        System.out.println(n.toString());
         if (n == null){
             vehicleRepo.save(c);
             return true;

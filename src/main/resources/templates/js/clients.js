@@ -20,6 +20,13 @@ class Clients{
         rootContent.innerHTML = html;
         return rootContent;
     }
+    renderModal = () => {
+        return `
+        <div id="modal" class="modal fade" tabindex="-1">
+            
+        </div>      
+        `;
+    }
 
     renderList = () => {
         return `
@@ -46,22 +53,6 @@ class Clients{
         </div>
         `;
     }
-
-    renderModal = () => {
-        return `
-        <div id="modal" class="modal fade" tabindex="-1">
-            
-        </div>      
-        `;
-    }
-    showModal= async ()=>{
-        // Load entity data into modal form
-        this.modal.show();
-    }
-
-
-
-
     row=(list,c)=>{
         var tr =document.createElement("tr");
         if(c.type_cli === "Administrator"){

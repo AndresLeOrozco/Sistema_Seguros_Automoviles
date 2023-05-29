@@ -590,7 +590,7 @@ class Insurances{
             finalprice += Math.max(min_cost, per_cost * price);
             listing.innerHTML += `
             <div class="d-flex justify-content-between">
-               <span>${e.descrption}</span><span>$${Math.max(min_cost, per_cost * price)}</span>
+               <span>${e.description}</span><span>$${Math.max(min_cost, per_cost * price)}</span>
             </div>
         `;});
         listing2.innerHTML = `

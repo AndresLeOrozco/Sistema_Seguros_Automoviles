@@ -27,7 +27,6 @@ public class Insurance implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
-
     })
     @JoinTable(
             name = "ins_cov",
@@ -35,7 +34,7 @@ public class Insurance implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "id_cov")}
     )
     Set<Coverage> cover;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="id_client", referencedColumnName = "id")
     @JsonBackReference
     Client client;
