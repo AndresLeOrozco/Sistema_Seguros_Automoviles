@@ -1,9 +1,11 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -16,6 +18,8 @@ public class Category implements Serializable {
     @Column
     String description;
 
+    @OneToMany(mappedBy = "cat",fetch = FetchType.EAGER)
+    Set<Coverage> coverage;
 
     public Category(String type, String description) {
         this.type = type;

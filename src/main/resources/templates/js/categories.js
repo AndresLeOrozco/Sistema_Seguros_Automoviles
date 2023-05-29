@@ -169,12 +169,61 @@ class Categories {
         this.modal.show();
     }
 
-    row=(list,c)=>{
+    row= async (list,c)=>{
         var tr =document.createElement("tr");
-        tr.innerHTML=`
+        let covs = {'entities': new Array(), 'entity': "", 'mode':'A'};
+        covs.entities = await this.getCovs(c);
+        if(covs.entities.length === 0) {
+            tr.innerHTML = `
                 <td>${c.type}</td>
-                <td>${c.description}</td>`;
-        list.append(tr);
+                <td>${c.description}</td>
+                <td>There is no coverages</td>    
+                `;
+            list.append(tr);
+        }
+        else{
+            tr.innerHTML = `
+    <td>${c.type}</td>
+    <td>${c.description}</td>
+    <td>
+                  <div class="w3-container">
+                    <button onclick="(function() {
+                      var button = document.getElementById('button-${c.id}');
+                      button.style.display = 'none';
+                      var modal = document.getElementById('${c.id}');
+                      modal.style.display = 'block';
+                    })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
+                    <div id="${c.id}" class="w3-modal" style="display: none; border: 1px solid black; padding: 10px">
+                      <div class="w3-modal-content">
+                        <div class="w3-container">
+                          <button onclick="(function() {
+                                var button = document.getElementById('button-${c.id}');
+                                button.style.display = 'block';
+                                var modal = document.getElementById('${c.id}');
+                                modal.style.display = 'none';
+                              })()" id="button-${c.id}" class="w3-button w3-display-topright" style="float: right; text-align: right;">&times;</button>
+                          <h3>Coverages</h3>
+                                ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
+                                    <p>${element.description}</p>
+                                `).join('') : ''}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+  `;
+            list.append(tr);
+        }
+
+    }
+
+
+    getCovs = async (Category) => {
+        const request = new Request(`${backend}/coverage/cat/${Category.id}`, { method: 'GET', headers: {} });
+        const response = await fetch(request);
+        //if (!response.ok) {errorMessage(response.status);return;}
+        let coverages = await response.json();
+        return coverages;
     }
 
     list=()=>{
@@ -266,8 +315,23 @@ class Categories {
         }
     }
 
+    getCat = async (id) =>{
+        const request = new Request(`${backend}/category/${id}`, { method: 'GET', headers: {} });
+        try {
+            const response = await fetch(request);
+            if (!response.ok) {
+                errorMessage(response.status);
+                return;
+            }
+            const categoryType = await response.json();
+            return categoryType;
+        } catch (error) {
+            console.error("Error al obtener los datos de categoría:", error);
+        }
+    }
+
     addCov = async () => {
-        const cat = this.dom.querySelector("#catDrpDwn").value;
+        const cat = Number(this.dom.querySelector("#catDrpDwn").value);
         const description = this.dom.querySelector("#descr").value;
         const min_cost = this.dom.querySelector("#minCost").value;
         const per_cost = this.dom.querySelector("#perCost").value;
@@ -279,15 +343,18 @@ class Categories {
             return;
         }
 
-        if ( Number(min_cost) === NaN || Number(per_cost) === NaN || per_cost < 1 ) {
+        if ( Number(min_cost) === NaN ) {
             this.addWarning("Wrong format number", 2);
             this.modalCov.hide();
             this.warn.show();
             return;
         }
 
+        let category = await this.getCat(cat);
+
         const newCoverage = {
-            cat: cat,
+            id: null,
+            category: category,
             description: description,
             min_cost: min_cost,
             per_cost: per_cost

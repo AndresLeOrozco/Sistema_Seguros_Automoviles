@@ -1,5 +1,6 @@
 package com.ssa.sistema_seguros_automoviles.data.Repo;
 
+import com.ssa.sistema_seguros_automoviles.logic.Category;
 import com.ssa.sistema_seguros_automoviles.logic.Coverage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +16,9 @@ public interface CoverageRepo extends JpaRepository<Coverage,Integer> {
     List<Coverage> findAll();
 
     Coverage findById(int id);
+
+    List<Coverage> findCoveragesByCat_Id(int id);
+
 
 
 }

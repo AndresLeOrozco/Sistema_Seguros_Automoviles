@@ -290,12 +290,12 @@ class App{
 
     renderUpdate=()=>{
         this.dom.querySelector("#titleReg").textContent = "Edit User";
-        this.dom.querySelector("#Rusername").value = globalstate.user.username;
+        this.dom.querySelector("#Rusername").value = globalstate.user.user;
         //this.dom.querySelector("#Rusername").setAttribute('readonly', 'true');
         this.dom.querySelector("#Rpass").value = globalstate.user.password;
         this.dom.querySelector("#Rname").value = globalstate.user.name;
-        this.dom.querySelector("#Rphone").value = globalstate.user.num_telefono;
-        this.dom.querySelector("#Remail").value = globalstate.user.mail;
+        this.dom.querySelector("#Rphone").value = globalstate.user.phone;
+        this.dom.querySelector("#Remail").value = globalstate.user.email;
         this.dom.querySelector("#Remail").setAttribute('readonly', 'true');
         this.dom.querySelector("#botSub").style.visibility = 'hidden';
         this.dom.querySelector("#botUpd").style.visibility = 'visible';
@@ -316,10 +316,10 @@ class App{
         }else{
             html+=`
               <li class="nav-item">
-                  <a class="nav-link" id="information" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> ${globalstate.user.username}</a>
+                  <a class="nav-link" id="information" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> ${globalstate.user.user}</a>
               </li>
             `;
-            if(globalstate.user.type_client===1){
+            if(globalstate.user.type_cli===1){
                 html+=`
                     <li class="nav-item">
                         <a class="nav-link" id="clients" href="#"> <span><i class="fa fa-address-book"></i></span> Clients </a>
@@ -335,7 +335,7 @@ class App{
                     </li>
                 `;
             }
-            if(globalstate.user.type_client===2){
+            if(globalstate.user.type_cli===2){
                 html+=`
                 <li class="nav-item">
                      <a class="nav-link" id="insurances" href="#"> <span><i class="fa fa-wheelchair"></i></span> Insurances </a>
@@ -355,13 +355,13 @@ class App{
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
         this.dom.querySelector("#app>#menu #menuItems #information")?.addEventListener('click',e=>this.renderUpdate());
         this.dom.querySelector("#GoRegister")?.addEventListener('click',e=>{
+            this.clearParameters();
             this.modal.hide();
             this.reg.show();
             });
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
-        let Hola = " ";
     }
 
 
@@ -381,7 +381,7 @@ class App{
                 this.warn.show();
             }
             let usuario = await response.json();
-            if (usuario.type_client === null) {
+            if (usuario.type_cli === null) {
                 this.addWarning("ID or password incorrect",1);
                 this.modal.hide();
                 this.warn.show();
@@ -393,7 +393,7 @@ class App{
                 this.renderMenuItems();
                 this.clearParameters();
             }
-            if(globalstate.user.type_client === 2)
+            if(globalstate.user.type_cli === 2)
                 await this.showInsurance();
         }
     }
@@ -490,12 +490,12 @@ class App{
         }
         const newRegister = {
             id:Number(globalstate.user.id),
-            username: username,
+            user: username,
             password: password,
             name: name,
-            num_telefono: phone,
-            mail: email,
-            type_client:Number(globalstate.user.type_client)
+            phone: phone,
+            email: email,
+            type_cli:Number(globalstate.user.type_cli)
         };
         const request = new Request(`${backend}/client/${globalstate.user.id}/update`, {
             method: 'PUT',

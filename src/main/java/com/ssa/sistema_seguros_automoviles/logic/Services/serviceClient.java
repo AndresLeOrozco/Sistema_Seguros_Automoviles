@@ -24,7 +24,7 @@ public class serviceClient {
     @Transactional
     public boolean save(Client c) {
         Client n = new Client();
-        n = clientRepo.findByUser(c.getUsername());
+        n = clientRepo.findByUser(c.getUser());
         if (n == null){
             clientRepo.save(c);
             return true;
@@ -33,12 +33,9 @@ public class serviceClient {
     }
     @Transactional
     public Client update(Client c){
-            Client cli = clientRepo.findByUser(c.getUser());
-            if(cli != null)
-                return null;
             clientRepo.save(c);
-            cli = clientRepo.findClientById(c.getId());
-            return cli;
+            c = clientRepo.findClientById(c.getId());
+            return c;
     }
 
 

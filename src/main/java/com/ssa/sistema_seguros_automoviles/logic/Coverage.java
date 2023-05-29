@@ -1,5 +1,6 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ public class Coverage implements Serializable {
     int id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category", referencedColumnName = "id")
-    Category category;
+    Category cat;
     @Column
     String description;
     @Column
@@ -24,11 +25,19 @@ public class Coverage implements Serializable {
     Set<Insurance> ins;
 
     public Coverage(Category id_category, String description, Integer min_cost, float per_cost) {
-    //    this.cat = id_category;
+        this.cat = id_category;
         this.description = description;
         this.min_cost = min_cost;
         this.per_cost = per_cost;
     }
+
+//    public Set<Insurance> getIns() {
+//        return ins;
+//    }
+
+  //  public void setIns(Set<Insurance> ins) {
+//        this.ins = ins;
+//    }
 
 //    public String getDescription() {
 //        return description;
@@ -56,22 +65,21 @@ public class Coverage implements Serializable {
         this.id = id_cov;
     }
 
-    public String getDescrption() {
+
+    public String getDescription() {
         return description;
     }
 
-
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Category getCategory() {
-        return category;
+        return cat;
     }
 
     public void setCategory(Category cat) {
-        this.category = cat;
-    }
-
-    public void setDescrption(String descrption) {
-        this.description = descrption;
+        this.cat = cat;
     }
 
     public Integer getMin_cost() {

@@ -30,7 +30,7 @@ public class CoverageController {
 
     @CrossOrigin
     @GetMapping(value = "{id}")
-    public  Coverage findById(@PathVariable String id){return  c.findById(parseInt(id));}
+    public  Coverage findById(@PathVariable int id){return  c.findById(id);}
 
     @CrossOrigin
     @PostMapping
@@ -42,6 +42,12 @@ public class CoverageController {
             System.out.println(e.toString());
         }
         return 0;
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "cat/{id}")
+    public List<Coverage> findCovList(@PathVariable int id) {
+        return c.findCovList(id);
     }
 
 }

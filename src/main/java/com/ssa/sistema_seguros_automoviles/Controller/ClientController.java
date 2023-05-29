@@ -34,7 +34,7 @@ public class ClientController {
     @CrossOrigin
     @PostMapping
     public int save(@RequestBody Client c) {
-        c.setType_client(2);
+        c.setType_cli(2);
         try{
             if(this.s.save(c))
                 return 1;
