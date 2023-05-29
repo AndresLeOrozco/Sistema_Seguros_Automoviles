@@ -10,7 +10,7 @@ import java.util.Set;
 public class Coverage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    int id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category", referencedColumnName = "id")
     Category category;
@@ -52,7 +52,7 @@ public class Coverage implements Serializable {
         return id;
     }
 
-    public void setId(Integer id_cov) {
+    public void setId(int id_cov) {
         this.id = id_cov;
     }
 

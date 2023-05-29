@@ -1,28 +1,31 @@
 class Insurances{
     dom;
     modal;
-
-    state;
+    modalAdd;
+    modalAdd2;
+    modalAdd3;
 
     insurance;
 
     constructor() {
-        this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
 
-        this.insurance = {'id_vehicle': "", 'pay_meth': "", 'vin': "",
-            'cover': new Array(), 'client': "", 'cost': "", 'date': ""};
+        this.insurance = {'idVehicle': 0, 'pay_meth': '', 'vin': '',
+             'idClient': 0, 'cost': 0, 'date': '', 'cover': new Array(),};
 
         this.dom = this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
         this.modalAdd = new bootstrap.Modal(this.dom.querySelector('#myModal1'));
         this.modalAdd2 = new bootstrap.Modal(this.dom.querySelector('#myModal2'));
         this.modalAdd3 = new bootstrap.Modal(this.dom.querySelector('#myModal3'));
-        // this.modalAdd4 = new bootstrap.Modal(this.dom.querySelector('#myModal4'));
+
         this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#addNew').addEventListener('click', this.registerInsurance);
         this.dom.querySelector('#nextV1').addEventListener('click', this.registerInsurance2);
         this.dom.querySelector('#nextV2').addEventListener('click', this.registerInsurance3);
-        // this.dom.querySelector('#nextV3').addEventListener('click', this.registerInsurance4);
+        this.dom.querySelector('#prevV2').addEventListener('click', this.registerInsurancePrev);
+        this.dom.querySelector('#prevV3').addEventListener('click', this.registerInsurancePrev2);
+        this.dom.querySelector('#payIns').addEventListener('click', this.registerPay);
+
 
 
     }
@@ -149,10 +152,8 @@ class Insurances{
                      <i class="fa fa-car"></i>
                      <h7>Brand - Model - Year</h7>
                      <select id="sVehicle" class="form-select" aria-label="Default select example" required>
-                      <option selected></option>
-<!--                      <option value="1">One</option>-->
-<!--                      <option value="2">Two</option>-->
-<!--                      <option value="3">Three</option>-->
+                      
+=
                     </select>
                     <br>
                     <i class="fa fa-credit-card"></i>
@@ -172,9 +173,8 @@ class Insurances{
             <br><br><br>
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button id="nextV1" type="button" class="btn btn-default btn-next">Next</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            <button id="nextV1" type="button" class="btn btn-success btn-next">Next</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
          </div>
       </div>
    </div>
@@ -209,9 +209,9 @@ class Insurances{
                </fieldset>
            </form>
          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-prev">Prev</button>
-            <button id="nextV2" type="button" class="btn btn-default btn-next">Next</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            <button id="prevV2" type="button" class="btn btn-warning btn-prev">Prev</button>
+            <button id="nextV2" type="button" class="btn btn-success btn-next">Next</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
          </div>
       </div>
    </div>
@@ -244,28 +244,18 @@ class Insurances{
       <div style="height: 100%; width: 100%; class="col-md-8 col-lg-6 col-xl-4">
         <div class="card text-black">
             <div id="addImage">
-<!--                <i class="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-->
-<!--                <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/3.webp"-->
-<!--                    class="card-img-top" alt="Apple Computer" />-->
+
             </div>
           <div class="card-body">
             <div class="text-center">
-              <h5 class="card-title">Believing is seeing</h5>
-              <p class="text-muted mb-4">Apple pro display XDR</p>
+              <h5 class="card-title"></h5>
+              <p class="text-muted mb-4"></p>
             </div>
             <div id="showCover">
-<!--              <div class="d-flex justify-content-between">-->
-<!--                <span>Pro Display XDR</span><span>$5,999</span>-->
-<!--              </div>-->
-<!--              <div class="d-flex justify-content-between">-->
-<!--                <span>Pro stand</span><span>$999</span>-->
-<!--              </div>-->
-<!--              <div class="d-flex justify-content-between">-->
-<!--                <span>Vesa Mount Adapter</span><span>$199</span>-->
-<!--              </div>-->
+
             </div>
             <div id="precioFinal" class="d-flex justify-content-between total font-weight-bold mt-4">
-<!--              <span>Total</span><span>$7,197.00</span>-->
+
             </div>
           </div>
         </div>
@@ -276,7 +266,8 @@ class Insurances{
            </form>
          </div>
          <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+         <button id="prevV3" type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Prev</button>
+        <button id="payIns" type="button" class="btn btn-success" aria-label="Close">Pay</button>
       </div>
       </div>
    </div>
@@ -300,43 +291,12 @@ class Insurances{
             `;
     }
 
-    addWarning = (message,type) => {
-        //type 1: Error Type 2: Warning Type 3 Succes
-        let warning = this.dom.querySelector("#modalBodyWarn");
-        let html = "";
-        if(type === 1)
-            html += `
-                <div class="alert alert-danger" role="alert">
-                 ${message}
-                </div>
-            `;
-        if(type === 2)
-            html += `
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <strong>WARNING!</strong> ${message}
-                 
-                </div>
-            `;
-        if(type === 3)
-            html += `
-                <div class="alert alert-success" role="alert">
-                  <h4 class="alert-heading">Succesful!</h4>
-                  <p>${message}</p>
-                  <hr>
-                </div>
-            `;
-        warning.replaceChildren();
-        warning.innerHTML=html;
-    }
-
-    showModal= async ()=>{
-        // Load entity data into modal form
-        this.modal.show();
-    }
 
     row=(list,c, n)=>{
         var tr =document.createElement("tr");
         tr.innerHTML=`
+ 
+                <td><img style="width: 70px; height: 70px" class="rounded-circle" src="${backend}/vehicle/${c.id_vehicle.id}/img"/></td>
                 <td>${n}</td>
                 <td>${c.vin}</td>
                 <td>${c.date}</td>
@@ -347,12 +307,13 @@ class Insurances{
         this.dom.querySelector(`#insurance-${c.id}`)?.addEventListener('click',e=>this.openDetail(c));
     }
 
-    list=()=>{
+    list= async ()=>{
         let n = 0;
         let insurances = [];
-        insurances = globalstate.user.insurances;
+        insurances = await this.getInsurancesById(globalstate.user.id);
         var listing= this.dom.querySelector("#listbody");
         listing.replaceChildren();
+
         insurances.forEach( e=>
             this.row(listing,e, n += 1)
         );
@@ -383,13 +344,18 @@ class Insurances{
     }
 
     listVehicle=()=>{
-
+        var option =document.createElement("option");
         const request = new Request(`${backend}/vehicle`, {method: 'GET', headers: { }});
         (async ()=>{
             const response = await fetch(request);
             if (!response.ok) {errorMessage(response.status);return;}
             var vehicles = await response.json();
             var listing=this.dom.querySelector("#sVehicle");
+            listing.replaceChildren();
+            option.innerHTML=`
+                <option selected></option>
+                `;
+            listing.append(option);
             vehicles.forEach( e=>this.selectOP(listing,e));
         })();
     }
@@ -401,6 +367,7 @@ class Insurances{
             if (!response.ok) {errorMessage(response.status);return;}
             var coverages = await response.json();
             var listing=this.dom.querySelector("#iCoverages");
+            listing.replaceChildren();
             coverages.forEach( e=>this.checkC(listing,e));
         })();
     }
@@ -416,7 +383,6 @@ class Insurances{
     }
     openDetail = async (c) =>{
         var p = document.createElement('p');
-        var tr = document.createElement('tr');
         var listing= this.dom.querySelector("#vehiclePrice");
         var listing2= this.dom.querySelector("#coverInfo");
         let covers = [];
@@ -427,20 +393,20 @@ class Insurances{
             <p>Vehicle Cost: ${c.cost}</p>
         `;
 
-
-        covers.forEach(e =>
-            tr.innerHTML =`
+        listing2.replaceChildren();
+        covers.forEach(function (e){
+            var tr = document.createElement('tr');
+            tr.innerHTML +=`
                 
                 <td>${e.min_cost}</td>
                 <td>${e.per_cost}</td>
                 <td>${e.descrption}</td>
-            `
-        );
+            `;
+            listing2.append(tr);
+        });
 
         listing.replaceChildren();
-        listing2.replaceChildren();
         listing.append(p);
-        listing2.append(tr);
         this.modal.show();
     }
 
@@ -458,18 +424,33 @@ class Insurances{
         return price;
     }
 
-    registerInsurance = () => {
+    registerInsurance = async () => {
+
+        var e  = await this.getAllInsurances();
         var currentDate = new Date();
         var year = currentDate.getFullYear();
         var month = currentDate.getMonth() + 1;
         var day = currentDate.getDate();
-        this.insurance.client = globalstate.user;
-        this.insurance.date = `${year}-${month}-${day}`;
+        this.insurance.idClient = globalstate.user.id;
+        this.insurance.date = `${year}-0${month}-${day}`;
 
         this.modalAdd.show();
         this.listVehicle();
     }
+    registerInsurancePrev = () =>{
+        this.registerInsurance();
+        this.modalAdd2.hide();
+        this.update();
+
+    }
+    registerInsurancePrev2 = () =>{
+
+        this.registerInsurance2();
+        this.modalAdd3.hide();
+
+    }
     registerInsurance2 =async () => {
+
         //Get the previous information
         var vin = document.getElementById("iVIN").value;
         var info = document.getElementById('sVehicle').value;
@@ -477,20 +458,23 @@ class Insurances{
         var price  = document.getElementById('iPrice').value;
 
 
+
         // Validate all inputs are fill
-        if (!vin || !infoCar || !price ) {
-            swal("Fill the blank");
+        if (!vin || !infoCar || !price || !info) {
+            swal("PLEASE!", "Fill the blank", "warning");
             return;
         }
 
         if (await this.getInsuranceByVin(vin) == 0){
-            alert("VIN COULD NOT BE USED!");
+            swal("ATTENTION","VIN REPEATED", "warning");
             return;
         }
 
+        var car = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+
         //After validate add all data to insurance
-        this.insurance.cost = price;
-        this.insurance.id_vehicle = await this.getVehicle(infoCar[0], infoCar[1], infoCar[2]);
+        this.insurance.cost = Number(price);
+        this.insurance.idVehicle = Number(car.id);
         this.insurance.pay_meth = document.querySelector('input[name="btnradio"]:checked').value;
         this.insurance.vin = vin;
 
@@ -505,6 +489,7 @@ class Insurances{
     }
 
     registerInsurance3 =async () => {
+
         // save each id of coverage registered
         var selectedCoverages = [];
 
@@ -514,6 +499,11 @@ class Insurances{
         // Recovery all coverages checked
         var checkboxes = document.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
         checkboxes.forEach( e => selectedCoverages.push(e.value));
+
+        if(selectedCoverages.length == 0){
+            swal("PLEASE!", "Check the coverages", "warning");
+            return;
+        }
 
         // Get from the DB the info od the coverages selected
         for (let i = 0; i < selectedCoverages.length; i++) {
@@ -526,16 +516,15 @@ class Insurances{
         this.modalAdd3.show();
         this.showInformation();
         this.modalAdd2.hide();
-    }
-    registerInsurance4 =async () => {
-        swal({
-            title: "Good job!",
-            text: "You clicked the button!",
-            icon: "success",
-        });
 
-        this.modalAdd4.show();
+    }
+
+    registerPay = () =>{
+
+        this.addInsurance(this.insurance);
         this.modalAdd3.hide();
+        this.clearParameters();
+
     }
 
     getVehicle= async (brand, model, year)=>{
@@ -571,6 +560,19 @@ class Insurances{
         return insurance;
     }
 
+    getInsurancesById = async (id) =>{
+        const request = new Request(`${backend}/insurance/client/${id}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        let insurances = [];
+        insurances = await response.json();
+        console.info(insurances);
+        return insurances;
+    }
+
     showInformation = async () =>{
         var finalprice = 0;
         var price = Number(this.insurance.cost);
@@ -579,9 +581,14 @@ class Insurances{
         var listing2 = this.dom.querySelector("#precioFinal")
         var listing3 = this.dom.querySelector("#addImage")
 
+        //Clear all datta recovery before
+        listing.replaceChildren();
+        listing2.replaceChildren();
+        listing3.replaceChildren();
+
         listing3.innerHTML = `
             <i className="fa fa-car fa-lg pt-3 pb-1 px-3"></i>-
-            <img src="${backend}/vehicle/${this.insurance.id_vehicle.id}/img" class="card-img-top" alt="Apple Computer" />
+            <img src="${backend}/vehicle/${this.insurance.idVehicle}/img" class="card-img-top" alt="Car insuranced" />
         `;
 
         this.insurance.cover.forEach( e => {
@@ -596,9 +603,7 @@ class Insurances{
         listing2.innerHTML = `
             <span>Total</span><span>$${finalprice}</span>
         `;
-
         // var insurance = {"id_vehicle": this.insurance.id_vehicle, "pay_meth": this.insurance.pay_meth, "vin": this.insurance.vin, "client": globalstate.user, "cost": price, "date": date, "cover": recoveryCoverage};
-        this.addInsurance(this.insurance);
 
     }
 
@@ -619,13 +624,13 @@ class Insurances{
                 this.handleErrorResponse(response.status, errorMessage);
                 return;
             }
-            let resp = await response.json();
-
-            if(JSON.stringify(resp).includes('0')){
-                alert('Insurance Already Exists');
-                return;
-            }
-            alert('Insurance Registered');
+            this.update();
+            swal({
+                title: "Good job!",
+                text: "You clicked the button!",
+                icon: "success",
+            });
+            swal("SUCCESSFULLY","Transaction processed!", "success");
             return;
 
         } catch (error) {
@@ -649,6 +654,36 @@ class Insurances{
                 alert(`Unknown error: ${status}`);
         }
     }
+
+    getAllInsurances = async () =>{
+        const request = new Request(`${backend}/insurance`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            errorMessage(response.status);
+            return;
+        }
+        var insurance = await response.json();
+        console.info(insurance);
+        return insurance;
+    }
+
+    clearParameters=() =>{
+        this.dom.querySelector("#iVIN").value = "";
+        this.dom.querySelector("#iPrice").value= "";
+        this.dom.querySelector("#sVehicle").selectedIndex=0;
+        this.dom.querySelector("#sVehicle").value="";
+        var checkboxes = this.dom.querySelectorAll('#iCoverages input[type="checkbox"]:checked');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+        this.insurance = {'idVehicle': 0, 'pay_meth': '', 'vin': '',
+            'idClient': 0, 'cost': 0, 'date': '', 'cover': new Array()};
+    }
+
+    update = ()=>{
+        this.list();
+    }
+
 
 
 }

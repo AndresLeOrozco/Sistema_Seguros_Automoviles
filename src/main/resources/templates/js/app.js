@@ -388,6 +388,7 @@ class App{
                 this.clearParameters();
             } else {
                 globalstate.user = usuario;
+                swal("SUCCESSFULLY","", "success");
                 this.modal.hide();
                 this.renderMenuItems();
                 this.clearParameters();
