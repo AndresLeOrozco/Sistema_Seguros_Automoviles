@@ -89,9 +89,9 @@ public class Client implements Serializable {
         return insurances;
     }
 
-    public void setInsurances(Set<Insurance> insurances) {
-        this.insurances = insurances;
-    }
+//    public void setInsurances(Set<Insurance> insurances) {
+//        this.insurances = insurances;
+//    }
 
     public Integer getType_cli() {
         return type_cli;

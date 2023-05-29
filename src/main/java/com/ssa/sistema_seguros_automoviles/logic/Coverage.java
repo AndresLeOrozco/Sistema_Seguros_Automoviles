@@ -11,8 +11,8 @@ import java.util.Set;
 public class Coverage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    int id;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category", referencedColumnName = "id")
     Category cat;
     @Column
@@ -21,7 +21,7 @@ public class Coverage implements Serializable {
     Integer min_cost;
     @Column
     float per_cost;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "cover")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "cover")
     Set<Insurance> ins;
 
     public Coverage(Category id_category, String description, Integer min_cost, float per_cost) {
@@ -50,10 +50,10 @@ public class Coverage implements Serializable {
 //    public Set<Insurance> getIns() {
 //        return ins;
 //    }
-
-    public void setIns(Set<Insurance> ins) {
-        this.ins = ins;
-    }
+//
+//    public void setIns(Set<Insurance> ins) {
+//        this.ins = ins;
+//    }
 
     public Coverage(){}
 
@@ -61,7 +61,7 @@ public class Coverage implements Serializable {
         return id;
     }
 
-    public void setId(Integer id_cov) {
+    public void setId(int id_cov) {
         this.id = id_cov;
     }
 
