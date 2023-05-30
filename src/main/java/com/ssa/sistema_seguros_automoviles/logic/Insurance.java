@@ -1,6 +1,7 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -42,6 +43,7 @@ public class Insurance implements Serializable {
     Set<Coverage> cover;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(insertable=false, updatable=false, name="id_client", referencedColumnName = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     Client client;
 
 

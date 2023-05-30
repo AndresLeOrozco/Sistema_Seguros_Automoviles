@@ -1,9 +1,7 @@
 package com.ssa.sistema_seguros_automoviles.logic;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.ssa.sistema_seguros_automoviles.data.Repo.ClientRepo;
 import jakarta.persistence.*;
 
@@ -35,7 +33,7 @@ public class Client implements Serializable {
     @Column
     Integer type_cli;
     @OneToMany(mappedBy = "client",fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     Set<Insurance> insurances;
 
     public Client(Integer id,String username, String password, String name, Integer num_telefono, String mail,Integer tc) {

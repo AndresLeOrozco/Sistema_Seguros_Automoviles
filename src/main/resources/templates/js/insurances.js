@@ -336,7 +336,7 @@ class Insurances{
         div.innerHTML=`
             <p style="font-size: medium; margin-bottom: 0em;  margin-top: 0em; font-weight: bold;">${c.category.type}</p>
             <input class="form-check-input" type="checkbox" role="switch" id="o-${c.id}" value="${c.id}">
-            <label class="form-check-label" for="flexSwitchCheckDefault">${c.descrption}</label>
+            <label class="form-check-label" for="flexSwitchCheckDefault">${c.description}</label>
            
        ` ;
         list.append(div);
@@ -400,7 +400,7 @@ class Insurances{
                 
                 <td>${e.min_cost}</td>
                 <td>${e.per_cost}</td>
-                <td>${e.descrption}</td>
+                <td>${e.description}</td>
             `;
             listing2.append(tr);
         });

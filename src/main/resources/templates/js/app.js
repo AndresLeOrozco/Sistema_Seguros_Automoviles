@@ -420,18 +420,20 @@ class App{
         }
 
         const newRegister = {
-            username: username,
+            user: username,
             password: password,
             name: name,
-            num_telefono: phone,
-            mail: email
+            phone: phone,
+            email: email,
+            type_cli: 2,
+            insurances:[]
         };
 
         const request = new Request(`${backend}/client`, {
             method: 'POST',
             body: JSON.stringify(newRegister),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json;"
             }
         });
         (async ()=>{
@@ -489,19 +491,20 @@ class App{
             return;
         }
         const newRegister = {
-            id:Number(globalstate.user.id),
+            id:globalstate.user.id,
             user: username,
             password: password,
             name: name,
             phone: phone,
             email: email,
-            type_cli:Number(globalstate.user.type_cli)
+            type_cli:globalstate.user.type_cli,
+            insurances:[]
         };
-        const request = new Request(`${backend}/client/${globalstate.user.id}/update`, {
+        const request = new Request(`${backend}/client/update`, {
             method: 'PUT',
             body: JSON.stringify(newRegister),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json;"
             }
         });
 
@@ -530,19 +533,6 @@ class App{
 
     }
 
-    handleErrorResponse = (status, message) => {
-        // Manejo de errores específicos en función del código de estado de la respuesta
-        switch (status) {
-            case 400:
-                alert(`Request error: ${message}`);
-                break;
-            case 401:
-                alert(`Authentication error: ${message}`);
-                break;
-            default:
-                alert(`Unknown error: ${status}`);
-        }
-    }
 
     clearParameters = () =>{
         this.dom.querySelector("#titleReg").textContent = "Sign Up";

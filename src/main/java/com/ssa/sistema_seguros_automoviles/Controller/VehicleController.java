@@ -27,8 +27,7 @@ import static java.lang.Integer.parseInt;
 public class VehicleController {
     @Autowired
     serviceVehicle c;
-    @Autowired
-    VehicleRepo vehicleRepo;
+
 
     @CrossOrigin
     @GetMapping(value="")

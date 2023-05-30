@@ -33,6 +33,7 @@ public class serviceClient {
     }
     @Transactional
     public Client update(Client c){
+            System.out.println(c.toString());
             clientRepo.save(c);
             c = clientRepo.findClientById(c.getId());
             return c;
