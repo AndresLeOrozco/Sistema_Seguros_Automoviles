@@ -7,7 +7,7 @@ class Clients{
     constructor() {
         this.state = {'entities': new Array(), 'entity': "", 'mode': 'A'};
         this.dom = this.render();
-        this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
+        this.modal = new bootstrap.Modal(this.dom.querySelector('#myModal'));
     }
 
     render = () => {
@@ -21,10 +21,30 @@ class Clients{
         return rootContent;
     }
     renderModal = () => {
-        return `
-        <div id="modal" class="modal fade" tabindex="-1">
-            
-        </div>      
+        return ` 
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+        
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Insurance Information</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              
+              <div class="modal-body" id="mBody">
+              
+              </div>
+        
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+              </div>
+        
+            </div>
+          </div>
+        </div>   
         `;
     }
 
@@ -63,7 +83,6 @@ class Clients{
                 <td>${c.type_cli}</td>
                 <td><strong>Administrator</strong></td>
                         `;
-            list.append(tr);
         }
         else{
             tr.innerHTML=`
@@ -71,43 +90,13 @@ class Clients{
                 <td>${c.user}</td>
                 <td>${c.phone}</td>
                 <td>${c.type_cli}</td>
-                <td>
-                  <div class="w3-container">
-                    <button onclick="(function() {
-                      var button = document.getElementById('button-${c.id}');
-                      button.style.display = 'none';
-                      var modal = document.getElementById('${c.id}');
-                      modal.style.display = 'block';
-                    })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
-                    <div id="${c.id}" class="w3-modal" style="display: none; border: 1px solid black; padding: 10px">
-                      <div class="w3-modal-content">
-                        <div class="w3-container">
-                          <button onclick="(function() {
-                                var button = document.getElementById('button-${c.id}');
-                                button.style.display = 'block';
-                                var modal = document.getElementById('${c.id}');
-                                modal.style.display = 'none';
-                              })()" id="button-${c.id}" class="w3-button w3-display-topright" style="float: right; text-align: right;">&times;</button>
-                          <h3>Insurances of client</h3>
-                                ${c.insurances && Array.isArray(c.insurances) ? c.insurances.map(element => `
-                                  <h5>Insurance ID: ${element.id}</h5>
-                                  <p>Modelo Vehiculo: ${element.id_vehicle.model}</p>
-                                  <p>VIN: ${element.vin}</p>
-                                  <ul>Coverages:
-                                    ${element.cover && Array.isArray(element.cover) ? element.cover.map(cov => `
-                                     <li> <p>Descripcion: ${cov.description}</p>
-                                      <p>Category: ${cov.category.description}</p></li>
-                                    `).join('') : ''}
-                                  </ul>
-                                `).join('') : ''}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-  `;
-            list.append(tr);
+                <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal"><a id="cli-${c.id}">Insurances</a></button></td>
+            `;
+
         }
+
+        list.append(tr);
+        this.dom.querySelector(`#cli-${c.id}`)?.addEventListener('click',e=>this.openDetail(c));
 
     }
 
@@ -129,4 +118,56 @@ class Clients{
             });
         })();
     }
+
+    openDetail = async (c) =>{
+        var insure = document.createElement('div');
+        var listing= this.dom.querySelector("#mBody");
+        let html = ""
+        let ins = [];
+        ins = c.insurances;
+        ins.forEach(i=>{
+            html +=`
+                <h4><strong>Insurance</strong></h4>
+                <p>VIN: ${i.vin}</p>
+                <p>Pay Method: ${i.pay_meth}</p>
+                <p>Vehicle Cost: ${i.cost}</p>
+                <table class="table table-striped">
+                <thead>
+                <h5>Coverages</h5>
+                  <tr>
+                    <th>Minimum Cost</th>
+                    <th>Percentage Cost</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    ${this.shCovs(i)}
+                </tbody>
+                </table>
+                <br>
+                
+            `;
+        });
+        insure.innerHTML=html;
+        listing.replaceChildren();
+        listing.append(insure);
+        this.modal.show();
+    }
+    shCovs = (ins) =>{
+        let covs = [];
+        covs = ins.cover;
+        let html = "";
+
+        covs.forEach(e=>{
+           html+=`
+               <tr>
+               <td>${e.min_cost}</td>
+               <td>${e.per_cost}</td>
+               <td>${e.description}</td>
+               </tr>
+           `;
+        })
+        return html;
+    }
+
 }
