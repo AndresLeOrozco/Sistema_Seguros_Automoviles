@@ -263,7 +263,6 @@ class App{
             html += `
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <strong>WARNING!</strong> ${message}
-                 
                 </div>
             `;
         if(type === 3)
@@ -374,7 +373,7 @@ class App{
             this.warn.show();
             this.clearParameters();
         }else {
-            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'POST', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 this.addWarning(response.statusText,1);
@@ -530,7 +529,6 @@ class App{
             globalstate.user = resp;
             this.reg.hide();
             this.renderMenuItems();
-
     }
 
 
@@ -547,7 +545,6 @@ class App{
         this.dom.querySelector("#clave").value = '';
         this.dom.querySelector("#botSub").style.visibility = 'visible';
         this.dom.querySelector("#botUpd").style.visibility = 'hidden';
-
     }
 
 

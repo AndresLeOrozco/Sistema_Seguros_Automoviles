@@ -22,6 +22,7 @@ public class ClientController {
     }
 
 
+
     @CrossOrigin
     @GetMapping(value="/login/{user}/{pass}")
     public Client login(@PathVariable() String user, @PathVariable() String pass) {
