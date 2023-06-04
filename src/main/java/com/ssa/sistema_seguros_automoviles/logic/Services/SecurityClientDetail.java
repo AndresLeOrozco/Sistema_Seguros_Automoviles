@@ -21,7 +21,6 @@ public class SecurityClientDetail implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        var optClient = this.clientRepo.findByUser(username);
         Optional<Client> optClient = Optional.ofNullable(clientRepo.findByUser(username));
 
         if (optClient.isPresent()) {

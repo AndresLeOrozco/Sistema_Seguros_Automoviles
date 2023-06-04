@@ -3,6 +3,7 @@ package com.ssa.sistema_seguros_automoviles.security;
 import com.ssa.sistema_seguros_automoviles.logic.Client;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -25,13 +26,23 @@ public class SecurityClient implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> list = new ArrayList<>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         if (client.getType_cli() == 1) {
-            list.add("ROLE_ADMIN");
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
         } else {
-            list.add("ROLE_CLIENT");
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
         }
-        return list.stream().map(SecurityAuthority::new).toList();
+        return authorities;
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(Client user) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if(user.getType_cli() == 1)
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        if(user.getType_cli() == 2)
+            authorities.add(new SimpleGrantedAuthority("CLI"));
+        return authorities;
     }
 
     @Override

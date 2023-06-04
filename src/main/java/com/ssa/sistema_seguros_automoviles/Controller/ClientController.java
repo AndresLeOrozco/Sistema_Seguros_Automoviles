@@ -15,14 +15,14 @@ public class ClientController {
     @Autowired
     serviceClient s;
 
-    @CrossOrigin
+
     @GetMapping(value="")
     public List<Client> find() {
         return s.find();
     }
 
 
-    @CrossOrigin
+
     @GetMapping(value="/login/{user}/{pass}")
     public Client login(@PathVariable() String user, @PathVariable() String pass) {
         Client c = s.findBy(user,pass);
@@ -31,7 +31,7 @@ public class ClientController {
         return new Client();
     }
 
-    @CrossOrigin
+
     @PostMapping
     public int save(@RequestBody Client c) {
         c.setType_cli(2);
@@ -43,7 +43,7 @@ public class ClientController {
         }
         return 0;
     }
-    @CrossOrigin
+
     @PutMapping(value ="/update")
     public Client updateClient(@RequestBody Client client) {
         if(s.update(client) != null)

@@ -101,7 +101,7 @@ class Clients{
     }
 
     list=()=>{
-        const request = new Request(`${backend}/client`, {method: 'GET', headers: { }});
+        const request = new Request(`${backend}/client`, {method: 'GET', mode:"no-cors", headers: { }});
         (async ()=> {
             const response = await fetch(request);
             if (!response.ok) {errorMessage(response.status);return;}
