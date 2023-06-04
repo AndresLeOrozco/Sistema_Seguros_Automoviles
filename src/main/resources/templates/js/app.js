@@ -374,7 +374,7 @@ class App{
             this.warn.show();
             this.clearParameters();
         }else {
-            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', mode: 'no-cors', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 this.addWarning(response.statusText,1);
