@@ -1,6 +1,7 @@
 class Categories {
     dom;
     modal;
+    modalC;
     modalCov
     state;
     coverageDOM;
@@ -11,6 +12,7 @@ class Categories {
         this.modal = new bootstrap.Modal(this.dom.querySelector('#modal'));
         this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.modalCov = new bootstrap.Modal(this.dom.querySelector('#modalCov'));
+        this.modalC = new bootstrap.Modal(this.dom.querySelector('#myModalCov'));
         this.dom.querySelector("#addNewCat").addEventListener('click', this.makenew);
         this.dom.querySelector("#addNewCov").addEventListener('click', this.makenewCov);
         this.dom.querySelector('#apply').addEventListener('click',this.add);
@@ -25,6 +27,7 @@ class Categories {
             ${this.renderModalCategory()}
             ${this.renderWarning()}
             ${this.renderModalCoverage()}
+            ${this.renderModal()}
         `;
         let rootContent = document.createElement('div');
         rootContent.id = 'categories';
@@ -95,20 +98,20 @@ class Categories {
                         <span style='margin-left:4em;font-weight: bold;'>Coverage</span> 
                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="formCov" >
-                    <div class="col">
-                        <label class="form-label" for="form2Example11">Select a Category</label>
-                        <select name="categoriesDrpDwn" id="catDrpDwn" required>
-                            <option value="" label="" disabled>Choose option</option>
+                        <form id="formCov" >
+                        <div class="col">
+                            <label class="form-label" for="form2Example11">Select a Category</label>
+                            <select name="categoriesDrpDwn" id="catDrpDwn" required>
+                                <option value="" label="" disabled>Choose option</option>
                             
-                        </select>
-                        <br><br>
-                    </div>
-                    <div class="modal-body">
-                        <input id="descr" type="text" class="form-control" placeholder="Description">
-                        <input id="minCost" type="text" class="form-control" placeholder="Minimum cost">
-                        <input id="perCost" type="text" class="form-control" placeholder="Percentage cost">
-                    </div>
+                            </select>
+                            <br><br>
+                        </div>
+                        <div class="modal-body">
+                            <input id="descr" type="text" class="form-control" placeholder="Description">
+                            <input id="minCost" type="text" class="form-control" placeholder="Minimum cost">
+                            <input id="perCost" type="text" class="form-control" placeholder="Percentage cost">
+                        </div>
                     <div class="modal-footer">
                         <button id="applyCov" type="button" class="btn btn-primary" >Save</button>
                     </div>
@@ -116,6 +119,34 @@ class Categories {
                 </div>         
             </div>
         </div>      
+        `;
+    }
+
+    renderModal = () => {
+        return ` 
+        <!-- The Modal -->
+        <div class="modal" id="myModalCov">
+          <div class="modal-dialog">
+            <div class="modal-content">
+        
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Coverages Information</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              
+              <div class="modal-body" id="mBodyC">
+              
+              </div>
+        
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+              </div>
+        
+            </div>
+          </div>
+        </div>   
         `;
     }
 
@@ -185,43 +216,18 @@ class Categories {
             tr.innerHTML = `
     <td>${c.type}</td>
     <td>${c.description}</td>
-    <td>
-                  <div class="w3-container">
-                    <button onclick="(function() {
-                      var button = document.getElementById('button-${c.id}');
-                      button.style.display = 'none';
-                      var modal = document.getElementById('${c.id}');
-                      modal.style.display = 'block';
-                    })()" id="button-${c.id}" class="w3-button w3-black">ver</button>                    
-                    <div id="${c.id}" class="w3-modal" style="display: none; border: 1px solid black; padding: 10px">
-                      <div class="w3-modal-content">
-                        <div class="w3-container">
-                          <button onclick="(function() {
-                                var button = document.getElementById('button-${c.id}');
-                                button.style.display = 'block';
-                                var modal = document.getElementById('${c.id}');
-                                modal.style.display = 'none';
-                              })()" id="button-${c.id}" class="w3-button w3-display-topright" style="float: right; text-align: right;">&times;</button>
-                          <h3>Coverages</h3>
-                                ${covs.entities && Array.isArray(covs.entities) ? covs.entities.map(element => `
-                                    <p>${element.description}</p>
-                                `).join('') : ''}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
+    <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModalCov"><a id="cat-${c.id}">Coverages</a></button></td>
+    
   `;
-            list.append(tr);
+
         }
-
+        list.append(tr);
+        this.dom.querySelector(`#cat-${c.id}`)?.addEventListener('click',e=>this.openDetail(c));
     }
-
 
     getCovs = async (Category) => {
         const request = new Request(`${backend}/coverage/cat/${Category.id}`, { method: 'GET', headers: {} });
         const response = await fetch(request);
-        //if (!response.ok) {errorMessage(response.status);return;}
         let coverages = await response.json();
         return coverages;
     }
@@ -238,6 +244,46 @@ class Categories {
             //listing.innerHTML="";
             this.state.entities.forEach( e=>this.row(listing,e));
         })();
+    }
+
+    openDetail = async (c) => {
+        var cover = document.createElement('div');
+        var listing = this.dom.querySelector("#mBodyC");
+        let html = "";
+        let covs = await this.getCovs(c);
+
+        // Verificar si covs es un array y no está vacío
+        if (Array.isArray(covs) && covs.length > 0) {
+            covs.forEach(i => {
+                html += `
+        <table class="table table-striped">
+          <thead>
+            <h4><strong>Coverage</strong></h4>
+            <tr>
+              <th>Description</th>
+              <th>Minimum Cost</th>
+              <th>Percentage Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${i.description}</td>
+              <td>${i.min_cost}</td>
+              <td>${i.per_cost}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+      `;
+            });
+        } else {
+            html = "No coverages available.";
+        }
+
+        cover.innerHTML = html;
+        listing.replaceChildren();
+        listing.appendChild(cover);
+        this.modalC.show();
     }
 
     comboBoxOption=(list,c)=>{

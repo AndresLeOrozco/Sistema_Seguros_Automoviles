@@ -361,7 +361,7 @@ class Insurances{
     }
     listCoverages=()=>{
 
-        const request = new Request(`${backend}/coverage`, {method: 'GET', headers: { }});
+        const request = new Request(`${backend}/coverage`, {method: 'GET',mode:"no-cors", headers: { }});
         (async ()=>{
             const response = await fetch(request);
             if (!response.ok) {errorMessage(response.status);return;}
@@ -528,7 +528,7 @@ class Insurances{
     }
 
     getVehicle= async (brand, model, year)=>{
-        const request = new Request(`${backend}/vehicle/car/${brand}/${model}/${year}`, {method: 'GET', headers: {}});
+        const request = new Request(`${backend}/vehicle/car/${brand}/${model}/${year}`, {method: 'GET',mode:"no-cors", headers: {}});
         const response = await fetch(request);
         if (!response.ok) {
             errorMessage(response.status);
@@ -539,7 +539,7 @@ class Insurances{
     }
 
     getCoverById = async (id) =>{
-        const request = new Request(`${backend}/coverage/${id}`, {method: 'GET', headers: {}});
+        const request = new Request(`${backend}/coverage/${id}`, {method: 'GET',mode:"no-cors", headers: {}});
         const response = await fetch(request);
         if (!response.ok) {
             errorMessage(response.status);
@@ -549,7 +549,7 @@ class Insurances{
         return coverage;
     }
     getInsuranceByVin = async (vin) =>{
-        const request = new Request(`${backend}/insurance/${vin}`, {method: 'GET', headers: {}});
+        const request = new Request(`${backend}/insurance/${vin}`, {method: 'GET',mode:"no-cors", headers: {}});
         const response = await fetch(request);
         if (!response.ok) {
             errorMessage(response.status);
@@ -561,7 +561,7 @@ class Insurances{
     }
 
     getInsurancesById = async (id) =>{
-        const request = new Request(`${backend}/insurance/client/${id}`, {method: 'GET', headers: {}});
+        const request = new Request(`${backend}/insurance/client/${id}`, {method: 'GET',mode:"no-cors", headers: {}});
         const response = await fetch(request);
         if (!response.ok) {
             errorMessage(response.status);

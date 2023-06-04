@@ -2,8 +2,6 @@ package com.ssa.sistema_seguros_automoviles.logic.Services;
 
 import com.ssa.sistema_seguros_automoviles.data.Repo.*;
 import com.ssa.sistema_seguros_automoviles.logic.Client;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,21 +41,5 @@ public class serviceClient {
             c = clientRepo.findClientById(c.getId());
             return c;
     }
-    @Transactional
-    public String generateToken(UserDetails userDetails) {
-        // Configurar las claims y la firma del token
-        String secretKey = "mySecretKey"; // Clave secreta para firmar el token
-        int expirationTimeInMinutes = 60; // Tiempo de expiración del token en minutos
-
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername()) // Establecer el nombre de usuario como subject del token
-                .claim("roles", userDetails.getAuthorities()) // Agregar roles o autoridades como claim del token
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeInMinutes * 60 * 1000)) // Establecer la fecha de expiración del token
-                .signWith(SignatureAlgorithm.HS256, secretKey) // Firmar el token con la clave secreta y el algoritmo de firma
-                .compact(); // Generar el token como una cadena compacta
-    }
-
-
-
 
 }

@@ -28,10 +28,10 @@ public class SecurityClient implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (client.getType_cli() == 1) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
 
         } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
+            authorities.add(new SimpleGrantedAuthority("CLI"));
         }
         return authorities;
     }

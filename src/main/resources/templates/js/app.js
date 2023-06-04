@@ -374,29 +374,31 @@ class App{
             this.warn.show();
             this.clearParameters();
         }else {
-            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', mode: 'no-cors', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'POST', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 this.addWarning(response.statusText,1);
                 this.warn.show();
             }
-            let usuario = await response.json();
-            if (usuario.type_cli === null) {
-                this.addWarning("ID or password incorrect",1);
-                this.modal.hide();
-                this.warn.show();
-                this.clearParameters();
-            } else {
-                globalstate.user = usuario;
+            let usuario = await response.text();
+            if (response.ok) {
+                let userx = await this.ClientInfo(user,pass);
+                globalstate.user = userx;
                 swal("SUCCESSFULLY","", "success");
                 this.modal.hide();
                 this.renderMenuItems();
+                this.clearParameters();
+            } else {
+                this.addWarning("ID or password incorrect",1);
+                this.modal.hide();
+                this.warn.show();
                 this.clearParameters();
             }
             if(globalstate.user.type_cli === 2)
                 await this.showInsurance();
         }
     }
+
 
     register = () => {
         const username = this.dom.querySelector("#Rusername").value;
@@ -549,6 +551,20 @@ class App{
         this.dom.querySelector("#botUpd").style.visibility = 'hidden';
 
     }
+
+    ClientInfo = async (us, pa) => {
+        const request = new Request(`${backend}/client/${us}/${pa}`, {
+            method: 'GET',
+            headers: {}
+        });
+        const response = await fetch(request);
+        if (!response.ok) {
+            this.addWarning(response.statusText, 1);
+            this.warn.show();
+        }
+        let client = await response.json();
+        return client;
+    };
 
 
     showCli=async()=>{

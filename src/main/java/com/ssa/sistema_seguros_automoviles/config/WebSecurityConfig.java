@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,8 +41,12 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         return http.csrf().disable()
                 .httpBasic()
                 .and().authorizeHttpRequests()
-                .requestMatchers("/client/login/*/*").hasAnyAuthority( "ROLE_CLIENT", "ROLE_ADMIN")
-                .requestMatchers(HttpMethod.GET, "/client/**").hasAnyAuthority(  "ROLE_ADMIN")
+                .requestMatchers("/client/login/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/client/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/category/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/coverage/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/insurance/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/vehicle/**").permitAll()
                 .and()
                 .formLogin(form -> form
                         .failureUrl("/login?error=true")
@@ -50,6 +56,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
                 )
                 .cors().disable()
+                .csrf().disable()
                 .build();
     }
 
@@ -72,7 +79,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             }
         };
     }
-
-
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 }
 //
