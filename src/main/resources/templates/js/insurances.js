@@ -397,7 +397,7 @@ class Insurances{
         covers.forEach(function (e){
             var tr = document.createElement('tr');
             tr.innerHTML +=`
-                
+                 
                 <td>${e.min_cost}</td>
                 <td>${e.per_cost}</td>
                 <td>${e.description}</td>
