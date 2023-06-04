@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.ssa.sistema_seguros_automoviles.data.Repo")
 public class SistemaSegurosAutomovilesApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SistemaSegurosAutomovilesApplication.class, args);
     }

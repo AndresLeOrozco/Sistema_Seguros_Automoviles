@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public interface ClientRepo  extends JpaRepository<Client,Integer> {
@@ -21,5 +22,7 @@ public interface ClientRepo  extends JpaRepository<Client,Integer> {
     Client findByUser(String user);
 
     Client findClientById(int id);
+
+    Optional<Client> findByUserAndPassword(String u,String pass);
 
 }

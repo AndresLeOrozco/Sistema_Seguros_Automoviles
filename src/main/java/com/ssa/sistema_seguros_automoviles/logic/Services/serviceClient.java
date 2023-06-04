@@ -27,6 +27,11 @@ public class serviceClient {
     }
 
     @Transactional
+    public Client findByUs(String us) {
+        return clientRepo.findByUser(us);
+    }
+
+    @Transactional
     public boolean save(Client c) {
         Client n = new Client();
         n = clientRepo.findByUser(c.getUser());
