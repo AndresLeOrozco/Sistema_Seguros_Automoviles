@@ -13,7 +13,6 @@ import java.util.List;
 public class SecurityClient implements UserDetails {
     private final Client client;
 
-
     @Override
     public String getUsername() {
         return client.getUser();
@@ -24,18 +23,16 @@ public class SecurityClient implements UserDetails {
         return client.getPassword();
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> list = new ArrayList<>();
-        if (client.getType_cli() == 1){
-            list.add("admin");
-        }else {
-            list.add("client");
+        if (client.getType_cli() == 1) {
+            list.add("ROLE_ADMIN");
+        } else {
+            list.add("ROLE_CLIENT");
         }
         return list.stream().map(SecurityAuthority::new).toList();
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
