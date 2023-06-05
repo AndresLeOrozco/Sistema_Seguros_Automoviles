@@ -28,6 +28,7 @@ class App{
         this.categoryDOM = new Categories();
         this.insuranceDOM = new Insurances();
         this.vehicleDOM = new Vehicles();
+
     }
 
     render=()=>{
@@ -303,8 +304,10 @@ class App{
     }
 
     renderMenuItems=()=>{
+
         var html='';
-        if(globalstate.user===null){
+
+        if(globalstate.user===null && localStorage.length < 1){
             html+=`
               <li class="nav-item">
                   <a class="nav-link" id="login" href="#" data-bs-toggle="modal"> <span><i class="fa fa-user"></i></span> Login </a>
@@ -314,6 +317,7 @@ class App{
               </li>
             `;
         }else{
+            globalstate = JSON.parse(localStorage.getItem("globalstate"));
             html+=`
               <li class="nav-item">
                   <a class="nav-link" id="information" href="#" data-bs-toggle="modal"> <span><i class="fa fa-address-card"></i></span> ${globalstate.user.user}</a>
@@ -334,6 +338,7 @@ class App{
                     <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout(Administrator) </a>
                     </li>
                 `;
+
             }
             if(globalstate.user.type_cli===2){
                 html+=`
@@ -344,6 +349,7 @@ class App{
                   <a class="nav-link" id="logout" href="#" data-bs-toggle="modal"> <span><i class="fas fa-power-off"></i></span> Logout(Client) </a>
                 </li>
                 `;
+                this.showInsuranceWithUser();
             }
 
         };
@@ -362,6 +368,8 @@ class App{
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
+        this.dom.querySelector('#insurances')?.addEventListener('click', e => this.showInsurance());
+
     }
 
 
@@ -388,10 +396,12 @@ class App{
                 this.clearParameters();
             } else {
                 globalstate.user = usuario;
+                localStorage.setItem("globalstate", JSON.stringify(globalstate));
                 swal("SUCCESSFULLY","", "success");
                 this.modal.hide();
                 this.renderMenuItems();
                 this.clearParameters();
+
             }
             if(globalstate.user.type_cli === 2)
                 await this.showInsurance();
@@ -574,13 +584,24 @@ class App{
     logout= async ()=>{
         // invoque backend for login
         this.dom.querySelector("#app>#menu #menuItems").style.fontWeight = 'normal';
+        localStorage.removeItem("globalstate");
+        localStorage.clear();
         globalstate.user=null;
         this.dom.querySelector('#app>#body').replaceChildren();
         this.renderBodyFiller();
         this.renderMenuItems();
     }
     showInsurance = async () =>{
+        // localStorage.setItem("globalstate", JSON.stringify(globalstate));
+        // console.info(localStorage.getItem("1"));
         this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
+        this.insuranceDOM.list();
+    }
+
+    showInsuranceWithUser = async () =>{
+        // localStorage.setItem("globalstate", JSON.stringify(globalstate));
+        // console.info(localStorage.getItem("1"));
+        // this.dom.querySelector('#app>#body').replaceChildren(this.insuranceDOM.dom);
         this.insuranceDOM.list();
     }
 

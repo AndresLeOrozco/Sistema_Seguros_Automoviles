@@ -17,6 +17,7 @@ class Insurances{
         this.modalAdd = new bootstrap.Modal(this.dom.querySelector('#myModal1'));
         this.modalAdd2 = new bootstrap.Modal(this.dom.querySelector('#myModal2'));
         this.modalAdd3 = new bootstrap.Modal(this.dom.querySelector('#myModal3'));
+        // this.modalCard = new bootstrap.Modal()
 
         this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#addNew').addEventListener('click', this.registerInsurance);
@@ -25,6 +26,9 @@ class Insurances{
         this.dom.querySelector('#prevV2').addEventListener('click', this.registerInsurancePrev);
         this.dom.querySelector('#prevV3').addEventListener('click', this.registerInsurancePrev2);
         this.dom.querySelector('#payIns').addEventListener('click', this.registerPay);
+        this.dom.querySelector('#searchVIN').addEventListener('click', this.showSearch);
+
+
 
 
 
@@ -45,6 +49,17 @@ class Insurances{
     }
     renderList = () => {
         return `
+<!--Aqui se agrega el buscar-->
+<div class="container h-100">
+      <div class="d-flex justify-content-center h-100">
+        <div class="searchbar">
+          <input id="searchWord" class="search_input" type="text" name="" placeholder="Search...">
+          <a id="searchVIN" href="#" class="search_icon"><i class="fas fa-search"></i></a>
+        </div>
+      </div>
+    </div>
+    <br>
+<!--Aqui termina el buscar-->
         <div id="list" class="container">     
             <div class="card bg-light">
                 <h4 class="card-title mt-3 text-center"><span><i class="fas fa-shield-alt"></i></span> Insurances</h4><br>
@@ -55,6 +70,7 @@ class Insurances{
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>Image</th>
                                     <th>Number</th>
                                     <th>VIN</th>
                                     <th>Date</th>
@@ -153,7 +169,7 @@ class Insurances{
                      <h7>Brand - Model - Year</h7>
                      <select id="sVehicle" class="form-select" aria-label="Default select example" required>
                       
-=
+
                     </select>
                     <br>
                     <i class="fa fa-credit-card"></i>
@@ -665,6 +681,22 @@ class Insurances{
         var insurance = await response.json();
         console.info(insurance);
         return insurance;
+    }
+
+    showSearch = async () =>{
+        let n = 0;
+        var searching = this.dom.querySelector('#searchWord').value;
+        var insurances = await this.getInsurancesById(globalstate.user.id);
+        const insurancesFilter = insurances.filter(insurance => insurance.vin.includes(searching));
+
+        var listing= this.dom.querySelector("#listbody");
+        listing.replaceChildren();
+
+        insurancesFilter.forEach( e=>
+            this.row(listing,e, n += 1)
+        );
+
+
     }
 
     clearParameters=() =>{
