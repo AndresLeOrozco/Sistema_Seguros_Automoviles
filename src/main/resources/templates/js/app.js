@@ -252,7 +252,7 @@ class App{
              <input type="text" name="name" id="cardName" class="form-control" placeholder="Cardholder Name" required="required"></div> 
              <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" placeholder="Card Number" id="cardNumb" required="required"><i class="fa fa-eye"></i> 
              </div> 
-             <div class="d-flex flex-row"> <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" id="expdate" required="required"> <span>Expiration Date</span> 
+             <div class="d-flex flex-row"> <div class="inputbox"> <input type="date" name="name" min="1" max="999" class="form-control" id="expdate" required="required"> <span>Expiration Date</span> 
              </div> <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" id="cvv" required="required"> <span>CVV</span> 
              </div> 
              </div> 
@@ -500,7 +500,8 @@ class App{
                     return;
                 }
                 this.addWarning("User Registered",3);
-                await this.postCard(username);
+                await this.postCard(newRegister);
+                this.modalCard.hide();
                 this.warn.show();
                 this.clearParameters();
                 this.reg.hide();
@@ -521,26 +522,41 @@ class App{
         this.reg.hide();
     }
 
+    getUserby = async (user) =>{
+        const request = new Request(`${backend}/client/login/${user.user}/${user.password}`, {method: 'GET', headers: {}});
+        const response = await fetch(request);
+        if (!response.ok) {
+            this.addWarning(response.statusText,1);
+            this.warn.show();
+        }
+        let usuario = await response.json();
+        return usuario;
+    }
+
     postCard = async(user) => {
         const cardNumber = this.dom.querySelector("#cardNumb").value;
         const date = this.dom.querySelector("#expdate").value;
         const cvv = this.dom.querySelector("#cvv").value;
-        const newRegister = {
-
+        let usuario = await this.getUserby(user);
+        const tarjeta = {
+            card_number: cardNumber,
+            date:date,
+            cvc:cvv,
+            id_client:usuario.id
         };
         const request = new Request(`${backend}/card`, {
             method: 'POST',
-            body: JSON.stringify(newRegister),
+            body: JSON.stringify(tarjeta),
             headers: {
                 "Content-type": "application/json;"
             }
         });
 
         const response = await fetch(request);
-        if (!response.ok) {
-
+        if(JSON.stringify(response).includes('0')) {
+                this.addWarning("Tarjeta Repetida",1);
+                this.warn.show();
         }
-
     }
 
 

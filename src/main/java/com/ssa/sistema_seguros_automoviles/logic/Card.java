@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "card")
-public class Card implements Serializable {
+public class Card implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -17,8 +17,10 @@ public class Card implements Serializable {
     @Column
     Integer cvc;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="id_client", referencedColumnName = "id")
+    @JoinColumn(insertable=false, updatable=false,name="id_client", referencedColumnName = "id")
     Client cli;
+    @Column(name = "id_client")
+    int id_client;
 
 
     public Card(Integer ID,long num_card, String fec_vencimiento, Integer cvc,Client id_cli) {
@@ -30,7 +32,14 @@ public class Card implements Serializable {
     }
 
     public Card() {
+    }
 
+    public void setId_client(int id_client) {
+        this.id_client = id_client;
+    }
+
+    public void setCli(Client cli) {
+        this.cli = cli;
     }
 
     public Integer getCvc() {

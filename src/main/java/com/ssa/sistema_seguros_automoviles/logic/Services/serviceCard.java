@@ -15,13 +15,9 @@ public class serviceCard {
         return cardRepo.findAll();
     }
 
-
+    @Transactional
     public boolean save(Card c) {
-        Card card = cardRepo.findCardByCard_number(c.getCard_number());
-        if(card == null) {
             cardRepo.save(c);
             return true;
-        }
-        return false;
     }
 }
