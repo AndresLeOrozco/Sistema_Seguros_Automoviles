@@ -1,5 +1,5 @@
 package com.ssa.sistema_seguros_automoviles.logic.Services;
-import com.ssa.sistema_seguros_automoviles.data.Repo.CardRepo;
+import com.ssa.sistema_seguros_automoviles.data.Repo.*;
 import com.ssa.sistema_seguros_automoviles.logic.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
