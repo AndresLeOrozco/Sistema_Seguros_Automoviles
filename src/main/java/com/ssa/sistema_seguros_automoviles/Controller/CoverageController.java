@@ -4,8 +4,6 @@ package com.ssa.sistema_seguros_automoviles.Controller;
 import com.ssa.sistema_seguros_automoviles.logic.Category;
 import com.ssa.sistema_seguros_automoviles.logic.Coverage;
 import com.ssa.sistema_seguros_automoviles.logic.Services.serviceCoverage;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +14,6 @@ import static java.lang.Integer.parseInt;
 @RestController()
 @RequestMapping("coverage")
 public class CoverageController {
-
-
 
     @Autowired
     serviceCoverage c;

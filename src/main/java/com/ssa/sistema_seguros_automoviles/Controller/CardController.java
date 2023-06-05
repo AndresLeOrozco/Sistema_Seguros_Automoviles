@@ -1,5 +1,6 @@
 package com.ssa.sistema_seguros_automoviles.Controller;
 import com.ssa.sistema_seguros_automoviles.logic.*;
+import com.ssa.sistema_seguros_automoviles.logic.Card;
 import com.ssa.sistema_seguros_automoviles.logic.Services.serviceCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,13 @@ public class CardController {
 
     @CrossOrigin
     @PostMapping(value="")
-    public int save(@RequestBody Card c) {
+    public int save(@RequestBody Card ca) {
         try{
-            if(this.c.save(c))
+            if(this.c.save(ca))
                 return 1;
         }catch(Exception e){
             System.out.println(e.toString());
         }
         return 0;
     }
-
-
-
 }

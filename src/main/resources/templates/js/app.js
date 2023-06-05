@@ -521,12 +521,40 @@ class App{
         this.reg.hide();
     }
 
+    getCli = async (id) =>{
+        const request = new Request(`${backend}/client/${id}`, { method: 'GET', headers: {} });
+        try {
+            const response = await fetch(request);
+            if (!response.ok) {
+                errorMessage(response.status);
+                return;
+            }
+            const clientId = await response.json();
+            return clientId;
+        } catch (error) {
+            console.error("Error al obtener los datos de categoría:", error);
+        }
+    }
+
     postCard = async(user) => {
-        const cardNumber = this.dom.querySelector("#cardNumb").value;
+        const card_number = this.dom.querySelector("#cardNumb").value;
         const date = this.dom.querySelector("#expdate").value;
         const cvv = this.dom.querySelector("#cvv").value;
-        const newRegister = {
 
+        if (!card_number || !date || !cvv) {
+            this.addWarning("Fill the blanks", 2);
+            this.modalCard.hide();
+            this.warn.show();
+            return;
+        }
+
+        let client = await this.getCli(user.id);
+
+        const newRegister = {
+            card_number: card_number,
+            date: date,
+            cvv: cvv,
+            cli: client
         };
         const request = new Request(`${backend}/card`, {
             method: 'POST',
@@ -536,9 +564,32 @@ class App{
             }
         });
 
-        const response = await fetch(request);
-        if (!response.ok) {
+        try {
+            const response = await fetch(request);
 
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                this.addWarning(errorMessage, 1);
+                this.modalCard.hide();
+                this.warn.show();
+                return;
+            }
+            let resp = await response.json();
+            if(JSON.stringify(resp).includes('0')){
+                this.addWarning("Card already exist", 1);
+                this.modalCard.hide();
+                this.warn.show();
+                this.clearParameters();
+                return;
+            }
+            this.addWarning("Card saved", 3);
+            this.modalCard.hide();
+            this.warn.show();
+            this.clearParameters();
+        } catch (error) {
+            this.addWarning(error, 2);
+            this.modalCard.hide();
+            this.warn.show();;
         }
 
     }
@@ -550,8 +601,7 @@ class App{
         const name = this.dom.querySelector("#Rname").value;
         const phone = this.dom.querySelector("#Rphone").value;
         const email = this.dom.querySelector("#Remail").value;
-
-        // ValidaciÃ³n de campos de entrada
+        
         if (!username || !password || !name || !phone || !email) {
             this.addWarning("Fill de blanks",2);
             this.reg.hide();
