@@ -3,7 +3,6 @@ package com.ssa.sistema_seguros_automoviles.logic.Services;
 import com.ssa.sistema_seguros_automoviles.data.Repo.*;
 import com.ssa.sistema_seguros_automoviles.logic.Client;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class serviceClient {
 
     @Transactional
     public boolean save(Client c) {
-        Client n = new Client();
+        Client n;
         n = clientRepo.findByUser(c.getUser());
         if (n == null){
             clientRepo.save(c);

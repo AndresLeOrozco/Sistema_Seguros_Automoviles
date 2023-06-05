@@ -8,4 +8,6 @@ import java.util.List;
 public interface CardRepo extends JpaRepository<Card,Integer> {
     @Override
     List<Card> findAll();
+
+    Card findCardByCard_number(long cn);
 }

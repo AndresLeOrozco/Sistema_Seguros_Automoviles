@@ -18,6 +18,18 @@ public class CardController {
         return c.find();
     }
 
+    @CrossOrigin
+    @PostMapping(value="")
+    public int save(@RequestBody Card c) {
+        try{
+            if(this.c.save(c))
+                return 1;
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        return 0;
+    }
+
 
 
 }

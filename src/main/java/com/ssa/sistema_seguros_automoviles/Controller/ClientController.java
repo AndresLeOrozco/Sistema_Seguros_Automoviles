@@ -6,11 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +17,6 @@ import static java.lang.Integer.parseInt;
 public class ClientController {
     @Autowired
     serviceClient s;
-    @Autowired
-    AuthenticationManager authenticationManager;
-
     @CrossOrigin
     @GetMapping(value="")
     public List<Client> find() {
@@ -34,22 +26,13 @@ public class ClientController {
 
 
     @CrossOrigin
-    @PostMapping(value="/login/{user}/{pass}")
-    public ResponseEntity<String> login(@PathVariable() String user, @PathVariable() String pass) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user,pass)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @CrossOrigin
-    @GetMapping (value="/{user}/{pass}")
-    public Client infoClient(@PathVariable() String user, @PathVariable() String pass) {
+    @GetMapping(value="/login/{user}/{pass}")
+    public Client login(@PathVariable() String user, @PathVariable() String pass) {
         Client c = s.findBy(user,pass);
+        if(c == null)
+            return new Client();
         return c;
     }
-
     @CrossOrigin
     @PostMapping
     public int save(@RequestBody Client c) {

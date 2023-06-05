@@ -16,9 +16,11 @@ class App{
         this.state={};
         this.dom=this.render();
         this.modal = new bootstrap.Modal(this.dom.querySelector('#app>#modal'));
+        this.modalCard = new bootstrap.Modal(this.dom.querySelector('#modalCard'))
         this.reg = new bootstrap.Modal(this.dom.querySelector('#register'));
         this.warn = new bootstrap.Modal(this.dom.querySelector('#alert'));
         this.dom.querySelector('#app>#modal #apply').addEventListener('click',e=>this.login());
+        this.dom.querySelector('#next').addEventListener('click',e=>this.registerCard());
         this.dom.querySelector('#subs').addEventListener('click',e=>this.register());
         this.dom.querySelector("#upd").addEventListener("click",e=>this.UpdateUser());
         this.dom.querySelector("#botUpd").style.visibility = 'hidden';
@@ -138,7 +140,7 @@ class App{
         
           <!-- Copyright -->
           <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 Copyright:
+            Â© 2023 Copyright:
             <a class="text-dark" href="https://www.youtube.com/watch?v=w3QFThq8gQo">BEGUESS SA</a>
           </div>
           <!-- Copyright -->
@@ -221,7 +223,7 @@ class App{
             
                   </div>
                   <div id="botSub" class="modal-footer d-flex justify-content-center">
-                    <button id="subs" class="btn btn-primary">Register</button>
+                    <button id="next" class="btn btn-success">Next</button>
                   </div>
                   <div id="botUpd" class="modal-footer d-flex justify-content-center">
                     <button id="upd" class="btn btn-primary">Update</button>
@@ -229,7 +231,48 @@ class App{
                 </div>
               </div>
             </div>
+            
+<!-- Modal -->
+<div class="modal fade" id="modalCard" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> <div class="modal-content"> 
+        <div class="modal-body"> <div class="text-right"> <i class="fa fa-close close" data-dismiss="modal"></i> </div> 
+        <div class="tabs mt-3"> <ul class="nav nav-tabs" id="myTab" role="tablist"> 
+        <li class="nav-item" role="presentation"> 
+        <a class="nav-link active" id="visa-tab" data-toggle="tab" href="#visa" role="tab" aria-controls="visa" aria-selected="true"> 
+            <img src="https://i.imgur.com/sB4jftM.png" width="80"> </a> </li> 
+            <li class="nav-item" role="presentation"></li> 
+            </ul> 
+            <div class="tab-content" id="myTabContent"> 
+            <div class="tab-pane fade show active" id="visa" role="tabpanel" aria-labelledby="visa-tab"> 
+            <div class="mt-4 mx-4"> 
+            <div class="text-center"> 
+            <h5>Credit card</h5> </div>
+             <div class="form mt-3"> 
+             <div class="inputbox"> 
+             <input type="text" name="name" id="cardName" class="form-control" placeholder="Cardholder Name" required="required"></div> 
+             <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" placeholder="Card Number" id="cardNumb" required="required"><i class="fa fa-eye"></i> 
+             </div> 
+             <div class="d-flex flex-row"> <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" id="expdate" required="required"> <span>Expiration Date</span> 
+             </div> <div class="inputbox"> <input type="text" name="name" min="1" max="999" class="form-control" id="cvv" required="required"> <span>CVV</span> 
+             </div> 
+             </div> 
+             </div> 
+             </div> 
+             </div> 
+             </div>
+             <br>
+             <br>
+              <div class="px-5 pay">
+<button id="subs" class="btn btn-dark btn-block">Register</button> 
+              </div>
+              </div> 
+              </div> 
+              </div>
+              </div>
+              </div>
+              </div>
             `;
+
 
     }
 
@@ -350,6 +393,7 @@ class App{
         this.dom.querySelector('#app>#menu #menuItems').replaceChildren();
         this.dom.querySelector('#app>#menu #menuItems').innerHTML=html;
         this.dom.querySelector("#app>#menu #menuItems #login")?.addEventListener('click',e=>this.modal.show());
+        this.dom.querySelector("#insurances")?.addEventListener('click',e=>this.showInsurance());
         this.dom.querySelector("#app>#menu #menuItems #register")?.addEventListener('click',e=>{this.reg.show();this.clearParameters()});
         this.dom.querySelector("#app>#menu #menuItems #logout")?.addEventListener('click',e=>this.logout());
         this.dom.querySelector("#app>#menu #menuItems #clients")?.addEventListener('click',e=>this.showCli());
@@ -358,7 +402,7 @@ class App{
             this.clearParameters();
             this.modal.hide();
             this.reg.show();
-            });
+        });
 
         this.dom.querySelector("#app>#menu #menuItems #categories")?.addEventListener('click',e=>this.showCat());
         this.dom.querySelector("#app>#menu #menuItems #vehicles")?.addEventListener('click',e=>this.showVeh());
@@ -374,31 +418,29 @@ class App{
             this.warn.show();
             this.clearParameters();
         }else {
-            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'POST', headers: {}});
+            const request = new Request(`${backend}/client/login/${user}/${pass}`, {method: 'GET', headers: {}});
             const response = await fetch(request);
             if (!response.ok) {
                 this.addWarning(response.statusText,1);
                 this.warn.show();
             }
-            let usuario = await response.text();
-            if (response.ok) {
-                let userx = await this.ClientInfo(user,pass);
-                globalstate.user = userx;
-                swal("SUCCESSFULLY","", "success");
-                this.modal.hide();
-                this.renderMenuItems();
-                this.clearParameters();
-            } else {
+            let usuario = await response.json();
+            if (usuario.type_cli === null) {
                 this.addWarning("ID or password incorrect",1);
                 this.modal.hide();
                 this.warn.show();
+                this.clearParameters();
+            } else {
+                globalstate.user = usuario;
+                swal("SUCCESSFULLY","", "success");
+                this.modal.hide();
+                this.renderMenuItems();
                 this.clearParameters();
             }
             if(globalstate.user.type_cli === 2)
                 await this.showInsurance();
         }
     }
-
 
     register = () => {
         const username = this.dom.querySelector("#Rusername").value;
@@ -407,7 +449,7 @@ class App{
         const phone = this.dom.querySelector("#Rphone").value;
         const email = this.dom.querySelector("#Remail").value;
 
-        // Validación de campos de entrada
+        // ValidaciÃ³n de campos de entrada
         if (!username || !password || !name || !phone || !email) {
             this.addWarning("Fill de blanks",2);
             this.reg.hide();
@@ -439,38 +481,68 @@ class App{
             }
         });
         (async ()=>{
-        try {
-            const response = await fetch(request);
+            try {
+                const response = await fetch(request);
 
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                this.addWarning(errorMessage,1);
-                this.reg.hide();
-                this.warn.show();
-                return;
-            }
-            let resp = await response.json();
-            if(JSON.stringify(resp).includes('0')){
-                this.addWarning("User already exist",1);
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    this.addWarning(errorMessage,1);
+                    this.reg.hide();
+                    this.warn.show();
+                    return;
+                }
+                let resp = await response.json();
+                if(JSON.stringify(resp).includes('0')){
+                    this.addWarning("User already exist",1);
+                    this.warn.show();
+                    this.clearParameters();
+                    this.reg.hide();
+                    return;
+                }
+                this.addWarning("User Registered",3);
+                await this.postCard(username);
                 this.warn.show();
                 this.clearParameters();
                 this.reg.hide();
-                return;
+                this.renderMenuItems();
+
+            } catch (error) {
+                console.error(error);
+                this.addWarning(error,1);
+                this.warn.show();
+                this.reg.hide();
+                this.clearParameters();
             }
-            this.addWarning("User Registered",3);
-            this.warn.show();
-            this.clearParameters();
-            this.reg.hide();
-            this.renderMenuItems();
-        } catch (error) {
-            console.error(error);
-            this.addWarning(error,1);
-            this.warn.show();
-            this.reg.hide();
-            this.clearParameters();
-        }
         })();
     }
+
+    registerCard = () =>{
+        this.modalCard.show();
+        this.reg.hide();
+    }
+
+    postCard = async(user) => {
+        const cardNumber = this.dom.querySelector("#cardNumb").value;
+        const date = this.dom.querySelector("#expdate").value;
+        const cvv = this.dom.querySelector("#cvv").value;
+        const newRegister = {
+
+        };
+        const request = new Request(`${backend}/card`, {
+            method: 'POST',
+            body: JSON.stringify(newRegister),
+            headers: {
+                "Content-type": "application/json;"
+            }
+        });
+
+        const response = await fetch(request);
+        if (!response.ok) {
+
+        }
+
+    }
+
 
     UpdateUser = async () => {
         const username = this.dom.querySelector("#Rusername").value;
@@ -479,7 +551,7 @@ class App{
         const phone = this.dom.querySelector("#Rphone").value;
         const email = this.dom.querySelector("#Remail").value;
 
-        // Validación de campos de entrada
+        // ValidaciÃ³n de campos de entrada
         if (!username || !password || !name || !phone || !email) {
             this.addWarning("Fill de blanks",2);
             this.reg.hide();
@@ -510,28 +582,28 @@ class App{
             }
         });
 
-            const response = await fetch(request);
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                this.addWarning(errorMessage,1);
-                this.reg.hide();
-                this.warn.show();
-                return;
-            }
-            let resp = await response.json();
-            if(resp.id === null) {
-                this.addWarning("Cant modify user, repeat Username",1);
-                this.warn.show();
-                this.clearParameters();
-                this.reg.hide();
-                return;
-            }
-            this.addWarning("User Modify",3);
+        const response = await fetch(request);
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            this.addWarning(errorMessage,1);
+            this.reg.hide();
+            this.warn.show();
+            return;
+        }
+        let resp = await response.json();
+        if(resp.id === null) {
+            this.addWarning("Cant modify user, repeat Username",1);
             this.warn.show();
             this.clearParameters();
-            globalstate.user = resp;
             this.reg.hide();
-            this.renderMenuItems();
+            return;
+        }
+        this.addWarning("User Modify",3);
+        this.warn.show();
+        this.clearParameters();
+        globalstate.user = resp;
+        this.reg.hide();
+        this.renderMenuItems();
 
     }
 
@@ -551,20 +623,6 @@ class App{
         this.dom.querySelector("#botUpd").style.visibility = 'hidden';
 
     }
-
-    ClientInfo = async (us, pa) => {
-        const request = new Request(`${backend}/client/${us}/${pa}`, {
-            method: 'GET',
-            headers: {}
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            this.addWarning(response.statusText, 1);
-            this.warn.show();
-        }
-        let client = await response.json();
-        return client;
-    };
 
 
     showCli=async()=>{

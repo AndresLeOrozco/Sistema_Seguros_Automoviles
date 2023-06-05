@@ -25,9 +25,7 @@ class Insurances{
         this.dom.querySelector('#prevV2').addEventListener('click', this.registerInsurancePrev);
         this.dom.querySelector('#prevV3').addEventListener('click', this.registerInsurancePrev2);
         this.dom.querySelector('#payIns').addEventListener('click', this.registerPay);
-
-
-
+        this.dom.querySelector('#busqueda').addEventListener('click', this.FiltrarporVin());
     }
 
     render = () => {
@@ -50,6 +48,14 @@ class Insurances{
                 <h4 class="card-title mt-3 text-center"><span><i class="fas fa-shield-alt"></i></span> Insurances</h4><br>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                           <button type="button" class="btn btn-outline-primary" id="addNew">Add New</button>
+                          <div class="input-group ps-5">
+                              <div id="navbar-search-autocomplete" class="form-outline">
+                                <input type="search" id="busqueda" class="form-control" />
+                              </div>
+                              <button type="button" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                              </button>
+                            </div>
                     </div>    
                     <div class="table-responsive " style="max-height: 300px; overflow: auto">
                         <table class="table table-striped table-hover">
@@ -307,14 +313,25 @@ class Insurances{
         this.dom.querySelector(`#insurance-${c.id}`)?.addEventListener('click',e=>this.openDetail(c));
     }
 
+    FiltrarporVin =async () => {
+        let vin = this.dom.querySelector("#busqueda").value;
+        if (vin === "")
+            this.insurance = await this.getInsurancesById(globalstate.user.id);
+        else {
+            const filteredList = this.insurance.filter((insurance) => insurance.vin.toLowerCase().includes(vin.toLowerCase()));
+            this.insurance = filteredList;
+        }
+        await this.list();
+    }
+
     list= async ()=>{
         let n = 0;
-        let insurances = [];
-        insurances = await this.getInsurancesById(globalstate.user.id);
+        let x = await globalstate.user
+        this.insurance = await this.getInsurancesById(x.id);
         var listing= this.dom.querySelector("#listbody");
         listing.replaceChildren();
-
-        insurances.forEach( e=>
+        if (Array.isArray(this.insurance) && this.insurance.length > 0)
+            this.insurance.forEach( e=>
             this.row(listing,e, n += 1)
         );
 
